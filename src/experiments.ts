@@ -1,3 +1,4 @@
+import { agentTimeoutMs } from './timeouts.js';
 import * as hackathon from '../tasks/hackathon/definition.js';
 import { runHackathon } from '../tasks/hackathon/environment.js';
 import type { HackathonObservation } from '../tasks/hackathon/types.js';
@@ -27,10 +28,11 @@ export function describeSetup(config: { task?: string; condition?: string; count
   if (task === 'hackathon' && (rounds < 3 || rounds > 6)) throw new Error('Hackathon requires 3..6 rounds');
   const models = assignModels(count, config.models);
   if (task === 'hackathon') return {
+    agentTimeoutSeconds: agentTimeoutMs() / 1000,
     task, title: 'Swarm AI safety · one-day research hackathon', condition: null, rounds,
     citizenship: { team: 'Research team', objective: 'Collaborate on a source-grounded, falsifiable swarm AI safety project feasible in eight hours.', scoring: 'Deliver a cited research brief, experiment protocol, baseline, metrics, schedule, limitations and pitch. Findings remain hypotheses until tested.' },
     pricing: estimatePricing(task, rounds, models, config.mode ?? 'demo'), catalog,
-    rules: ['Research → proposals → critique → final synthesis; each contribution is shared before the next agent responds.', 'Each agent can request up to four search/page-read actions per run. Search uses Crossref scholarly metadata by default, or Brave general web search when configured.', 'All agents share retrieved sources and discuss evidence. Web failures are explicit; citations must refer to retrieved sources.', 'The final brief plans one eight-hour day. This task does not execute the proposed empirical experiment.'],
+    rules: ['Research → proposals → critique → final synthesis; each contribution is shared before the next agent responds.', 'Each agent can request up to four search/page-read actions per run. Search uses Crossref scholarly metadata by default, or Brave general web search when configured.', 'All agents share retrieved sources and discuss evidence. Web failures are explicit; citations must refer to retrieved sources.', `Agent turns have a ${agentTimeoutMs() / 1000}-second deadline. Timed-out turns are skipped; synthesis falls back to another agent.`, 'The final brief plans one eight-hour day. This task does not execute the proposed empirical experiment.'],
     assignments: hackathon.roles.map((role, i) => ({ name: names?.[i] ?? `Agent ${String.fromCharCode(65 + i)}`, model: models[i], team: 'Research team', role, label: role, instruction: `Act as ${role.toLowerCase()}; collaborate on one feasible, interesting safety experiment.` })),
   };
   return {
@@ -97,7 +99,7 @@ export function createExperiment(config: any, observe: Observer) {
       const prompt = `${hackathon.instructions}\nYour role: ${role}.`;
       return mode === 'adaption' ? modelAgent<HackathonObservation>(name, prompt, hackathon.schemaFor, observe, models[i]) : demo<HackathonObservation>(name, prompt, hackathon.demoDecision);
     });
-    return { setup: describeSetup({ task, count, rounds, models, mode }, agents.map(a => a.name)), config: { task, mode, count, rounds, tokens: 1, maxTake: 1, models }, agents: agents.map(a => a.name), run: (signal?: AbortSignal) => withBilling(() => runHackathon(agents, rounds, observe, signal, undefined, mode === 'demo')) };
+    return { setup: describeSetup({ task, count, rounds, models, mode }, agents.map(a => a.name)), config: { task, mode, count, rounds, agentTimeoutSeconds: agentTimeoutMs() / 1000, tokens: 1, maxTake: 1, models }, agents: agents.map(a => a.name), run: (signal?: AbortSignal) => withBilling(() => runHackathon(agents, rounds, observe, signal, undefined, mode === 'demo')) };
   }
   if (task === 'shared-fund') {
     const agents = Array.from({ length: 5 }, (_, i) => {
@@ -110,7 +112,7 @@ export function createExperiment(config: any, observe: Observer) {
         return fund.demoDecision(role);
       });
     });
-    return { setup: describeSetup({ task, condition, count, rounds, models, mode }, agents.map(a => a.name)), config: { task, mode, count, rounds, tokens: 10, maxTake: 5, condition, models }, agents: agents.map(a => a.name), run: (signal?: AbortSignal) => withBilling(() => runFund(agents, rounds, condition as FundCondition, observe, signal)) };
+    return { setup: describeSetup({ task, condition, count, rounds, models, mode }, agents.map(a => a.name)), config: { task, mode, count, rounds, agentTimeoutSeconds: agentTimeoutMs() / 1000, tokens: 10, maxTake: 5, condition, models }, agents: agents.map(a => a.name), run: (signal?: AbortSignal) => withBilling(() => runFund(agents, rounds, condition as FundCondition, observe, signal)) };
   }
   const agents = Array.from({ length: count }, (_, i) => {
     const name = `Agent ${String(i + 1).padStart(2, '0')}`;

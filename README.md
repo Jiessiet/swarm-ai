@@ -55,6 +55,28 @@ in this task. Expected findings are hypotheses, **not measured results**. This
 runner plans the research project; it does not automatically execute the proposed
 empirical experiment or train models.
 
+## Timeouts and continuing a run
+
+Each model turn now has a **10-minute** deadline (previously two minutes). Set
+`AGENT_TIMEOUT_SECONDS` to an integer from 1 to 3600 before starting the CLI or
+server, for example:
+
+```bash
+AGENT_TIMEOUT_SECONDS=900 npm run dashboard
+```
+
+In the hackathon, a timed-out turn is recorded and skipped so teammates can
+continue. The agent can participate again in the next round. Already retrieved
+sources and completed contributions are kept, and later agents see which turns
+were missed. The dashboard, saved traces, JSON and Markdown show skipped turns.
+
+If the synthesis lead times out, another agent is asked to write the brief. If
+all five synthesis attempts time out, the run saves a clearly labeled **partial
+record** with contributions and sources, and marks the saved run `partial`.
+Stop still cancels the whole run immediately. Other model/validation errors
+continue to fail the run; recovery applies specifically to agent turn timeouts.
+The retained resource/fund tasks keep their strict participant-failure behavior.
+
 ## Internet research
 
 Agents explicitly request `search` and `read` actions in their structured replies.

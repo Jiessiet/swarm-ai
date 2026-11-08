@@ -62,6 +62,7 @@ function render(e) {
   }
   if (e.type === 'operator.setup') applyLiveSetup(d);
   if (e.type === 'agent.observation') { agentState(e.agent, 'Working'); $('round').textContent = currentTask === 'hackathon' ? `${d.phase} · ${e.agent}` : d.phase === 'peer-review' ? 'Final peer review · citizenship' : `Round ${d.round} / ${d.totalRounds}`; }
+  if (e.type === 'hackathon.agent.timeout') { agentState(e.agent, 'Timed out · turn skipped'); message(`${d.message}. Continuing with the remaining agents.`); }
   if (e.type === 'hackathon.phase') { $('round').textContent = d.phase === 'synthesis' ? 'Final synthesis' : `${d.phase} · ${d.round} / ${d.totalRounds}`; $('pool').textContent = $('hub').textContent = d.phase; $('bar').style.width = `${Math.min(100, d.round / (d.totalRounds + 1) * 100)}%`; }
   if (e.type === 'hackathon.contribution') {
     const a = agents.get(e.agent); if (a) { a.balance++; a.node.querySelector('.balance b').textContent = a.balance; agentState(e.agent, 'Shared with team'); }
@@ -89,7 +90,7 @@ function render(e) {
   if (e.type === 'operator.billing') $('usage-cost').textContent = `Run usage cost: ${d.credits.toFixed(6)} credits${d.simulated ? ' · demo, no API charges' : ' · from reported usage, not an invoice'}`;
   if (e.type === 'sdk.turn.completed' && d.usage) { usage += d.usage.input_tokens + d.usage.output_tokens; $('usage').textContent = usage.toLocaleString(); }
   if (e.type === 'run.completed' && d.metrics) showMetrics(d.metrics);
-  if (['run.completed','run.failed','run.stopped'].includes(e.type)) { busy(false); $('status').textContent = e.type.split('.')[1]; agents.forEach((_, name) => agentState(name, 'Idle')); if (d.message) message(d.message); }
+  if (['run.completed','run.failed','run.stopped'].includes(e.type)) { busy(false); $('status').textContent = e.type === 'run.completed' && d.completion === 'partial' ? 'Partial · no final brief' : e.type === 'run.completed' && d.timeouts?.length ? 'Completed with skipped turns' : e.type.split('.')[1]; agents.forEach((_, name) => agentState(name, 'Idle')); if (d.message) message(d.message); else if (e.type === 'run.completed' && d.completion === 'partial') message('All synthesis attempts timed out. Partial research and sources have been saved.'); else if (e.type === 'run.completed' && d.timeouts?.length) message(`Research brief saved. ${d.timeouts.length} timed-out turn(s) were skipped.`); }
   addEvent(e);
   if (['run.completed', 'run.failed', 'run.stopped'].includes(e.type)) refreshRuns();
 }

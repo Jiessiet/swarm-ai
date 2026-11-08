@@ -3,9 +3,16 @@ function section(target, title, text) { target.append(el('h3', title), el('p', t
 function list(target, title, items) { target.append(el('h3', title)); const ul = el('ul'); for (const item of items) ul.append(el('li', item)); target.append(ul); }
 export function researchBrief(result, target, runId) {
   const b = result.brief; target.replaceChildren();
-  target.append(el('p', result.simulated ? 'SIMULATED DEMO · No browsing or empirical trials performed.' : 'RESEARCH PLAN · Empirical experiment not yet run.'), el('h2', b.title));
+  target.append(el('p', result.simulated ? 'SIMULATED DEMO · No browsing or empirical trials performed.' : 'RESEARCH PLAN · Empirical experiment not yet run.'), el('h2', b?.title ?? 'Partial hackathon record'));
   if (result.evidence) target.append(el('p', `${result.evidence.searchResults} search results · ${result.evidence.pagesRead} pages read · ${result.evidence.citedSources} cited sources. ${result.evidence.note}`));
-  if (runId) { const download = el('a', 'Download research brief (.md)'); download.href = `/runs/${encodeURIComponent(runId)}/brief.md`; download.download = 'research-brief.md'; target.append(download); }
+  if (runId) { const download = el('a', b ? 'Download research brief (.md)' : 'Download partial record (.md)'); download.href = `/runs/${encodeURIComponent(runId)}/brief.md`; download.download = 'research-brief.md'; target.append(download); }
+  if (result.timeouts?.length) list(target, 'Timed-out turns · skipped', result.timeouts.map(t => `${t.message} · ${t.phase}, round ${t.round}`));
+  if (!b) {
+    section(target, 'No final brief', 'All synthesis attempts timed out. The discussion and retrieved sources are saved; no empirical experiment was run.');
+    for (const contribution of result.contributions ?? []) section(target, `${contribution.agent} · ${contribution.phase} · round ${contribution.round}`, contribution.message);
+    return;
+  }
+  if (result.synthesisAgent) target.append(el('p', `Synthesized by ${result.synthesisAgent}.`));
   section(target, 'Research question', b.researchQuestion); section(target, 'Hypothesis · untested', b.hypothesis); section(target, 'Safety mechanism', b.safetyMechanism);
   target.append(el('h3', 'Related work'));
   if (!b.relatedWork.length) target.append(el('p', 'No retrieved sources cited. Verify related work before claiming novelty.'));

@@ -42,3 +42,17 @@ test('agents receive validated shared messages, not private SDK events', async (
   assert.equal(events.find(e => e.type === 'agent.message').data.text, 'Hello Bob');
   assert.equal(events.filter(e => e.type === 'agent.message').length, 2);
 });
+
+test('saves partial hackathon status and public timeout records for replay', () => {
+  const id = randomUUID();
+  try {
+    const trace = createTrace(id, { task: 'hackathon' }, ['Agent E']);
+    trace.append({ type: 'hackathon.agent.timeout', agent: 'Agent E', data: { phase: 'synthesis', round: 4, timeoutSeconds: 600, message: 'Agent E timed out after 600 seconds' } });
+    trace.append({ type: 'run.completed', data: { completion: 'partial', brief: null } });
+    const saved = readTrajectory(id);
+    assert.equal(saved.manifest.status, 'partial');
+    assert.equal(saved.events[0].type, 'hackathon.agent.timeout');
+    assert.equal(saved.events[0].visibility, 'public');
+    assert.equal(saved.events[1].type, 'run.completed');
+  } finally { rmSync(join(traceRoot, id), { recursive: true, force: true }); }
+});

@@ -60,6 +60,8 @@ export function conversationEvent(event, setup) {
   if (event.time) header.append(element('time', new Date(event.time).toLocaleTimeString()));
   node.append(header);
   switch (event.type) {
+    case 'hackathon.agent.timeout':
+      node.append(element('h3', `${event.agent} · turn timed out`), element('p', `${d.message} (${d.phase}, round ${d.round}). Turn skipped; the team continues.`, 'event-description')); break;
     case 'hackathon.phase':
       node.append(element('h3', `Hackathon · ${d.phase}`)); break;
     case 'hackathon.contribution':
@@ -87,7 +89,7 @@ export function conversationEvent(event, setup) {
     case 'run.started':
       node.append(element('h3', 'Experiment started'), element('p', `${d.agents?.length ?? 'All'} agents are participating${d.mode === 'demo' ? ' in a simulated demonstration' : ' using Adaption inference'}.`, 'event-description')); break;
     case 'run.completed':
-      node.append(element('h3', 'Experiment completed'), element('p', d.brief ? 'The one-day research plan is ready. Proposed empirical work has not been run.' : d.rounds ? `${d.rounds.length} rounds finished. Review each agent’s contribution history below.` : 'All committed decisions have been saved.', 'event-description')); break;
+      node.append(element('h3', 'Experiment completed'), element('p', d.completion === 'partial' ? 'Partial research saved. All synthesis attempts timed out; no final brief was produced.' : d.brief ? 'The one-day research plan is ready. Proposed empirical work has not been run.' : d.rounds ? `${d.rounds.length} rounds finished. Review each agent’s contribution history below.` : 'All committed decisions have been saved.', 'event-description')); break;
     case 'run.stopped': case 'run.failed': case 'sdk.error': case 'sdk.turn.failed':
       node.classList.add('error'); node.append(element('h3', event.type.includes('stopped') ? 'Experiment stopped' : 'A problem interrupted the run'), element('p', d.message ?? d.error?.message ?? 'See technical details for the error.', 'event-description')); break;
     case 'agent.peer_submission':

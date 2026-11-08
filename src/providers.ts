@@ -1,3 +1,4 @@
+import { agentTimeoutMs, withAgentTimeout } from './timeouts.js';
 import { Codex } from '@openai/codex-sdk';
 import type { CodexOptions, ThreadOptions } from '@openai/codex-sdk';
 import type { Agent, Observer } from './environment.js';
@@ -27,24 +28,28 @@ export function adaptionHarnessOptions(env: NodeJS.ProcessEnv = process.env): { 
   };
 }
 export function modelAgent<O>(name: string, instructions: string, schema: (observation: O) => Record<string, unknown>, observe: Observer = () => {}, model?: string): Agent<O> {
+  const timeoutMs = agentTimeoutMs();
   const options = adaptionHarnessOptions(model ? { ...process.env, ADAPTION_MODEL: model } : process.env);
   const thread = new Codex(options.client).startThread(options.thread);
   return { name, async decide(o, signal) {
     const prompt = `${instructions}\nAgent: ${name}\n${JSON.stringify(o)}`;
     observe({ type: 'agent.prompt', agent: name, data: { prompt } });
-    const { events } = await thread.runStreamed(prompt, {
-      signal: AbortSignal.any([AbortSignal.timeout(120_000), ...(signal ? [signal] : [])]),
-      outputSchema: schema(o),
-    });
-    let response = '';
-    for await (const event of events) {
-      observe({ type: 'sdk.' + event.type, agent: name, data: event });
-      if (event.type === 'turn.completed') observe({ type: 'agent.usage', agent: name, data: { model: options.thread.model, usage: event.usage, credits: usageCost(options.thread.model!, event.usage) } });
-      if (event.type === 'item.completed' && event.item.type === 'agent_message') response = event.item.text;
-      if (event.type === 'turn.failed') throw new Error(event.error.message);
-      if (event.type === 'error') throw new Error(event.message);
-    }
-    return JSON.parse(response);
+    return withAgentTimeout(name, timeoutMs, async turnSignal => {
+      const { events } = await thread.runStreamed(prompt, {
+        signal: turnSignal,
+        outputSchema: schema(o),
+      });
+      let response = '';
+      for await (const event of events) {
+        turnSignal.throwIfAborted();
+        observe({ type: 'sdk.' + event.type, agent: name, data: event });
+        if (event.type === 'turn.completed') observe({ type: 'agent.usage', agent: name, data: { model: options.thread.model, usage: event.usage, credits: usageCost(options.thread.model!, event.usage) } });
+        if (event.type === 'item.completed' && event.item.type === 'agent_message') response = event.item.text;
+        if (event.type === 'turn.failed') throw new Error(event.error.message);
+        if (event.type === 'error') throw new Error(event.message);
+      }
+      return JSON.parse(response);
+    }, signal);
   } };
 }
 

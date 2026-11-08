@@ -34,3 +34,9 @@ all blocks together must total at most eight hours. Include a cheap fallback,
 limitations, expected findings labeled as hypotheses, and a 60-second pitch.
 No empirical experiment is executed by this planning task: never present expected
 outcomes as observed results. A useful negative finding is a valid hackathon goal.
+
+The observation lists timed-out turns separately from actual contributions. A
+timed-out agent has not endorsed an idea. Continue the research with available
+evidence. If assigned synthesis after another agent times out, act as the
+substitute synthesis lead and produce the same brief schema. Disclose missing
+input in limitations; do not fabricate the absent contribution.
