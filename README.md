@@ -1,74 +1,87 @@
 # swarm-ai
 
-A shared-resource agent environment using the OpenAI Codex TypeScript SDK and
-Adaption's Python API. Each agent observes the pool and prior decisions, chooses
-an allocation, and receives another turn while resources remain. The original
-`experiment.py` remains available.
+Multiple agents using the **Codex harness / TypeScript SDK**, with **Adaption
+providing model inference**:
 
-## Quick start
+```text
+Shared-resource environment → Codex SDK threads → Adaption Responses API → model
+                              tools + agent loop
+```
 
-Requires Node.js 20+ and npm. Python is needed only for Adaption.
+Codex manages each agent's thread and tool loop. The configured custom provider
+sends inference to `https://api.prod.adaptionlabs.ai/api/v1/responses`, using
+`ADAPTION_API_KEY` as bearer authentication. No OpenAI model key or ChatGPT login
+is required. There is no separate direct-Adaption agent or Python bridge in this
+runner. The original Python `experiment.py` remains as a standalone experiment.
+
+## Setup and run
+
+Requires Node.js 20+ and npm:
 
 ```bash
 npm ci
+# Configure ADAPTION_API_KEY in your shell or environment secret settings.
+npm start
+```
+
+Default: three Codex-harness agents, Adaption model `qwen3.5-397b`, three rounds,
+12 shared tokens, maximum allocation four tokens. Set `ADAPTION_MODEL` to another
+model you can access, or an Adaption inference stack such as `stack:your-slug`.
+
+For example, after configuring the key:
+
+```bash
+ADAPTION_MODEL=qwen3.5-397b ROUNDS=5 STARTING_TOKENS=30 npm start
+```
+
+`.env.example` lists settings; it is not loaded automatically. Set variables in
+your shell or use your runtime's environment-file support. Do not commit keys.
+`ADAPTION_BASE_URL` optionally overrides the HTTPS API base (include `/api/v1`,
+not `/responses`). Codex appends `/responses` itself. Provider selection is
+explicit, so the runner does not fall back to OpenAI inference.
+
+## Offline verification
+
+```bash
 npm run demo
 npm run check
 npm test
 ```
 
-The default demo runs three deterministic agents without API calls. Results are
-written to ignored `results/run-*.json` files. Each round rotates the first mover;
-turns are sequential so every participant sees the current pool. Invalid decisions
-or provider failures stop the run. Completed runs record settings, decisions,
-reasons, allocations and remaining resources.
+The demo uses deterministic baseline participants and makes no API calls.
+Tests cover resource conservation, turn order, invalid decisions, history
+isolation, exhaustion, provider errors, provider routing and configuration checks.
 
-## Codex agents
+## Environment behavior
 
-Authenticate the Codex CLI using `codex login`, or set `CODEX_API_KEY` through
-your environment's secret settings. Then run:
+Each agent has its own Codex thread, reused across turns. Turns run sequentially
+against the current resource pool, with the first mover rotating each round.
+Decisions must match the allowed integer allocation and include a reason.
+Invalid decisions or provider errors stop the run. Completed runs save JSON
+settings, allocations, reasons and remaining resources in ignored `results/`.
 
-```bash
-AGENT_BACKEND=codex npm start
-```
+Threads use read-only sandboxing, disabled tool network/web search and no approval
+prompts. The inference connection to Adaption is independent of tool network
+access. Codex remains tool capable; use an appropriate workspace because read-only
+access can still expose files to the model. Turns have a two-minute deadline.
 
-Each agent has its own persistent SDK thread for the duration of the run.
-Threads use read-only sandboxing, disabled network and web search, and no approval
-prompts. Codex remains a tool-capable coding agent; read-only mode is not a
-confidentiality boundary. Run against an appropriate workspace. Turns time out
-after two minutes. Optionally set `CODEX_MODEL` to an available Codex model.
+## Compatibility status
 
-## Adaption agents
+Configured against Codex's documented custom-provider `wire_api = "responses"`
+and Adaption's documented Responses endpoint. Type checking, six tests and the
+offline demo pass. **Live Adaption inference has not been verified** because this
+workspace has no configured API key. Codex sends tool definitions, structured
+output requirements, conversation items and streaming requests; the selected
+Adaption model/stack must support those request shapes and return compatible SSE
+events and tool calls. A shared endpoint format alone does not prove complete
+harness compatibility. A rejected field or tool shape needs compatibility work;
+it should not be silently removed if doing so breaks the Codex tool loop.
 
-Use Python compatible with the repository's pinned dependencies:
+References:
+- [Codex SDK](https://github.com/openai/codex/tree/main/sdk/typescript)
+- [Codex custom provider configuration](https://developers.openai.com/codex/config-reference)
+- [Adaption Responses API](https://docs.adaptionlabs.ai/api/resources/responses/methods/create)
 
-```bash
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-# Configure ADAPTION_API_KEY securely before starting.
-PYTHON=.venv/bin/python AGENT_BACKEND=adaption npm start
-```
-
-`ADAPTION_MODEL` defaults to `qwen3.5-397b`, matching the existing experiment.
-Adaption calls use the official Python client via a JSON stdin/stdout worker;
-credentials stay in environment variables. Set `AGENT_BACKEND=mixed` for one
-Codex agent and one Adaption agent, with both providers authenticated.
-
-These are separate backends sharing one environment. This implementation does
-not assume Adaption is a compatible Codex Responses endpoint, and does not route
-Codex through Adaption. Live provider compatibility must be verified with your
-account and model access. No live API calls are required by the tests.
-
-## Configuration and extension
-
-See `.env.example`; it is a template, not automatically loaded. Set shell variables
-or use your runtime's environment-file support. `ROUNDS`, `STARTING_TOKENS`, and
-`MAX_TAKE` must be positive safe integers. `PYTHON` selects the Adaption worker's
-Python executable. Never commit keys or `.env` files.
-
-Implement the `Agent` interface in `src/environment.ts` to add a participant.
-`src/providers.ts` contains the provider adapters and `src/cli.ts` assembles the
-group. Tests cover resource conservation, turn rotation, decision validation,
-history isolation, exhaustion and provider errors.
-
-Current scope is an experiment harness: no training/adaptation feedback loop,
-parallel coding worktrees, deployment service, or dashboard is included.
+`src/providers.ts` configures Codex with Adaption; `src/environment.ts` owns the
+simulation; `src/cli.ts` assembles the agents. This is a shared-resource experiment
+harness, with no training or model adaptation feedback loop yet.
