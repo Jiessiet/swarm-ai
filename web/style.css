@@ -6,3 +6,7 @@
 .pricing-panel,#citizenship{margin:18px 0}.cost-headline{padding:20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}.cost-headline strong{font-size:26px;font-weight:500;color:#c3edb5}.cost-headline span{font-size:12px;color:#9eb8a7}.price-assumptions{font-size:11px;line-height:1.7;color:#8fa897;margin:0;padding:12px 20px}.price-assumptions a{color:#bbdfad}.pricing-panel select{min-width:190px}.model-label{font:10px/1.6 ui-monospace,monospace!important;color:#c4d4bc!important;overflow-wrap:anywhere}.team-goal{font-size:14px;line-height:1.8;color:#d3e8ce}.citizenship-summary{font-size:17px;color:#c7e2be;line-height:1.7;margin:0;padding:20px}.peer-evidence{font-size:12px;line-height:1.8;padding:10px 20px;color:#aec9b3}.peer-evidence summary{cursor:pointer}.peer-evidence p{font-size:12px;line-height:1.7}.saved-pricing{border-bottom:1px solid #344739;margin-bottom:12px}#usage-cost{padding-top:14px;padding-bottom:14px}
 
 .agent-model{display:block;font:9px/1.6 ui-monospace,monospace;color:#b7cdb0;overflow-wrap:anywhere;margin-bottom:8px}
+
+.research-brief p, .research-brief li { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
+.research-brief h3 { margin-top: 1.4rem; }
+.research-brief a { color: #b6dfa0; }

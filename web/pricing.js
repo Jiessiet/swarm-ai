@@ -15,7 +15,7 @@ export function pricingPanel(setup, target, onChange) {
   if (onChange) target.append(el('p','Choose a model for each agent using the dropdowns above. Selecting a model already assigned to another agent swaps the two assignments, keeping all agents on different models. Estimates refresh automatically before the next run.','price-assumptions'));
   target.append(el('p',quote.assumptions,'price-assumptions'));
   const source=el('p',undefined,'price-assumptions');const link=el('a','Adaption model pricing');link.href=quote.source;link.target='_blank';link.rel='noreferrer';source.append(link,document.createTextNode(` · verified ${new Date(quote.verifiedAt).toLocaleString()}. Model availability and harness compatibility need live verification.`));target.append(source);
-  target.append(el('p','Different models can affect behavior as well as roles. A single mixed-model run cannot isolate the effect of the planted role; rotate model assignments across repeated comparisons.','price-assumptions'));
+  if (setup.task !== 'hackathon') target.append(el('p','Different models can affect behavior as well as roles. A single mixed-model run cannot isolate the effect of the planted role; rotate model assignments across repeated comparisons.','price-assumptions'));
 }
 export function citizenshipPanel(score,target) {
   target.replaceChildren();

@@ -24,7 +24,8 @@
   "homepage": "https://github.com/Jiessiet/swarm-ai#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
-    "@openai/codex-sdk": "^0.167.0"
+    "@openai/codex-sdk": "^0.167.0",
+    "undici": "^7.30.2"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
