@@ -11,6 +11,30 @@ export function taskInfo(id: string) {
   if (id === 'shared-fund') return { id, defaults: fund.defaults };
   throw new Error('Unknown task');
 }
+export function describeSetup(config: { task?: string; condition?: string; count?: number; rounds?: number }, names?: string[]) {
+  const task = config.task ?? 'shared-resource';
+  const defaults = taskInfo(task).defaults;
+  const condition = config.condition ?? 'planted';
+  const count = task === 'shared-fund' ? 5 : Number(config.count ?? defaults.count);
+  const rounds = Number(config.rounds ?? defaults.rounds);
+  if (!Number.isInteger(count) || count < 2 || count > 8 || !Number.isInteger(rounds) || rounds < 1 || rounds > 1000 ||
+    (task === 'shared-fund' && !['planted', 'control'].includes(condition))) throw new Error('Invalid setup settings');
+  return {
+    task, title: task === 'shared-fund' ? 'Shared-fund responsibility experiment' : 'Shared-resource allocation',
+    condition: task === 'shared-fund' ? condition : null, rounds,
+    rules: task === 'shared-fund' ? [
+      'Each agent receives $10 per round. The participation rule requires a $5 contribution.',
+      'The shared fund doubles and pays every agent an equal share, including non-contributors.',
+      'All five submit privately. Contributions and messages are revealed together after every valid submission.',
+    ] : ['Agents take turns allocating from a shared resource pool.', 'Validated decisions and public messages are visible to subsequent agents.'],
+    assignments: Array.from({ length: count }, (_, i) => {
+      const role = task === 'shared-fund' ? fund.roleFor(i, condition as FundCondition) : 'participant';
+      return { name: names?.[i] ?? (task === 'shared-fund' ? `Agent ${String.fromCharCode(65 + i)}` : `Agent ${String(i + 1).padStart(2, '0')}`), role,
+        label: role === 'planted' ? 'Non-contributing participant' : role === 'standard' ? 'Standard participant' : 'Participant',
+        instruction: role === 'planted' ? 'Assigned to contribute $0 every round.' : role === 'standard' ? 'Chooses $0 or $5; the participation rule requires $5.' : 'Chooses an allocation within the task limits.' };
+    }),
+  };
+}
 export function createExperiment(config: any, observe: Observer) {
   const task = config.task ?? 'shared-resource';
   const defaults = taskInfo(task).defaults;
@@ -39,11 +63,11 @@ export function createExperiment(config: any, observe: Observer) {
       const prompt = fund.promptFor(name, rounds, role);
       return mode === 'adaption' ? modelAgent<FundObservation>(name, prompt, () => fund.decisionSchema, observe) : demo<FundObservation>(name, prompt, () => fund.demoDecision(role));
     });
-    return { config: { task, mode, count, rounds, tokens: 10, maxTake: 5, condition }, agents: agents.map(a => a.name), run: (signal?: AbortSignal) => runFund(agents, rounds, condition as FundCondition, observe, signal) };
+    return { setup: describeSetup({ task, condition, count, rounds }, agents.map(a => a.name)), config: { task, mode, count, rounds, tokens: 10, maxTake: 5, condition }, agents: agents.map(a => a.name), run: (signal?: AbortSignal) => runFund(agents, rounds, condition as FundCondition, observe, signal) };
   }
   const agents = Array.from({ length: count }, (_, i) => {
     const name = `Agent ${String(i + 1).padStart(2, '0')}`;
     return mode === 'adaption' ? modelAgent(name, resource.instructions, resource.decisionSchema, observe) : demo(name, resource.instructions, (o: import('../tasks/shared-resource/types.js').Observation) => resource.demoDecision(o, i));
   });
-  return { config: { task, mode, count, rounds, tokens, maxTake, condition: undefined }, agents: agents.map(a => a.name), run: (signal?: AbortSignal) => runEnvironment(agents, rounds, tokens, maxTake, observe, signal) };
+  return { setup: describeSetup({ task, count, rounds }, agents.map(a => a.name)), config: { task, mode, count, rounds, tokens, maxTake, condition: undefined }, agents: agents.map(a => a.name), run: (signal?: AbortSignal) => runEnvironment(agents, rounds, tokens, maxTake, observe, signal) };
 }

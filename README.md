@@ -197,3 +197,20 @@ result file. Choose `CONDITION=planted` or `CONDITION=control` for one condition
 `TASK=shared-resource` selects the original experiment, which remains the default.
 Demo contributions are programmed; they do not establish real model contagion.
 Live Adaption compatibility still requires credentials and end-to-end validation.
+
+### Readable conversations and experiment setup
+
+The visualizer renders public messages as conversation cards, with speaker names,
+role badges and contribution/payoff summaries grouped by revealed round. Private
+SDK responses are parsed into readable messages; draft updates replace each other
+instead of flooding the feed. Raw JSON is available under collapsed **Technical
+details**. Agent filters work on individual speakers inside a shared round.
+
+**Experiment setup** previews the next run's rules and role assignments. In the
+planted fund condition, **Agent E** is explicitly marked **Non-contributing
+participant — assigned to contribute $0 every round**. Control runs show five
+standard participants. Actual runs record a setup snapshot in `run.json` and an
+operator-only setup event; saved trajectories display the recorded assignments.
+Older runs without a snapshot show assignments inferred from their stored
+condition, clearly labeled. Setup labels are for the trusted local operator;
+they are not added to other agents' observations or shared conversation.

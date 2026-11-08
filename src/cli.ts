@@ -15,8 +15,9 @@ async function main() {
     let trace: ReturnType<typeof createTrace>;
     const observe = (event: import('./types.js').Activity) => trace.append(event);
     const experiment = createExperiment({ task, condition, mode: backend === 'baseline' ? 'demo' : backend, rounds: Number(process.env.ROUNDS ?? defaults.rounds), tokens: Number(process.env.STARTING_TOKENS ?? defaults.tokens), maxTake: Number(process.env.MAX_TAKE ?? defaults.maxTake), count: defaults.count }, observe);
-    trace = createTrace(id, { ...experiment.config, repetition }, experiment.agents);
+    trace = createTrace(id, { ...experiment.config, repetition }, experiment.agents, experiment.setup);
     observe({ type: 'run.started', data: { ...experiment.config, repetition, agents: experiment.agents } });
+    observe({ type: 'operator.setup', data: experiment.setup });
     try {
       const result = await experiment.run();
       await mkdir('results', { recursive: true });

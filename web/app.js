@@ -1,27 +1,46 @@
+import { conversationEvent, setupPanel } from './conversation.js';
 const $ = id => document.getElementById(id);
 const colors = ['#b6dfa0','#a4c4ea','#d8bae8','#e6c18b','#88cfc3','#db9d9d','#bfc98b','#a8abd9'];
-let agents = new Map(), total = 0, decisions = 0, usage = 0, count = 0, entries = [], lastId = 0, configured = false, running = false, currentTask = 'shared-resource';
+let agents = new Map(), total = 0, decisions = 0, usage = 0, count = 0, entries = [], lastId = 0, configured = false, running = false, currentTask = 'shared-resource', liveSetup = null, draftNodes = new Map();
 function busy(value) { running = value; $('start').disabled = value; $('stop').disabled = !value; for (const input of $('controls').querySelectorAll('input,select')) input.disabled = value; if (!value && $('task').value === 'shared-fund') for (const key of ['count','tokens','maxTake']) $(key).disabled = true; }
 function message(text) { $('notice').textContent = text; }
 function agentState(name, state) { const a = agents.get(name); if (a) { a.node.classList.toggle('active', state === 'Working'); a.node.querySelector('.state').textContent = state; } }
 function addEvent(e) {
-  const node = document.createElement('article'); node.className = 'event' + (e.type.includes('failed') || e.type === 'sdk.error' ? ' error' : ''); node.dataset.agent = e.agent || ''; node.dataset.visibility = e.visibility || 'private';
-  const meta = document.createElement('div'); meta.className = 'meta';
-  const who = document.createElement('b'); who.textContent = e.agent || 'Environment';
-  const type = document.createElement('span'); type.textContent = `${e.visibility ?? 'private'} · ${e.type.replace('sdk.', '')}`;
-  const time = document.createElement('time'); time.textContent = new Date(e.time).toLocaleTimeString();
-  meta.append(who, type, time); const content = document.createElement('pre');
-  const d = e.data; content.textContent = e.type === 'fund.round' ? `Round ${d.round}: $${d.totalContributions} contributed → $${d.doubledFund} doubled → $${d.share} each.\n` + d.outcomes.map(o => `${o.agent}: contributed $${o.contribution}, payoff $${o.payoff}. ${o.message}`).join('\n') : d?.item ? d.item.text ?? d.item.command ?? JSON.stringify(d.item, null, 2) : JSON.stringify(d, null, 2);
-  node.append(meta, content); filterNode(node);
-  $('feed').querySelector('.empty')?.remove(); $('feed').append(node); entries.push(node);
-  if (entries.length > 400) entries.shift().remove();
   $('event-count').textContent = `${++count} events`;
+  // Update a private draft in place rather than adding every partial JSON chunk.
+  const item = e.data?.item;
+  const key = item ? `${e.agent}:${item.id ?? item.type}` : null;
+  const node = conversationEvent(e, liveSetup);
+  if (key && ['sdk.item.started', 'sdk.item.updated', 'sdk.item.completed'].includes(e.type)) {
+    const existing = draftNodes.get(key);
+    if (existing?.isConnected) {
+      existing.replaceWith(node); const index = entries.indexOf(existing); if (index >= 0) entries[index] = node;
+    } else { $('feed').append(node); entries.push(node); }
+    if (e.type === 'sdk.item.completed') draftNodes.delete(key); else draftNodes.set(key, node);
+  } else { $('feed').append(node); entries.push(node); }
+  filterNode(node);
+  $('feed').querySelector('.empty')?.remove();
+  if (entries.length > 400) entries.shift().remove();
   if ($('follow').checked) $('feed').scrollTop = $('feed').scrollHeight;
 }
+function applyLiveSetup(setup) {
+  liveSetup = setup; setupPanel(setup, $('setup'), 'Recorded setup for this run');
+  for (const [name, agent] of agents) {
+    agent.node.querySelector('.agent-role')?.remove();
+    const assignment = setup.assignments.find(a => a.name === name);
+    if (assignment) {
+      const badge = document.createElement('span'); badge.className = 'agent-role' + (assignment.role === 'planted' ? ' planted-role' : ''); badge.textContent = assignment.label;
+      agent.node.querySelector('h3').after(badge);
+      agent.node.classList.toggle('non-contributor', assignment.role === 'planted');
+    }
+  }
+}
+
 function render(e) {
   if (e.id <= lastId) return; lastId = e.id;
   const d = e.data;
   if (e.type === 'run.started') {
+    liveSetup = null; draftNodes.clear();
     currentTask = d.task ?? 'shared-resource'; setTaskView(currentTask);
     $('fund-metrics').hidden = true;
     agents = new Map(); entries = []; decisions = usage = count = 0; total = d.tokens;
@@ -36,6 +55,7 @@ function render(e) {
       $('agents').append(node); agents.set(name, { node, balance: 0 }); $('filter').add(new Option(name, name));
     });
   }
+  if (e.type === 'operator.setup') applyLiveSetup(d);
   if (e.type === 'agent.observation') { agentState(e.agent, 'Working'); $('round').textContent = `Round ${d.round} / ${d.totalRounds}`; }
   if (e.type === 'agent.submission') agentState(e.agent, 'Submitted · awaiting reveal');
   if (e.type === 'fund.round') {
@@ -63,7 +83,12 @@ stream.onopen = () => { $('connection').textContent = '● Stream connected'; };
 stream.onerror = () => { $('connection').textContent = '○ Reconnecting…'; };
 stream.onmessage = e => render(JSON.parse(e.data));
 stream.addEventListener('status', e => { const s = JSON.parse(e.data); configured = s.configured; busy(s.active); });
-function filterNode(node) { node.hidden = ($('filter').value !== 'all' && node.dataset.agent !== $('filter').value) || ($('live-scope').value !== 'all' && node.dataset.visibility !== $('live-scope').value); }
+function filterNode(node) {
+  const selected = $('filter').value;
+  const group = JSON.parse(node.dataset.agents || '[]');
+  node.hidden = (selected !== 'all' && node.dataset.agent !== selected && !group.includes(selected)) || ($('live-scope').value !== 'all' && node.dataset.visibility !== $('live-scope').value);
+  for (const bubble of node.querySelectorAll('[data-speaker]')) bubble.hidden = selected !== 'all' && bubble.dataset.speaker !== selected;
+}
 $('filter').onchange = $('live-scope').onchange = () => entries.forEach(filterNode);
 $('controls').onsubmit = async e => {
   e.preventDefault(); if (running) return;
@@ -93,6 +118,7 @@ async function loadTask() {
     if (running) return;
     for (const key of ['count','rounds','tokens','maxTake']) $(key).value = task.defaults[key];
     setTaskView(task.id); busy(false); $('hub').textContent = task.id === 'shared-fund' ? '$0' : task.defaults.tokens;
+    await previewSetup();
   } catch { message('Could not load task defaults.'); }
 }
 function showMetrics(metrics) {
@@ -101,6 +127,20 @@ function showMetrics(metrics) {
     const line = document.createElement('p'); line.textContent = `${entry.agent}: ${entry.contributions.map(c => '$' + c).join(' → ')}. First $5 → $0 switch: ${entry.firstSwitchToZero ? 'round ' + entry.firstSwitchToZero : 'none'}. Returns to $5: ${entry.returnToFiveRounds.join(', ') || 'none'}.${entry.initialNonContribution ? ' Started at $0.' : ''}`; $('metrics-body').append(line);
   }
 }
+let previewVersion = 0;
+async function previewSetup() {
+  const version = ++previewVersion;
+  if (running) return;
+  try {
+    const query = new URLSearchParams({ task: $('task').value, condition: $('condition').value, count: $('count').value, rounds: $('rounds').value });
+    const response = await fetch('/setup?' + query);
+    if (!response.ok) return;
+    const setup = await response.json();
+    if (running || version !== previewVersion) return;
+    setupPanel(setup, $('setup'), 'Next run · setup preview');
+  } catch { message('Could not load setup preview.'); }
+}
+for (const key of ['condition', 'count', 'rounds']) $(key).addEventListener('input', previewSetup);
 $('task').onchange = loadTask;
 loadTask();
 
@@ -121,25 +161,18 @@ async function loadTrajectory() {
     if (!response.ok) throw new Error(await response.text());
     const { manifest, events } = await response.json();
     $('trajectory').replaceChildren();
-    const summary = document.createElement('p'); summary.className = 'trace-note'; summary.textContent = `${manifest.config.task} · ${manifest.agents.length} agents · ${manifest.status} · ${events.length} events`; $('trajectory').append(summary);
+    let setup = manifest.setup;
+    if (!setup && manifest.config.task) {
+      const query = new URLSearchParams({ task: manifest.config.task, condition: manifest.config.condition ?? 'planted', count: String(manifest.agents.length), rounds: String(manifest.config.rounds ?? 3) });
+      const response = await fetch('/setup?' + query);
+      if (response.ok) { setup = await response.json(); setup.assignments.forEach((a, i) => { a.name = manifest.agents[i]?.name ?? a.name; }); }
+    }
+    if (setup) { const panel = document.createElement('div'); panel.className = 'saved-setup'; setupPanel(setup, panel, manifest.setup ? 'Saved run · recorded role assignments' : 'Older run · assignments inferred from recorded condition'); $('trajectory').append(panel); }
     const final = events.find(e => e.type === 'run.completed');
     $('fund-metrics').hidden = true; if (final?.data?.metrics) showMetrics(final.data.metrics);
     for (const event of events) {
-      const article = document.createElement('article'); article.className = 'trace-step';
-      const heading = document.createElement('h3');
-      const d = event.data;
-      heading.textContent = `${event.agent || 'Environment'} · ${event.type === 'agent.message' ? 'Shared message' : event.type === 'agent.decision' ? 'Decision' : event.type.replace('sdk.', '')}`;
-      const badge = document.createElement('span'); badge.className = 'trace-badge'; badge.textContent = `${event.visibility} · ${new Date(event.time).toLocaleTimeString()}`;
-      article.append(heading, badge);
-      if (event.type === 'fund.round') {
-        const text = document.createElement('p'); text.textContent = `Round ${d.round}: $${d.totalContributions} contributed → $${d.doubledFund} doubled fund → $${d.share} each.`; article.append(text);
-        for (const outcome of d.outcomes) { const line = document.createElement('p'); line.textContent = `${outcome.agent} contributed $${outcome.contribution}, received $${outcome.payoff} ($${outcome.cumulativePayoff} cumulative). “${outcome.message}”`; article.append(line); }
-      } else if (event.type === 'agent.message' || event.type === 'agent.decision') {
-        const text = document.createElement('p'); text.textContent = event.type === 'agent.message' ? d.text : `Round ${d.round}: took ${d.take}, leaving ${d.poolRemaining}. ${d.reason}`; article.append(text);
-      } else {
-        const details = document.createElement('details'); const label = document.createElement('summary'); label.textContent = event.visibility === 'private' ? 'Inspect private event' : 'Inspect event';
-        const body = document.createElement('pre'); body.textContent = JSON.stringify(d, null, 2); details.append(label, body); article.append(details);
-      }
+      if (['sdk.item.started','sdk.item.updated'].includes(event.type)) continue;
+      const article = conversationEvent(event, setup); article.classList.add('saved-event');
       $('trajectory').append(article);
     }
   } catch (error) { message('Could not load trajectory: ' + error.message); }

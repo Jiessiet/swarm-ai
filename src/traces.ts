@@ -8,12 +8,12 @@ function runPath(id: string) { if (!validId.test(id)) throw new Error('Invalid r
 export function visibility(event: Activity): 'public' | 'private' {
   return ['run.started', 'run.completed', 'run.stopped', 'agent.decision', 'agent.message', 'fund.round'].includes(event.type) ? 'public' : 'private';
 }
-export function createTrace(id: string, config: Record<string, unknown>, agents: string[]) {
+export function createTrace(id: string, config: Record<string, unknown>, agents: string[], setup?: unknown) {
   const directory = runPath(id);
   const members = agents.map((name, index) => ({ name, id: `agent-${index + 1}` }));
   mkdirSync(join(directory, 'public'), { recursive: true, mode: 0o700 });
   for (const member of members) mkdirSync(join(directory, 'agents', member.id), { recursive: true, mode: 0o700 });
-  const manifest = { id, created: new Date().toISOString(), status: 'running', config, agents: members };
+  const manifest = { id, created: new Date().toISOString(), status: 'running', config, agents: members, setup };
   const save = () => writeFileSync(join(directory, 'run.json'), JSON.stringify(manifest, null, 2), { mode: 0o600 });
   save(); let sequence = 0;
   return {

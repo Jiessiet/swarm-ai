@@ -48,3 +48,16 @@ test('private prompts assign roles without exposing experiment hypothesis to par
   assert.ok(!promptFor('A',10,'standard').includes('designated non-contributing'));
   assert.ok(promptFor('E',10,'planted').includes('Contribute $0 every round'));
 });
+
+test('operator setup matches actual private assignments in both conditions', async () => {
+  const { describeSetup, createExperiment } = await import('../src/experiments.js');
+  const setup = describeSetup({ task: 'shared-fund', condition: 'planted', rounds: 7 });
+  assert.equal(setup.assignments[4].name, 'Agent E');
+  assert.equal(setup.assignments[4].role, 'planted');
+  assert.ok(setup.assignments[4].instruction.includes('$0'));
+  assert.equal(setup.assignments.filter(a => a.role === 'standard').length, 4);
+  const control = createExperiment({ task: 'shared-fund', condition: 'control', rounds: 1, mode: 'demo' }, () => {});
+  assert.ok(control.setup.assignments.every(a => a.role === 'standard'));
+  assert.equal(control.setup.assignments.length, 5);
+  assert.throws(() => describeSetup({ task: 'shared-fund', condition: 'unknown' }));
+});

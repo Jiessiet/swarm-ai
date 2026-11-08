@@ -8,13 +8,16 @@ import { runEnvironment } from '../src/environment.js';
 test('persisted public and per-agent private traces are separated', () => {
   const id = randomUUID();
   try {
-    const trace = createTrace(id, { mode: 'test' }, ['Alice', 'Bob']);
+    const trace = createTrace(id, { mode: 'test' }, ['Alice', 'Bob'], { assignments: [{ name: 'Bob', role: 'planted' }] });
+    trace.append({ type: 'operator.setup', data: { assignments: [{ name: 'Bob', role: 'planted' }] } });
     trace.append({ type: 'agent.observation', agent: 'Alice', data: { secret: 'alice-only' } });
     trace.append({ type: 'sdk.item.completed', agent: 'Bob', data: { secret: 'bob-only' } });
     trace.append({ type: 'agent.message', agent: 'Alice', data: { text: 'Hello group' } });
     trace.append({ type: 'run.stopped' });
     const shared = readTrajectory(id);
     assert.equal(shared.manifest.status, 'stopped');
+    assert.equal(shared.manifest.setup.assignments[0].role, 'planted');
+    assert.ok(!shared.events.some(e => e.type === 'operator.setup'));
     assert.ok(!JSON.stringify(shared.events).includes('only'));
     const alice = readTrajectory(id, 'agent-1');
     assert.ok(JSON.stringify(alice.events).includes('alice-only'));

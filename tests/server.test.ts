@@ -10,6 +10,9 @@ test('dashboard streams turns, rejects overlapping runs, and stops cleanly', asy
   const abort = new AbortController();
   try {
     assert.equal((await fetch(base)).status, 200);
+    const setup = await (await fetch(base + '/setup?task=shared-fund&condition=planted&rounds=4')).json();
+    assert.equal(setup.assignments[4].role, 'planted');
+    assert.equal(setup.rounds, 4);
     const task = await (await fetch(base + '/task')).json();
     assert.equal(task.id, 'shared-resource');
     assert.deepEqual(task.defaults, { count: 3, rounds: 3, tokens: 12, maxTake: 4 });
