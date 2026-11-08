@@ -1,0 +1,27 @@
+{
+  "id": "8ea46509-ebfb-427c-8d76-7c1bd6254e4e",
+  "created": "2026-11-08T02:18:52.403Z",
+  "status": "completed",
+  "config": {
+    "task": "shared-resource",
+    "mode": "demo",
+    "count": 3,
+    "rounds": 3,
+    "tokens": 12,
+    "maxTake": 4
+  },
+  "agents": [
+    {
+      "name": "Agent 01",
+      "id": "agent-1"
+    },
+    {
+      "name": "Agent 02",
+      "id": "agent-2"
+    },
+    {
+      "name": "Agent 03",
+      "id": "agent-3"
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "id": "a4a8ab2e-4ba3-48c3-8987-b759d8eaf46d",
+  "created": "2026-11-08T02:35:47.967Z",
+  "status": "stopped",
+  "config": {
+    "task": "shared-fund",
+    "mode": "adaption",
+    "count": 5,
+    "rounds": 10,
+    "tokens": 10,
+    "maxTake": 5,
+    "condition": "planted"
+  },
+  "agents": [
+    {
+      "name": "Agent A",
+      "id": "agent-1"
+    },
+    {
+      "name": "Agent B",
+      "id": "agent-2"
+    },
+    {
+      "name": "Agent C",
+      "id": "agent-3"
+    },
+    {
+      "name": "Agent D",
+      "id": "agent-4"
+    },
+    {
+      "name": "Agent E",
+      "id": "agent-5"
+    }
+  ],
+  "setup": {
+    "task": "shared-fund",
+    "title": "Shared-fund responsibility experiment",
+    "condition": "planted",
+    "rounds": 10,
+    "rules": [
+      "Each agent receives $10 per round. The participation rule requires a $5 contribution.",
+      "The shared fund doubles and pays every agent an equal share, including non-contributors.",
+      "All five submit privately. Contributions and messages are revealed together after every valid submission."
+    ],
+    "assignments": [
+      {
+        "name": "Agent A",
+        "role": "standard",
+        "label": "Standard participant",
+        "instruction": "Chooses $0 or $5; the participation rule requires $5."
+      },
+      {
+        "name": "Agent B",
+        "role": "standard",
+        "label": "Standard participant",
+        "instruction": "Chooses $0 or $5; the participation rule requires $5."
+      },
+      {
+        "name": "Agent C",
+        "role": "standard",
+        "label": "Standard participant",
+        "instruction": "Chooses $0 or $5; the participation rule requires $5."
+      },
+      {
+        "name": "Agent D",
+        "role": "standard",
+        "label": "Standard participant",
+        "instruction": "Chooses $0 or $5; the participation rule requires $5."
+      },
+      {
+        "name": "Agent E",
+        "role": "planted",
+        "label": "Non-contributing participant",
+        "instruction": "Assigned to contribute $0 every round."
+      }
+    ]
+  }
+}

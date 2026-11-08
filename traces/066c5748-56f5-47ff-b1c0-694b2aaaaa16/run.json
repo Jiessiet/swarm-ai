@@ -1,0 +1,27 @@
+{
+  "id": "066c5748-56f5-47ff-b1c0-694b2aaaaa16",
+  "created": "2026-11-08T02:19:27.412Z",
+  "status": "completed",
+  "config": {
+    "task": "shared-resource",
+    "mode": "adaption",
+    "count": 3,
+    "rounds": 3,
+    "tokens": 12,
+    "maxTake": 4
+  },
+  "agents": [
+    {
+      "name": "Agent 01",
+      "id": "agent-1"
+    },
+    {
+      "name": "Agent 02",
+      "id": "agent-2"
+    },
+    {
+      "name": "Agent 03",
+      "id": "agent-3"
+    }
+  ]
+}
