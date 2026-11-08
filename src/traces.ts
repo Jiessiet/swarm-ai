@@ -6,7 +6,7 @@ export const traceRoot = resolve(process.env.TRACE_DIR ?? 'traces');
 const validId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 function runPath(id: string) { if (!validId.test(id)) throw new Error('Invalid run ID'); return join(traceRoot, id); }
 export function visibility(event: Activity): 'public' | 'private' {
-  return ['run.started', 'run.completed', 'run.stopped', 'agent.decision', 'agent.message'].includes(event.type) ? 'public' : 'private';
+  return ['run.started', 'run.completed', 'run.stopped', 'agent.decision', 'agent.message', 'fund.round'].includes(event.type) ? 'public' : 'private';
 }
 export function createTrace(id: string, config: Record<string, unknown>, agents: string[]) {
   const directory = runPath(id);

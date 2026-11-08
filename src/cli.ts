@@ -1,26 +1,32 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
-import { runEnvironment } from './environment.js';
-import { baseline, adaptionAgent } from './providers.js';
 import { createTrace } from './traces.js';
-import { defaults, taskId } from '../tasks/shared-resource/definition.js';
+import { createExperiment, taskInfo } from './experiments.js';
 async function main() {
   const backend = process.env.AGENT_BACKEND ?? 'adaption';
   if (!['baseline', 'adaption'].includes(backend)) throw new Error('AGENT_BACKEND must be baseline or adaption');
-  const runId = randomUUID();
-  let trace: ReturnType<typeof createTrace>;
-  const observe = (event: import('./types.js').Activity) => trace.append(event);
-  const agents = Array.from({ length: defaults.count }, (_, index) => index + 1).map(i => (backend === 'baseline' ? baseline(`${backend}-${i}`) : adaptionAgent(`${backend}-${i}`, observe)));
-  trace = createTrace(runId, { task: taskId, mode: backend }, agents.map(a => a.name));
-  observe({ type: 'run.started', data: { mode: backend, agents: agents.map(a => a.name), tokens: Number(process.env.STARTING_TOKENS ?? defaults.tokens) } });
-  let result;
-  try { result = await runEnvironment(agents, Number(process.env.ROUNDS ?? defaults.rounds), Number(process.env.STARTING_TOKENS ?? defaults.tokens), Number(process.env.MAX_TAKE ?? defaults.maxTake), observe);
-    observe({ type: 'run.completed', data: result });
-  } catch (error) { observe({ type: 'run.failed', data: { message: error instanceof Error ? error.message : 'Run failed' } }); throw error; }
-  await mkdir('results', { recursive: true });
-  const path = `results/run-${randomUUID()}.json`;
-  await writeFile(path, JSON.stringify({ timestamp: new Date().toISOString(), backend, task: taskId, ...result }, null, 2), { flag: 'wx' });
-  console.table(result.turns);
-  console.log(`Pool remaining: ${result.poolRemaining}. Saved ${path}`);
+  const task = process.env.TASK ?? 'shared-resource';
+  const defaults = taskInfo(task).defaults;
+  const repetitions = Number(process.env.REPETITIONS ?? 1);
+  if (!Number.isInteger(repetitions) || repetitions < 1 || repetitions > 100) throw new Error('REPETITIONS must be 1..100');
+  const conditions = task === 'shared-fund' && process.env.CONDITION === 'both' ? ['planted', 'control'] : [process.env.CONDITION ?? 'planted'];
+  for (let repetition = 1; repetition <= repetitions; repetition++) for (const condition of conditions) {
+    const id = randomUUID();
+    let trace: ReturnType<typeof createTrace>;
+    const observe = (event: import('./types.js').Activity) => trace.append(event);
+    const experiment = createExperiment({ task, condition, mode: backend === 'baseline' ? 'demo' : backend, rounds: Number(process.env.ROUNDS ?? defaults.rounds), tokens: Number(process.env.STARTING_TOKENS ?? defaults.tokens), maxTake: Number(process.env.MAX_TAKE ?? defaults.maxTake), count: defaults.count }, observe);
+    trace = createTrace(id, { ...experiment.config, repetition }, experiment.agents);
+    observe({ type: 'run.started', data: { ...experiment.config, repetition, agents: experiment.agents } });
+    try {
+      const result = await experiment.run();
+      await mkdir('results', { recursive: true });
+      const path = `results/run-${id}.json`;
+      await writeFile(path, JSON.stringify({ ...experiment.config, repetition, ...result }, null, 2), { flag: 'wx' });
+      observe({ type: 'run.completed', data: result });
+      console.log(`${task} / ${condition} / repetition ${repetition}: ${path}`);
+      if ('metrics' in result) console.table(result.metrics.standardAgents);
+      else console.table(result.turns);
+    } catch (error) { observe({ type: 'run.failed', data: { message: error instanceof Error ? error.message : 'Run failed' } }); throw error; }
+  }
 }
 main().catch(error => { console.error(error.message); process.exitCode = 1; });

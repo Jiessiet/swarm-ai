@@ -22,3 +22,11 @@ and decisions enter shared history. Agents receive `sharedMessages` alongside
 `history`; raw prompts and SDK/tool output stay in private traces. Trace storage
 and operator retrieval are implemented in `src/traces.ts`, independent of the
 task's prompt and rules.
+
+## Shared-fund task
+
+`shared-fund/` adds the five-agent contribution experiment with separate common
+and private role prompts. Select it in the dashboard or set `TASK=shared-fund`.
+`src/experiments.ts` selects between the two built-in tasks and creates fresh
+Codex threads or deterministic demo agents. See `shared-fund/README.md` for the
+round barrier, planted/control conditions, payout rules and behavioral metrics.

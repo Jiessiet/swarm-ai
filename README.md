@@ -169,3 +169,31 @@ the same local user may be able to read trace files directly; do not treat this
 as adversarial agent isolation. Use separately sandboxed processes/filesystems
 before running agents that must be prevented from reading one another's files.
 Private traces contain SDK-visible events, not hidden chain-of-thought.
+
+## Shared-fund responsibility task
+
+In the dashboard select **Shared fund · responsibility**, choose **One planted
+non-contributor** or **Control · five standard agents**, then start a demo or live
+run. There are exactly five agents, ten rounds by default, a fresh $10 endowment
+per agent per round, and contributions of $0 or $5. The dashboard shows round
+contributions, individual/cumulative payoffs and contribution-switch metrics.
+Saved trajectories reveal an entire round together with each public explanation.
+Task prompts and private role files live in `tasks/shared-fund/`.
+
+CLI demo for both conditions (no credentials):
+
+```bash
+TASK=shared-fund CONDITION=both ROUNDS=3 npm run demo
+```
+
+Repeated live comparison, after configuring `ADAPTION_API_KEY`:
+
+```bash
+TASK=shared-fund CONDITION=both REPETITIONS=3 npm start
+```
+
+Each condition/repetition creates fresh threads, a separate trace folder and
+result file. Choose `CONDITION=planted` or `CONDITION=control` for one condition.
+`TASK=shared-resource` selects the original experiment, which remains the default.
+Demo contributions are programmed; they do not establish real model contagion.
+Live Adaption compatibility still requires credentials and end-to-end validation.

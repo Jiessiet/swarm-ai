@@ -1,12 +1,10 @@
 import { createServer, type ServerResponse } from 'node:http';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
-import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
-import { runEnvironment, type Activity, type Agent } from './environment.js';
+import type { Activity } from './types.js';
+import { createExperiment, taskInfo } from './experiments.js';
 import { createTrace, listTraces, readTrajectory } from './traces.js';
-import { adaptionAgent } from './providers.js';
-import { defaults, taskId, demoDecision } from '../tasks/shared-resource/definition.js';
 
 export function createDashboard() {
   const clients = new Set<ServerResponse>();
@@ -38,7 +36,7 @@ export function createDashboard() {
         res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(trajectory)); return;
       }
       if (req.method === 'GET' && url.pathname === '/task') {
-        res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify({ id: taskId, defaults })); return;
+        res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(taskInfo(url.searchParams.get('id') ?? 'shared-resource'))); return;
       }
       if (req.method === 'GET' && url.pathname === '/events') {
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
@@ -57,38 +55,19 @@ export function createDashboard() {
         if (active) { res.writeHead(409).end('A run is already active'); return; }
         let body = '';
         for await (const chunk of req) { body += chunk; if (body.length > 4096) { res.writeHead(413).end(); return; } }
+        if (active) { res.writeHead(409).end('A run is already active'); return; }
         const config = JSON.parse(body);
-        const { mode = 'demo', count = defaults.count, rounds = defaults.rounds, tokens = defaults.tokens, maxTake = defaults.maxTake } = config;
-        if (!['demo', 'adaption'].includes(mode) || !Number.isInteger(count) || count < 2 || count > 8 ||
-          ![rounds, tokens, maxTake].every(n => Number.isSafeInteger(n) && n >= 1 && n <= 1000)) {
-          res.writeHead(400).end('Invalid run settings'); return;
-        }
+        const experiment = createExperiment(config, emit);
         const controller = new AbortController();
-        const agents: Agent[] = Array.from({ length: count }, (_, i) => {
-          const name = `Agent ${String(i + 1).padStart(2, '0')}`;
-          if (mode === 'adaption') return adaptionAgent(name, emit);
-          return { name, async decide(o, signal) {
-            emit({ type: 'sdk.turn.started', agent: name, data: { type: 'turn.started' } });
-            await delay(350, undefined, { signal });
-            const text = JSON.stringify(demoDecision(o, i));
-            for (let end = 18; end < text.length + 18; end += 18) {
-              await delay(100, undefined, { signal });
-              emit({ type: 'sdk.item.updated', agent: name, data: { type: 'item.updated', item: { id: `${o.round}-${i}`, type: 'agent_message', text: text.slice(0, end) } } });
-            }
-            emit({ type: 'sdk.item.completed', agent: name, data: { type: 'item.completed', item: { id: `${o.round}-${i}`, type: 'agent_message', text } } });
-            emit({ type: 'sdk.turn.completed', agent: name, data: { type: 'turn.completed', usage: { input_tokens: 120 + o.history.length * 20, output_tokens: 36, cached_input_tokens: 0 } } });
-            return JSON.parse(text);
-          } };
-        });
         active = { id: randomUUID(), controller };
-        trace = createTrace(active.id, { task: taskId, mode, count, rounds, tokens, maxTake }, agents.map(a => a.name));
-        emit({ type: 'run.started', data: { task: taskId, mode, agents: agents.map(a => a.name), rounds, tokens, maxTake } });
+        trace = createTrace(active.id, experiment.config, experiment.agents);
+        emit({ type: 'run.started', data: { ...experiment.config, agents: experiment.agents } });
         res.writeHead(202, { 'Content-Type': 'application/json' }).end(JSON.stringify({ id: active.id }));
         void (async () => {
           try {
-            const result = await runEnvironment(agents, rounds, tokens, maxTake, emit, controller.signal);
+            const result = await experiment.run(controller.signal);
             await mkdir('results', { recursive: true });
-            await writeFile(`results/run-${active!.id}.json`, JSON.stringify({ task: taskId, mode, ...result }, null, 2), { flag: 'wx' });
+            await writeFile(`results/run-${active!.id}.json`, JSON.stringify({ ...experiment.config, ...result }, null, 2), { flag: 'wx' });
             emit({ type: 'run.completed', data: result });
           } catch (error) {
             emit({ type: controller.signal.aborted ? 'run.stopped' : 'run.failed', data: { message: controller.signal.aborted ? 'Stopped by user' : error instanceof Error ? error.message : 'Run failed' } });

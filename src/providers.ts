@@ -25,7 +25,7 @@ export function adaptionHarnessOptions(env: NodeJS.ProcessEnv = process.env): { 
     thread: { model: env.ADAPTION_MODEL ?? 'qwen3.5-397b', sandboxMode: 'read-only', approvalPolicy: 'never', networkAccessEnabled: false, webSearchMode: 'disabled' },
   };
 }
-export function adaptionAgent(name: string, observe: Observer = () => {}): Agent {
+export function modelAgent<O>(name: string, instructions: string, schema: (observation: O) => Record<string, unknown>, observe: Observer = () => {}): Agent<O> {
   const options = adaptionHarnessOptions();
   const thread = new Codex(options.client).startThread(options.thread);
   return { name, async decide(o, signal) {
@@ -33,7 +33,7 @@ export function adaptionAgent(name: string, observe: Observer = () => {}): Agent
     observe({ type: 'agent.prompt', agent: name, data: { prompt } });
     const { events } = await thread.runStreamed(prompt, {
       signal: AbortSignal.any([AbortSignal.timeout(120_000), ...(signal ? [signal] : [])]),
-      outputSchema: decisionSchema(o),
+      outputSchema: schema(o),
     });
     let response = '';
     for await (const event of events) {
@@ -44,4 +44,8 @@ export function adaptionAgent(name: string, observe: Observer = () => {}): Agent
     }
     return JSON.parse(response);
   } };
+}
+
+export function adaptionAgent(name: string, observe: Observer = () => {}): Agent {
+  return modelAgent(name, instructions, decisionSchema, observe);
 }
