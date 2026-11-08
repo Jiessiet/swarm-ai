@@ -1,6 +1,6 @@
 const $ = id => document.getElementById(id);
 const colors = ['#b6dfa0','#a4c4ea','#d8bae8','#e6c18b','#88cfc3','#db9d9d','#bfc98b','#a8abd9'];
-let agents = new Map(), total = 30, decisions = 0, usage = 0, count = 0, entries = [], lastId = 0, configured = false, running = false;
+let agents = new Map(), total = 0, decisions = 0, usage = 0, count = 0, entries = [], lastId = 0, configured = false, running = false;
 function busy(value) { running = value; $('start').disabled = value; $('stop').disabled = !value; for (const input of $('controls').querySelectorAll('input,select')) input.disabled = value; }
 function message(text) { $('notice').textContent = text; }
 function agentState(name, state) { const a = agents.get(name); if (a) { a.node.classList.toggle('active', state === 'Working'); a.node.querySelector('.state').textContent = state; } }
@@ -61,3 +61,10 @@ $('controls').onsubmit = async e => {
   } catch (error) { message(error.message); busy(false); }
 };
 $('stop').onclick = async () => { try { const r = await fetch('/stop', { method:'POST' }); if (!r.ok) throw new Error('Stop failed'); } catch (e) { message(e.message); } };
+
+// Load initial form values from the task definition; never override an active run.
+fetch('/task').then(response => response.json()).then(task => {
+  if (running) return;
+  for (const key of ['count', 'rounds', 'tokens', 'maxTake']) $(key).value = task.defaults[key];
+  $('hub').textContent = task.defaults.tokens;
+}).catch(() => message('Could not load task defaults. Reload to try again.'));

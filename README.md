@@ -118,3 +118,10 @@ and completed items; it does not promise a per-token text delta or expose hidden
 chain-of-thought. Demo text chunks and usage are simulated and labeled. Agents
 interact through shared observations and prior decisions, not direct chat with
 one another. Execution remains sequential to preserve resource consistency.
+
+## Editing the task
+
+Task definitions live in **`tasks/shared-resource/`**. Edit `instructions.md` for
+the prompt, `definition.ts` for defaults and output schema, and `environment.ts`
+for the simulation rules. The CLI and dashboard load the same task definition;
+restart after changes. See [tasks/README.md](tasks/README.md) for the folder map.

@@ -5,6 +5,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import { runEnvironment, type Activity, type Agent } from './environment.js';
 import { adaptionAgent } from './providers.js';
+import { defaults, taskId, demoDecision } from '../tasks/shared-resource/definition.js';
 
 export function createDashboard() {
   const clients = new Set<ServerResponse>();
@@ -26,6 +27,9 @@ export function createDashboard() {
       const host = req.headers.host?.split(':')[0];
       if (!['localhost', '127.0.0.1'].includes(host ?? '')) { res.writeHead(403).end(); return; }
       if (req.headers.origin && req.headers.origin !== `http://${req.headers.host}`) { res.writeHead(403).end(); return; }
+      if (req.method === 'GET' && url.pathname === '/task') {
+        res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify({ id: taskId, defaults })); return;
+      }
       if (req.method === 'GET' && url.pathname === '/events') {
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
         const last = Number(req.headers['last-event-id'] ?? 0);
@@ -44,7 +48,7 @@ export function createDashboard() {
         let body = '';
         for await (const chunk of req) { body += chunk; if (body.length > 4096) { res.writeHead(413).end(); return; } }
         const config = JSON.parse(body);
-        const { mode = 'demo', count = 3, rounds = 4, tokens = 30, maxTake = 4 } = config;
+        const { mode = 'demo', count = defaults.count, rounds = defaults.rounds, tokens = defaults.tokens, maxTake = defaults.maxTake } = config;
         if (!['demo', 'adaption'].includes(mode) || !Number.isInteger(count) || count < 2 || count > 8 ||
           ![rounds, tokens, maxTake].every(n => Number.isSafeInteger(n) && n >= 1 && n <= 1000)) {
           res.writeHead(400).end('Invalid run settings'); return;
@@ -56,8 +60,7 @@ export function createDashboard() {
           return { name, async decide(o, signal) {
             emit({ type: 'sdk.turn.started', agent: name, data: { type: 'turn.started' } });
             await delay(350, undefined, { signal });
-            const take = Math.min(i % 3 + 1, o.maximumTake);
-            const text = JSON.stringify({ take, reason: ['Keeping a steady share of the pool.', 'Balancing my allocation with the remaining agents.', 'Taking an available share for this round.'][i % 3] });
+            const text = JSON.stringify(demoDecision(o, i));
             for (let end = 18; end < text.length + 18; end += 18) {
               await delay(100, undefined, { signal });
               emit({ type: 'sdk.item.updated', agent: name, data: { type: 'item.updated', item: { id: `${o.round}-${i}`, type: 'agent_message', text: text.slice(0, end) } } });
@@ -68,13 +71,13 @@ export function createDashboard() {
           } };
         });
         active = { id: randomUUID(), controller };
-        emit({ type: 'run.started', data: { mode, agents: agents.map(a => a.name), rounds, tokens, maxTake } });
+        emit({ type: 'run.started', data: { task: taskId, mode, agents: agents.map(a => a.name), rounds, tokens, maxTake } });
         res.writeHead(202, { 'Content-Type': 'application/json' }).end(JSON.stringify({ id: active.id }));
         void (async () => {
           try {
             const result = await runEnvironment(agents, rounds, tokens, maxTake, emit, controller.signal);
             await mkdir('results', { recursive: true });
-            await writeFile(`results/run-${active!.id}.json`, JSON.stringify({ mode, ...result }, null, 2), { flag: 'wx' });
+            await writeFile(`results/run-${active!.id}.json`, JSON.stringify({ task: taskId, mode, ...result }, null, 2), { flag: 'wx' });
             emit({ type: 'run.completed', data: result });
           } catch (error) {
             emit({ type: controller.signal.aborted ? 'run.stopped' : 'run.failed', data: { message: controller.signal.aborted ? 'Stopped by user' : error instanceof Error ? error.message : 'Run failed' } });
