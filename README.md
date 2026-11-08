@@ -85,3 +85,36 @@ References:
 `src/providers.ts` configures Codex with Adaption; `src/environment.ts` owns the
 simulation; `src/cli.ts` assembles the agents. This is a shared-resource experiment
 harness, with no training or model adaptation feedback loop yet.
+
+## Local agent observatory
+
+```bash
+npm run dashboard
+```
+
+Open **http://127.0.0.1:3333** in your local browser. To use this on your own
+machine, check out `feat/agent-environment`, run `npm ci`, then start the dashboard.
+The server binds to loopback only. Set `PORT` to change the default port.
+
+Choose **Demo** to see simulated activity without credentials, or **Live · Adaption
+inference** to run Codex threads against Adaption. Configure `ADAPTION_API_KEY`
+in the server environment before starting live mode; credentials are never
+entered into the browser. The same `ADAPTION_MODEL` and `ADAPTION_BASE_URL` settings
+used by the CLI apply. Live inference compatibility remains unverified.
+
+The dashboard shows active agents, observations, streamed SDK messages, tool
+activity when emitted, usage, allocations, remaining resources, and a decision
+ledger. Filter the activity feed by agent or turn off follow mode to inspect
+older events. Stop cancels the active turn and environment run. Completed runs
+save results to `results/`. One run can be active at a time.
+
+Events use server-sent events with reconnect and a bounded in-memory replay
+buffer of 2,000 events; the browser retains up to 400 feed entries. Reload restores
+recent events while the server remains running. Restarting the server clears the
+live buffer. This is a local development viewer, not a hosted multi-user service.
+
+The live feed exposes events the Codex SDK actually emits, including item updates
+and completed items; it does not promise a per-token text delta or expose hidden
+chain-of-thought. Demo text chunks and usage are simulated and labeled. Agents
+interact through shared observations and prior decisions, not direct chat with
+one another. Execution remains sequential to preserve resource consistency.
