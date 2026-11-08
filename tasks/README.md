@@ -16,3 +16,9 @@ The Codex/Adaption adapter and event transport remain in `src/`; visual renderin
 remains in `web/`. The dashboard currently understands shared-resource observations
 and decisions. Adding a different task shape also requires updating its renderer
 and selecting that task in the entrypoints; there is no dynamic task plugin loader.
+
+Shared-resource responses have a public `message` field. Only validated messages
+and decisions enter shared history. Agents receive `sharedMessages` alongside
+`history`; raw prompts and SDK/tool output stay in private traces. Trace storage
+and operator retrieval are implemented in `src/traces.ts`, independent of the
+task's prompt and rules.

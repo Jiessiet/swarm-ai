@@ -5,14 +5,14 @@ function busy(value) { running = value; $('start').disabled = value; $('stop').d
 function message(text) { $('notice').textContent = text; }
 function agentState(name, state) { const a = agents.get(name); if (a) { a.node.classList.toggle('active', state === 'Working'); a.node.querySelector('.state').textContent = state; } }
 function addEvent(e) {
-  const node = document.createElement('article'); node.className = 'event' + (e.type.includes('failed') || e.type === 'sdk.error' ? ' error' : ''); node.dataset.agent = e.agent || '';
+  const node = document.createElement('article'); node.className = 'event' + (e.type.includes('failed') || e.type === 'sdk.error' ? ' error' : ''); node.dataset.agent = e.agent || ''; node.dataset.visibility = e.visibility || 'private';
   const meta = document.createElement('div'); meta.className = 'meta';
   const who = document.createElement('b'); who.textContent = e.agent || 'Environment';
-  const type = document.createElement('span'); type.textContent = e.type.replace('sdk.', '');
+  const type = document.createElement('span'); type.textContent = `${e.visibility ?? 'private'} · ${e.type.replace('sdk.', '')}`;
   const time = document.createElement('time'); time.textContent = new Date(e.time).toLocaleTimeString();
   meta.append(who, type, time); const content = document.createElement('pre');
   const d = e.data; content.textContent = d?.item ? d.item.text ?? d.item.command ?? JSON.stringify(d.item, null, 2) : JSON.stringify(d, null, 2);
-  node.append(meta, content); node.hidden = $('filter').value !== 'all' && e.agent !== $('filter').value;
+  node.append(meta, content); filterNode(node);
   $('feed').querySelector('.empty')?.remove(); $('feed').append(node); entries.push(node);
   if (entries.length > 400) entries.shift().remove();
   $('event-count').textContent = `${++count} events`;
@@ -43,13 +43,15 @@ function render(e) {
   if (e.type === 'sdk.turn.completed' && d.usage) { usage += d.usage.input_tokens + d.usage.output_tokens; $('usage').textContent = usage.toLocaleString(); }
   if (['run.completed','run.failed','run.stopped'].includes(e.type)) { busy(false); $('status').textContent = e.type.split('.')[1]; agents.forEach((_, name) => agentState(name, 'Idle')); if (d.message) message(d.message); }
   addEvent(e);
+  if (['run.completed', 'run.failed', 'run.stopped'].includes(e.type)) refreshRuns();
 }
 const stream = new EventSource('/events');
 stream.onopen = () => { $('connection').textContent = '● Stream connected'; };
 stream.onerror = () => { $('connection').textContent = '○ Reconnecting…'; };
 stream.onmessage = e => render(JSON.parse(e.data));
 stream.addEventListener('status', e => { const s = JSON.parse(e.data); configured = s.configured; busy(s.active); });
-$('filter').onchange = () => entries.forEach(node => { node.hidden = $('filter').value !== 'all' && node.dataset.agent !== $('filter').value; });
+function filterNode(node) { node.hidden = ($('filter').value !== 'all' && node.dataset.agent !== $('filter').value) || ($('live-scope').value !== 'all' && node.dataset.visibility !== $('live-scope').value); }
+$('filter').onchange = $('live-scope').onchange = () => entries.forEach(filterNode);
 $('controls').onsubmit = async e => {
   e.preventDefault(); if (running) return;
   if ($('mode').value === 'adaption' && !configured) { message('Set ADAPTION_API_KEY in the server environment, then restart npm run dashboard.'); return; }
@@ -68,3 +70,48 @@ fetch('/task').then(response => response.json()).then(task => {
   for (const key of ['count', 'rounds', 'tokens', 'maxTake']) $(key).value = task.defaults[key];
   $('hub').textContent = task.defaults.tokens;
 }).catch(() => message('Could not load task defaults. Reload to try again.'));
+
+let savedRuns = [];
+async function refreshRuns() {
+  try {
+    savedRuns = await (await fetch('/runs')).json();
+    const selected = $('saved-run').value;
+    $('saved-run').replaceChildren(new Option('Select a saved run', ''));
+    for (const run of savedRuns) $('saved-run').add(new Option(`${new Date(run.created).toLocaleString()} · ${run.config.mode} · ${run.status} · ${run.id.slice(0,8)}`, run.id));
+    if (savedRuns.some(run => run.id === selected)) $('saved-run').value = selected;
+  } catch (error) { message('Could not load saved runs: ' + error.message); }
+}
+async function loadTrajectory() {
+  const id = $('saved-run').value; if (!id) return;
+  try {
+    const response = await fetch(`/runs/${encodeURIComponent(id)}${$('trace-agent').value ? '?agent=' + encodeURIComponent($('trace-agent').value) : ''}`);
+    if (!response.ok) throw new Error(await response.text());
+    const { manifest, events } = await response.json();
+    $('trajectory').replaceChildren();
+    const summary = document.createElement('p'); summary.className = 'trace-note'; summary.textContent = `${manifest.config.task} · ${manifest.agents.length} agents · ${manifest.status} · ${events.length} events`; $('trajectory').append(summary);
+    for (const event of events) {
+      const article = document.createElement('article'); article.className = 'trace-step';
+      const heading = document.createElement('h3');
+      const d = event.data;
+      heading.textContent = `${event.agent || 'Environment'} · ${event.type === 'agent.message' ? 'Shared message' : event.type === 'agent.decision' ? 'Decision' : event.type.replace('sdk.', '')}`;
+      const badge = document.createElement('span'); badge.className = 'trace-badge'; badge.textContent = `${event.visibility} · ${new Date(event.time).toLocaleTimeString()}`;
+      article.append(heading, badge);
+      if (event.type === 'agent.message' || event.type === 'agent.decision') {
+        const text = document.createElement('p'); text.textContent = event.type === 'agent.message' ? d.text : `Round ${d.round}: took ${d.take}, leaving ${d.poolRemaining}. ${d.reason}`; article.append(text);
+      } else {
+        const details = document.createElement('details'); const label = document.createElement('summary'); label.textContent = event.visibility === 'private' ? 'Inspect private event' : 'Inspect event';
+        const body = document.createElement('pre'); body.textContent = JSON.stringify(d, null, 2); details.append(label, body); article.append(details);
+      }
+      $('trajectory').append(article);
+    }
+  } catch (error) { message('Could not load trajectory: ' + error.message); }
+}
+$('refresh-runs').onclick = refreshRuns;
+$('saved-run').onchange = () => {
+  const run = savedRuns.find(run => run.id === $('saved-run').value);
+  $('trace-agent').replaceChildren(new Option('Public shared trace', ''));
+  for (const agent of run?.agents ?? []) $('trace-agent').add(new Option(`${agent.name} · private + public`, agent.id));
+  loadTrajectory();
+};
+$('trace-agent').onchange = loadTrajectory;
+refreshRuns();

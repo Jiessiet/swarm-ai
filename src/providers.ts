@@ -29,7 +29,9 @@ export function adaptionAgent(name: string, observe: Observer = () => {}): Agent
   const options = adaptionHarnessOptions();
   const thread = new Codex(options.client).startThread(options.thread);
   return { name, async decide(o, signal) {
-    const { events } = await thread.runStreamed(`${instructions}\nAgent: ${name}\n${JSON.stringify(o)}`, {
+    const prompt = `${instructions}\nAgent: ${name}\n${JSON.stringify(o)}`;
+    observe({ type: 'agent.prompt', agent: name, data: { prompt } });
+    const { events } = await thread.runStreamed(prompt, {
       signal: AbortSignal.any([AbortSignal.timeout(120_000), ...(signal ? [signal] : [])]),
       outputSchema: decisionSchema(o),
     });

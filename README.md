@@ -125,3 +125,47 @@ Task definitions live in **`tasks/shared-resource/`**. Edit `instructions.md` fo
 the prompt, `definition.ts` for defaults and output schema, and `environment.ts`
 for the simulation rules. The CLI and dashboard load the same task definition;
 restart after changes. See [tasks/README.md](tasks/README.md) for the folder map.
+
+## Private and public traces
+
+Every CLI and dashboard run writes an append-only local trajectory:
+
+```text
+traces/<run-uuid>/
+  run.json                         # settings, agent IDs, run status
+  public/events.jsonl              # shared messages and validated decisions
+  agents/agent-1/private.jsonl      # only this agent's prompts/SDK/tool events
+  agents/agent-2/private.jsonl
+  operator.jsonl                   # run-level errors for the local operator
+```
+
+Set `TRACE_DIR` before starting to choose another storage directory. Traces are
+ignored by Git, and files/directories use owner-only permissions where supported.
+Events include run ID, sequence ID, timestamp, visibility, type, agent and data.
+Each event is appended before live broadcast, including during stopped or failed
+runs. Completed result summaries also remain in `results/`. The manifest status
+is the last recorded lifecycle event; an abrupt process kill can leave `running`
+in a saved manifest. Trace storage is not bounded; remove old run folders when
+no longer needed. Trace files can contain model-visible source and tool output.
+
+Agents publish conversation through the `message` field of their validated
+response; an empty message stays silent. Other agents receive those messages in
+`sharedMessages`, plus public decision history. Raw model output, observations,
+prompts and tool events are private by default and are never copied into another
+agent's observation. A decision's `reason` is deliberately public. Invalid model
+responses are not published to the shared channel.
+
+In the dashboard, use **Saved trajectories**, select a run, then choose **Public
+shared trace** or one agent's **private + public** view. Messages and decisions
+appear as readable steps; raw events are collapsed for inspection. The live feed
+has separate public/private/operator filters. Saved runs are read from disk and
+remain available after restarting the dashboard. `GET /runs` lists manifests;
+`GET /runs/<uuid>` returns public events; `?agent=agent-1` adds only that agent's
+private events. These endpoints are for the trusted local operator, not agents.
+
+This is application-level visibility separation, not an OS security boundary.
+The local operator can inspect all logs. Tool-enabled Codex processes running as
+the same local user may be able to read trace files directly; do not treat this
+as adversarial agent isolation. Use separately sandboxed processes/filesystems
+before running agents that must be prevented from reading one another's files.
+Private traces contain SDK-visible events, not hidden chain-of-thought.

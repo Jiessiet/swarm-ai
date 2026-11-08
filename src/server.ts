@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import { runEnvironment, type Activity, type Agent } from './environment.js';
+import { createTrace, listTraces, readTrajectory } from './traces.js';
 import { adaptionAgent } from './providers.js';
 import { defaults, taskId, demoDecision } from '../tasks/shared-resource/definition.js';
 
@@ -12,8 +13,10 @@ export function createDashboard() {
   const events: object[] = [];
   let active: { id: string; controller: AbortController } | undefined;
   let sequence = 0;
+  let trace: ReturnType<typeof createTrace> | undefined;
   function emit(event: Activity) {
-    const record = { ...event, id: ++sequence, time: new Date().toISOString(), run: active?.id };
+    const stored = trace?.append(event);
+    const record = { ...stored, ...event, id: ++sequence, time: stored?.time ?? new Date().toISOString(), run: active?.id };
     events.push(record);
     if (events.length > 2000) events.shift();
     for (const client of clients) {
@@ -27,6 +30,13 @@ export function createDashboard() {
       const host = req.headers.host?.split(':')[0];
       if (!['localhost', '127.0.0.1'].includes(host ?? '')) { res.writeHead(403).end(); return; }
       if (req.headers.origin && req.headers.origin !== `http://${req.headers.host}`) { res.writeHead(403).end(); return; }
+      if (req.method === 'GET' && url.pathname === '/runs') {
+        res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(listTraces())); return;
+      }
+      if (req.method === 'GET' && url.pathname.startsWith('/runs/')) {
+        const trajectory = readTrajectory(url.pathname.slice(6), url.searchParams.get('agent') ?? undefined);
+        res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(trajectory)); return;
+      }
       if (req.method === 'GET' && url.pathname === '/task') {
         res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify({ id: taskId, defaults })); return;
       }
@@ -71,6 +81,7 @@ export function createDashboard() {
           } };
         });
         active = { id: randomUUID(), controller };
+        trace = createTrace(active.id, { task: taskId, mode, count, rounds, tokens, maxTake }, agents.map(a => a.name));
         emit({ type: 'run.started', data: { task: taskId, mode, agents: agents.map(a => a.name), rounds, tokens, maxTake } });
         res.writeHead(202, { 'Content-Type': 'application/json' }).end(JSON.stringify({ id: active.id }));
         void (async () => {
@@ -81,7 +92,7 @@ export function createDashboard() {
             emit({ type: 'run.completed', data: result });
           } catch (error) {
             emit({ type: controller.signal.aborted ? 'run.stopped' : 'run.failed', data: { message: controller.signal.aborted ? 'Stopped by user' : error instanceof Error ? error.message : 'Run failed' } });
-          } finally { active = undefined; }
+          } finally { active = undefined; trace = undefined; }
         })();
         return;
       }

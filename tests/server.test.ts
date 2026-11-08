@@ -30,5 +30,15 @@ test('dashboard streams turns, rejects overlapping runs, and stops cleanly', asy
     while (!stream.includes('run.stopped')) { const chunk = await reader.read(); stream += new TextDecoder().decode(chunk.value); }
     assert.match(stream, /Stopped by user/);
     await reader.cancel();
+    const runs = await (await fetch(base + '/runs')).json();
+    const run = runs.find((r: any) => r.config.tokens === 6 && r.config.mode === 'demo');
+    assert.ok(run);
+    const publicTrace = await (await fetch(base + '/runs/' + run.id)).json();
+    assert.ok(publicTrace.events.every((e: any) => e.visibility === 'public'));
+    assert.ok(publicTrace.events.some((e: any) => e.type === 'agent.message'));
+    const privateTrace = await (await fetch(base + '/runs/' + run.id + '?agent=agent-1')).json();
+    assert.ok(privateTrace.events.some((e: any) => e.type === 'sdk.item.updated'));
+    assert.ok(!privateTrace.events.some((e: any) => e.visibility === 'private' && e.agent === 'Agent 02'));
+    assert.equal((await fetch(base + '/runs/' + run.id + '?agent=unknown')).status, 400);
   } finally { abort.abort(); server.closeAllConnections(); await new Promise<void>(resolve => server.close(() => resolve())); }
 });
