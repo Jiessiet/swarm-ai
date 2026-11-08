@@ -1,261 +1,152 @@
 # swarm-ai
 
-Multiple agents using the **Codex harness / TypeScript SDK**, with **Adaption
-providing model inference**:
+A collaborative **one-day swarm AI safety research hackathon**. Five agents search
+online sources, discuss research ideas, challenge each other's assumptions, and
+converge on a small empirical project a team can implement and evaluate in eight
+hours. The output is a cited research brief with a hypothesis, baseline,
+intervention, metrics, analysis plan, schedule, limitations, fallback and pitch.
 
-```text
-Shared-resource environment → Codex SDK threads → Adaption Responses API → model
-                              tools + agent loop
-```
+The hackathon is now the default CLI and dashboard task. The original
+shared-resource and shared-fund experiments remain selectable alternatives.
 
-Codex manages each agent's thread and tool loop. The configured custom provider
-sends inference to `https://api.prod.adaptionlabs.ai/api/v1/responses`, using
-`ADAPTION_API_KEY` as bearer authentication. No OpenAI model key or ChatGPT login
-is required. There is no separate direct-Adaption agent or Python bridge in this
-runner. The original Python `experiment.py` remains as a standalone experiment.
+## Run the hackathon
 
-## Setup and run
-
-Requires Node.js 20+ and npm:
+Requires Node.js 20.18.1+ and npm:
 
 ```bash
 npm ci
-# Configure ADAPTION_API_KEY in your shell or environment secret settings.
+npm run demo        # deterministic demo; no credentials or internet calls
+npm run dashboard   # http://127.0.0.1:3333
+```
+
+In the dashboard choose **Swarm AI safety · hackathon**, inspect the five research
+roles and model assignments, then start **Demo** or **Live · Adaption inference**.
+Live mode requires `ADAPTION_API_KEY` in the server environment. Credentials are
+never entered in the browser. For the CLI:
+
+```bash
+# Configure ADAPTION_API_KEY in your shell/secret manager first.
 npm start
+# Optional additional critique rounds (3–6 collaboration rounds in total):
+TASK=hackathon ROUNDS=4 npm start
 ```
 
-Default resource task: three Codex-harness agents using different low-cost models,
-three rounds, 12 shared tokens and maximum allocation four. The shared-fund task
-uses five different models and ten rounds plus one final peer-review turn.
-Set per-agent models through the dashboard dropdowns or `AGENT_MODELS` (a
-comma-separated list with one distinct catalog model per agent).
+`.env.example` documents settings; it is not loaded automatically. Configure
+variables in your shell or use your runtime's environment-file support.
 
-```bash
-ROUNDS=5 STARTING_TOKENS=30 npm start
+## How the team works
+
+The agents have five complementary roles: literature scout, safety analyst,
+experiment designer, skeptical reviewer and synthesis lead. Each has a persistent
+Codex SDK thread and its own selected Adaption model. Defaults use five different
+low-cost catalog models; dashboard dropdowns swap assignments when needed.
+`AGENT_MODELS` accepts five distinct catalog model IDs.
+
+1. **Research:** discover and inspect relevant work on swarm / multi-agent AI safety.
+2. **Propose:** formulate narrow questions with a falsifiable hypothesis and controls.
+3. **Critique:** challenge novelty, confounds, cost, feasibility and evaluation design.
+4. **Synthesize:** the lead receives the entire shared discussion and produces one
+   research brief, including rejected alternatives and a schedule capped at eight hours.
+
+Extra rounds repeat critique. Speakers rotate, and every validated contribution
+is shared before the next agent responds. Research roles have a common goal;
+there are no simulated fund contributions, allocations, earnings or peer grades
+in this task. Expected findings are hypotheses, **not measured results**. This
+runner plans the research project; it does not automatically execute the proposed
+empirical experiment or train models.
+
+## Internet research
+
+Agents explicitly request `search` and `read` actions in their structured replies.
+The environment performs the request and returns evidence or an explicit error
+on their next turn. Each agent has up to **four web actions per run** (20 for the
+team), separate from its discussion turns. Sources receive IDs, titles, URLs,
+retrieval times and a `search-result` or `page` label. All teammates receive the
+source registry. Contributions and the final brief may cite only registered IDs.
+This verifies citation IDs, not the truth or relevance of every model claim.
+
+- **Without another key:** search queries go to Crossref's public scholarly API.
+  Results may be metadata/abstracts only and are labeled as discovery results.
+- **General web search:** configure `BRAVE_SEARCH_API_KEY` on the server to use
+  Brave Search instead. Search API fees are not included in model-cost estimates.
+- **Read:** agents can request public HTTPS HTML/text pages, including abstract
+  pages. Reads follow at most four redirects, limit downloads to 1 MB, and return
+  at most 12,000 readable characters. PDFs are unsupported; use their abstract
+  page. Paywalls, bot checks and truncated pages remain evidence gaps.
+
+Research requests honor standard HTTP(S) proxy variables. Destination checks
+reject private/local addresses and check redirects. When local DNS cannot resolve
+an external host, a fixed Google DNS-over-HTTPS lookup validates its public IPv4
+addresses. Network policy must allow the chosen search service, `dns.google` when
+needed, and the pages being read. These checks are not adversarial OS isolation.
+
+Webpage text is untrusted evidence, never agent instructions. Tool results, errors
+and contributions appear in the public trace. Browsing is mediated by the task,
+so it does not depend on Adaption implementing a native web-search tool. Existing
+Codex command sandboxing and native web-search settings remain unchanged.
+
+## Results and dashboard
+
+The dashboard shows research roles, model assignments, estimated costs, live
+conversation, searches, sources, phase progress and the final readable brief.
+**Download research brief (.md)** exports the report. Completed CLI/dashboard
+runs also write JSON and Markdown to ignored `results/`.
+
+Every run persists `traces/<run-id>/run.json`, public `events.jsonl`, per-agent
+private SDK/prompt logs, and an operator log. Saved trajectories survive server
+restarts. The trusted local operator can inspect private traces; agents receive
+shared validated contributions and retrieved sources through task observations.
+This separation is at application level, not an OS security boundary. Codex
+processes running as the same user may still read workspace files.
+
+The server binds to loopback (`127.0.0.1`, default port 3333). One run can be active
+at a time. Stop cancels agent turns and in-progress web requests. The live event
+buffer holds 2,000 events and the browser holds 400 feed entries; complete saved
+traces remain on disk. Trace storage is unbounded and can contain model-visible
+source/tool output. The viewer shows SDK-visible events, not hidden chain-of-thought.
+
+## Architecture and validation
+
+```text
+CLI / local dashboard → tasks/hackathon/environment.ts
+                       ↔ shared discussion + source registry
+                       ↔ Codex SDK threads → Adaption Responses API
+                       ↔ Crossref / Brave search + public-page reader
+                       → JSON traces + Markdown research brief
 ```
 
-`.env.example` lists settings; it is not loaded automatically. Set variables in
-your shell or use your runtime's environment-file support. Do not commit keys.
-`ADAPTION_BASE_URL` optionally overrides the HTTPS API base (include `/api/v1`,
-not `/responses`). Codex appends `/responses` itself. Provider selection is
-explicit, so the runner does not fall back to OpenAI inference.
-
-## Offline verification
+Task instructions, schemas, deterministic demo and rules live in `tasks/hackathon/`.
+`src/experiments.ts` selects tasks; `src/providers.ts` configures Codex/Adaption;
+`src/server.ts` serves the local observatory; `web/` renders conversations and briefs.
 
 ```bash
-npm run demo
 npm run check
 npm test
 ```
 
-The demo uses deterministic baseline participants and makes no API calls.
-Tests cover resource conservation, turn order, invalid decisions, history
-isolation, exhaustion, provider errors, provider routing and configuration checks.
+Tests cover collaboration/context isolation, research-action budgets, web errors,
+cancellation, registered citations, the eight-hour schedule limit, demo behavior,
+public traces, existing games and dashboard endpoints.
 
-## Environment behavior
+**Live Adaption/Codex compatibility remains unverified without credentials.**
+Codex sends structured outputs, tool definitions, conversation history and streaming
+requests. A shared Responses endpoint format does not prove full compatibility.
+`ADAPTION_BASE_URL` must be an HTTPS API base including `/api/v1`, without
+`/responses`. No OpenAI API key or ChatGPT login is used by this runner.
 
-Each agent has its own Codex thread, reused across turns. Turns run sequentially
-against the current resource pool, with the first mover rotating each round.
-Decisions must match the allowed integer allocation and include a reason.
-Invalid decisions or provider errors stop the run. Completed runs save JSON
-settings, allocations, reasons and remaining resources in ignored `results/`.
+Model pricing in `config/models.json` is in Adaption credits per million tokens.
+Hackathon estimates allow for research-action turns and synthesis but are planning
+figures, not spending caps or provider invoices. Live reported SDK usage is
+converted to credits separately; demos cost zero and their conversations are scripted.
 
-Threads use read-only sandboxing, disabled tool network/web search and no approval
-prompts. The inference connection to Adaption is independent of tool network
-access. Codex remains tool capable; use an appropriate workspace because read-only
-access can still expose files to the model. Turns have a two-minute deadline.
-
-## Compatibility status
-
-Configured against Codex's documented custom-provider `wire_api = "responses"`
-and Adaption's documented Responses endpoint. Type checking, six tests and the
-offline demo pass. **Live Adaption inference has not been verified** because this
-workspace has no configured API key. Codex sends tool definitions, structured
-output requirements, conversation items and streaming requests; the selected
-Adaption model/stack must support those request shapes and return compatible SSE
-events and tool calls. A shared endpoint format alone does not prove complete
-harness compatibility. A rejected field or tool shape needs compatibility work;
-it should not be silently removed if doing so breaks the Codex tool loop.
-
-References:
-- [Codex SDK](https://github.com/openai/codex/tree/main/sdk/typescript)
-- [Codex custom provider configuration](https://developers.openai.com/codex/config-reference)
-- [Adaption Responses API](https://docs.adaptionlabs.ai/api/resources/responses/methods/create)
-
-`src/providers.ts` configures Codex with Adaption; `src/environment.ts` owns the
-simulation; `src/cli.ts` assembles the agents. This is a shared-resource experiment
-harness, with no training or model adaptation feedback loop yet.
-
-## Local agent observatory
+## Original tasks
 
 ```bash
-npm run dashboard
-```
-
-Open **http://127.0.0.1:3333** in your local browser. To use this on your own
-machine, check out `feat/agent-environment`, run `npm ci`, then start the dashboard.
-The server binds to loopback only. Set `PORT` to change the default port.
-
-Choose **Demo** to see simulated activity without credentials, or **Live · Adaption
-inference** to run Codex threads against Adaption. Configure `ADAPTION_API_KEY`
-in the server environment before starting live mode; credentials are never
-entered into the browser. The same `ADAPTION_BASE_URL` setting used by the CLI applies. Models are selected per agent through the webpage or `AGENT_MODELS`. Live inference compatibility remains unverified.
-
-The dashboard shows active agents, observations, streamed SDK messages, tool
-activity when emitted, usage, allocations, remaining resources, and a decision
-ledger. Filter the activity feed by agent or turn off follow mode to inspect
-older events. Stop cancels the active turn and environment run. Completed runs
-save results to `results/`. One run can be active at a time.
-
-Events use server-sent events with reconnect and a bounded in-memory replay
-buffer of 2,000 events; the browser retains up to 400 feed entries. Reload restores
-recent events while the server remains running. Restarting the server clears the
-live buffer. This is a local development viewer, not a hosted multi-user service.
-
-The live feed exposes events the Codex SDK actually emits, including item updates
-and completed items; it does not promise a per-token text delta or expose hidden
-chain-of-thought. Demo text chunks and usage are simulated and labeled. Agents
-interact through shared observations and prior decisions, not direct chat with
-one another. Execution remains sequential to preserve resource consistency.
-
-## Editing the task
-
-Task definitions live in **`tasks/shared-resource/`**. Edit `instructions.md` for
-the prompt, `definition.ts` for defaults and output schema, and `environment.ts`
-for the simulation rules. The CLI and dashboard load the same task definition;
-restart after changes. See [tasks/README.md](tasks/README.md) for the folder map.
-
-## Private and public traces
-
-Every CLI and dashboard run writes an append-only local trajectory:
-
-```text
-traces/<run-uuid>/
-  run.json                         # settings, agent IDs, run status
-  public/events.jsonl              # shared messages and validated decisions
-  agents/agent-1/private.jsonl      # only this agent's prompts/SDK/tool events
-  agents/agent-2/private.jsonl
-  operator.jsonl                   # run-level errors for the local operator
-```
-
-Set `TRACE_DIR` before starting to choose another storage directory. Traces are
-ignored by Git, and files/directories use owner-only permissions where supported.
-Events include run ID, sequence ID, timestamp, visibility, type, agent and data.
-Each event is appended before live broadcast, including during stopped or failed
-runs. Completed result summaries also remain in `results/`. The manifest status
-is the last recorded lifecycle event; an abrupt process kill can leave `running`
-in a saved manifest. Trace storage is not bounded; remove old run folders when
-no longer needed. Trace files can contain model-visible source and tool output.
-
-In the shared-resource task, agents publish conversation through the `message`
-field of their validated response; an empty message stays silent. Other agents receive those messages in
-`sharedMessages`, plus public decision history. Raw model output, observations,
-prompts and tool events are private by default and are never copied into another
-agent's observation. A decision's `reason` is deliberately public. Invalid model
-responses are not published to the shared channel.
-
-In the dashboard, use **Saved trajectories**, select a run, then choose **Public
-shared trace** or one agent's **private + public** view. Messages and decisions
-appear as readable steps; raw events are collapsed for inspection. The live feed
-has separate public/private/operator filters. Saved runs are read from disk and
-remain available after restarting the dashboard. `GET /runs` lists manifests;
-`GET /runs/<uuid>` returns public events; `?agent=agent-1` adds only that agent's
-private events. These endpoints are for the trusted local operator, not agents.
-
-This is application-level visibility separation, not an OS security boundary.
-The local operator can inspect all logs. Tool-enabled Codex processes running as
-the same local user may be able to read trace files directly; do not treat this
-as adversarial agent isolation. Use separately sandboxed processes/filesystems
-before running agents that must be prevented from reading one another's files.
-Private traces contain SDK-visible events, not hidden chain-of-thought.
-
-## Shared-fund responsibility task
-
-In the dashboard select **Shared fund · responsibility**, choose **One planted
-non-contributor** or **Control · five standard agents**, then start a demo or live
-run. There are exactly five agents, ten rounds by default, a fresh $10 endowment
-per agent per round, and contributions of $0 or $5. The dashboard shows round
-contributions, individual/cumulative payoffs and contribution-switch metrics.
-Before submitting, agents can send one public message or stay silent. They can
-keep their plans private. Once all five contributions validate, each agent gets
-only their own payoff as financial feedback. The operator’s saved trajectory
-shows the discussion followed by the complete round record.
-Task prompts and private role files live in `tasks/shared-fund/`.
-
-CLI demo for both conditions (no credentials):
-
-```bash
+TASK=shared-resource npm run demo
 TASK=shared-fund CONDITION=both ROUNDS=3 npm run demo
 ```
 
-Repeated live comparison, after configuring `ADAPTION_API_KEY`:
-
-```bash
-TASK=shared-fund CONDITION=both REPETITIONS=3 npm start
-```
-
-Each condition/repetition creates fresh threads, a separate trace folder and
-result file. Choose `CONDITION=planted` or `CONDITION=control` for one condition.
-`TASK=shared-resource` selects the original experiment, which remains the default.
-Demo contributions are programmed; they do not establish real model contagion.
-Live Adaption compatibility still requires credentials and end-to-end validation.
-
-### Readable conversations and experiment setup
-
-The visualizer renders public messages as conversation cards, with speaker names,
-role badges and contribution/payoff summaries grouped by revealed round. Private
-SDK responses are parsed into readable messages; draft updates replace each other
-instead of flooding the feed. Raw JSON is available under collapsed **Technical
-details**. Agent filters work on individual speakers inside a shared round.
-
-**Experiment setup** previews the next run's rules and role assignments. In the
-planted fund condition, **Agent E** is explicitly marked **Non-contributing
-participant — assigned to contribute $0 every round**. Control runs show five
-standard participants. Actual runs record a setup snapshot in `run.json` and an
-operator-only setup event; saved trajectories display the recorded assignments.
-Older runs without a snapshot show assignments inferred from their stored
-condition, clearly labeled. Setup labels are for the trusted local operator;
-they are not added to other agents' observations or shared conversation.
-
-## Team citizenship, models and pricing
-
-All task participants are citizens of Shelter Team. The fund task is a repeated
-public-goods game with two separately reported outcomes: personal simulated money
-and a peer-adjusted community project grade. Contributions generate two project
-points per dollar toward a target of 50 points per round. Team grade is percentage
-completion of that target; points do not deduct a second payment from the fund.
-
-After all contribution rounds, each agent rates all four peers (no self-ratings)
-using the supplied Excellent=100 through No show=0 scale and evidence from
-public messages. All reviews are collected privately and revealed together.
-Peer average / team peer average determines each adjustment, capped at 1.05;
-individual project grade = team grade × adjustment. All-zero peer averages produce
-zero adjustments. Grades do not modify simulated money. Review text, score
-breakdowns and team progress appear in the website and saved trajectories.
-The planted role still requires $0 contributions but participates in peer review.
-
-The desktop **Models & estimated run cost** panel has a dropdown for every agent.
-Changing a model recalculates the pre-run estimate. Choosing an occupied model
-swaps assignments so each agent keeps a different model. Assignments are fixed
-while running and recorded with role/setup snapshots for saved-run inspection.
-
-The five default models are DeepSeek V4 Flash, Gemma 4 26B A4B, Gemma 4 31B,
-GLM 53 Flash and Qwen 3.8 27B. The other documented models are available in the
-selectors. Model IDs/rates live in `config/models.json`, sourced from
-[Adaption's models page](https://docs.adaptionlabs.ai/inference-stacks/models/).
-Prices are **credits per million tokens**, not USD. Recheck the source when prices
-change. Availability depends on the key, and Codex/Adaption compatibility remains
-unverified without live credentials. Distinct model roles confound one-run causal
-claims; CLI repetitions rotate models across roles while preserving identical
-assignments within each planted/control pair. Explicit `AGENT_MODELS` overrides
-that rotation.
-
-Estimates include one discussion call and one contribution call per round plus
-one final peer-review call per fund agent. They account heuristically for growing conversation context and
-include estimated input/output tokens and per-model rates. No cached discount is
-assumed. The displayed range is illustrative and **not a spending cap**; extra
-harness/tool turns, reasoning, retries and long messages can exceed it. Run
-estimates are saved in setup snapshots. Live SDK usage is separately converted
-to credits (cached rates apply only to reported cached input) and saved in traces
-and completed results; it is a rate-based calculation, not a provider invoice.
-Demo API cost is zero; its displayed token usage/decisions/reviews are simulated.
+The original Python `experiment.py` is a separate standalone experiment requiring
+its pinned Python dependencies and `ADAPTION_API_KEY`. See
+[tasks/README.md](tasks/README.md) and
+[tasks/shared-fund/README.md](tasks/shared-fund/README.md) for the retained games.

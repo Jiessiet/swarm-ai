@@ -1,3 +1,4 @@
+import { briefMarkdown } from '../tasks/hackathon/environment.js';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { catalog } from './pricing.js';
@@ -6,7 +7,7 @@ import { createExperiment, taskInfo } from './experiments.js';
 async function main() {
   const backend = process.env.AGENT_BACKEND ?? 'adaption';
   if (!['baseline', 'adaption'].includes(backend)) throw new Error('AGENT_BACKEND must be baseline or adaption');
-  const task = process.env.TASK ?? 'shared-resource';
+  const task = process.env.TASK ?? 'hackathon';
   const defaults = taskInfo(task).defaults;
   const repetitions = Number(process.env.REPETITIONS ?? 1);
   if (!Number.isInteger(repetitions) || repetitions < 1 || repetitions > 100) throw new Error('REPETITIONS must be 1..100');
@@ -26,9 +27,11 @@ async function main() {
       await mkdir('results', { recursive: true });
       const path = `results/run-${id}.json`;
       await writeFile(path, JSON.stringify({ ...experiment.config, repetition, ...result }, null, 2), { flag: 'wx' });
+      if ('brief' in result) await writeFile(`results/run-${id}.md`, briefMarkdown(result), { flag: 'wx' });
       observe({ type: 'run.completed', data: result });
-      console.log(`${task} / ${condition} / repetition ${repetition}: ${path}`);
-      if ('metrics' in result) console.table(result.metrics.standardAgents);
+      console.log(`${task} / ${task === 'shared-fund' ? condition : backend} / repetition ${repetition}: ${path}`);
+      if ('brief' in result) { console.log(`Research brief: results/run-${id}.md`); }
+      else if ('metrics' in result) console.table(result.metrics.standardAgents);
       else console.table(result.turns);
     } catch (error) { observe({ type: 'run.failed', data: { message: error instanceof Error ? error.message : 'Run failed' } }); throw error; }
   }

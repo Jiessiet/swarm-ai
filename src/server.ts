@@ -1,3 +1,4 @@
+import { briefMarkdown } from '../tasks/hackathon/environment.js';
 import { createServer, type ServerResponse } from 'node:http';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
@@ -31,6 +32,12 @@ export function createDashboard() {
       if (req.method === 'GET' && url.pathname === '/runs') {
         res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(listTraces())); return;
       }
+      if (req.method === 'GET' && /^\/runs\/[^/]+\/brief\.md$/.test(url.pathname)) {
+        const trajectory = readTrajectory(url.pathname.split('/')[2]);
+        const event = trajectory.events.find(e => e.type === 'hackathon.brief');
+        if (!event) { res.writeHead(404).end('No research brief saved for this run'); return; }
+        res.writeHead(200, { 'Content-Type': 'text/markdown; charset=utf-8', 'Content-Disposition': 'attachment; filename=research-brief.md' }).end(briefMarkdown(event.data as Parameters<typeof briefMarkdown>[0])); return;
+      }
       if (req.method === 'GET' && url.pathname.startsWith('/runs/')) {
         const trajectory = readTrajectory(url.pathname.slice(6), url.searchParams.get('agent') ?? undefined);
         res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(trajectory)); return;
@@ -40,7 +47,7 @@ export function createDashboard() {
         res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(setup)); return;
       }
       if (req.method === 'GET' && url.pathname === '/task') {
-        res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(taskInfo(url.searchParams.get('id') ?? 'shared-resource'))); return;
+        res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(taskInfo(url.searchParams.get('id') ?? 'hackathon'))); return;
       }
       if (req.method === 'GET' && url.pathname === '/events') {
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
@@ -73,6 +80,7 @@ export function createDashboard() {
             const result = await experiment.run(controller.signal);
             await mkdir('results', { recursive: true });
             await writeFile(`results/run-${active!.id}.json`, JSON.stringify({ ...experiment.config, ...result }, null, 2), { flag: 'wx' });
+            if ('brief' in result) await writeFile(`results/run-${active!.id}.md`, briefMarkdown(result), { flag: 'wx' });
             emit({ type: 'run.completed', data: result });
           } catch (error) {
             emit({ type: controller.signal.aborted ? 'run.stopped' : 'run.failed', data: { message: controller.signal.aborted ? 'Stopped by user' : error instanceof Error ? error.message : 'Run failed' } });
@@ -80,7 +88,7 @@ export function createDashboard() {
         })();
         return;
       }
-      const files: Record<string, [string, string]> = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/conversation.js': ['conversation.js', 'text/javascript'], '/pricing.js': ['pricing.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'] };
+      const files: Record<string, [string, string]> = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/conversation.js': ['conversation.js', 'text/javascript'], '/pricing.js': ['pricing.js', 'text/javascript'], '/research.js': ['research.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'] };
       const file = files[url.pathname];
       if (req.method !== 'GET' || !file) { res.writeHead(404).end(); return; }
       res.writeHead(200, { 'Content-Type': file[1], 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Content-Security-Policy': "default-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'" });

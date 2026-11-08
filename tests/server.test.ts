@@ -14,13 +14,13 @@ test('dashboard streams turns, rejects overlapping runs, and stops cleanly', asy
     assert.equal(setup.assignments[4].role, 'planted');
     assert.equal(setup.rounds, 4);
     const task = await (await fetch(base + '/task')).json();
-    assert.equal(task.id, 'shared-resource');
-    assert.deepEqual(task.defaults, { count: 3, rounds: 3, tokens: 12, maxTake: 4 });
+    assert.equal(task.id, 'hackathon');
+    assert.deepEqual(task.defaults, { count: 5, rounds: 3, tokens: 1, maxTake: 1 });
     assert.equal((await fetch(base + '/run', { method: 'POST', headers: { Origin: 'https://example.com' }, body: '{}' })).status, 403);
     assert.equal((await fetch(base + '/run', { method: 'POST', body: '{"count":99}' })).status, 400);
     const response = await fetch(base + '/events', { signal: abort.signal });
     const reader = response.body!.getReader();
-    const start = () => fetch(base + '/run', { method: 'POST', body: JSON.stringify({ mode: 'demo', count: 2, rounds: 1, tokens: 6 }) });
+    const start = () => fetch(base + '/run', { method: 'POST', body: JSON.stringify({ task: 'shared-resource', mode: 'demo', count: 2, rounds: 1, tokens: 6 }) });
     assert.equal((await start()).status, 202);
     assert.equal((await start()).status, 409);
     let stream = '';

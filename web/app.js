@@ -1,9 +1,10 @@
+import { researchBrief } from './research.js';
 import { pricingPanel, citizenshipPanel } from './pricing.js';
 import { conversationEvent, setupPanel } from './conversation.js';
 const $ = id => document.getElementById(id);
 const colors = ['#b6dfa0','#a4c4ea','#d8bae8','#e6c18b','#88cfc3','#db9d9d','#bfc98b','#a8abd9'];
-let agents = new Map(), total = 0, decisions = 0, usage = 0, count = 0, entries = [], lastId = 0, configured = false, running = false, currentTask = 'shared-resource', liveSetup = null, draftNodes = new Map(), selectedModels = null, quoteSnapshot = null, actualCredits = 0;
-function busy(value) { running = value; $('start').disabled = value; $('stop').disabled = !value; for (const input of document.querySelectorAll('#controls input,#controls select,#pricing select')) input.disabled = value; if (!value && $('task').value === 'shared-fund') for (const key of ['count','tokens','maxTake']) $(key).disabled = true; }
+let agents = new Map(), total = 0, decisions = 0, usage = 0, count = 0, entries = [], lastId = 0, configured = false, running = false, currentTask = 'hackathon', liveSetup = null, draftNodes = new Map(), selectedModels = null, quoteSnapshot = null, actualCredits = 0;
+function busy(value) { running = value; $('start').disabled = value; $('stop').disabled = !value; for (const input of document.querySelectorAll('#controls input,#controls select,#pricing select')) input.disabled = value; if (!value && ['shared-fund', 'hackathon'].includes($('task').value)) for (const key of ['count','tokens','maxTake']) $(key).disabled = true; }
 function message(text) { $('notice').textContent = text; }
 function agentState(name, state) { const a = agents.get(name); if (a) { a.node.classList.toggle('active', state === 'Working'); a.node.querySelector('.state').textContent = state; } }
 function addEvent(e) {
@@ -44,23 +45,30 @@ function render(e) {
   if (e.id <= lastId) return; lastId = e.id;
   const d = e.data;
   if (e.type === 'run.started') {
-    previewVersion++; liveSetup = null; draftNodes.clear(); actualCredits = 0; $('usage-cost').textContent = ''; $('citizenship').hidden = true;
-    currentTask = d.task ?? 'shared-resource'; setTaskView(currentTask);
+    previewVersion++; liveSetup = null; draftNodes.clear(); actualCredits = 0; $('usage-cost').textContent = ''; $('citizenship').hidden = true; $('research').hidden = true;
+    currentTask = d.task ?? 'hackathon'; setTaskView(currentTask);
     $('fund-metrics').hidden = true;
     agents = new Map(); entries = []; decisions = usage = count = 0; total = d.tokens;
     $('agents').replaceChildren(); $('feed').replaceChildren(); $('ledger').replaceChildren(); $('filter').replaceChildren(new Option('All agents', 'all'));
-    $('usage').textContent = $('decisions').textContent = '0'; $('pool').textContent = $('hub').textContent = total; $('bar').style.width = '100%'; $('status').textContent = 'Running'; busy(true);
+    $('usage').textContent = $('decisions').textContent = '0'; $('pool').textContent = $('hub').textContent = currentTask === 'hackathon' ? 'Research' : total; $('bar').style.width = '100%'; $('status').textContent = 'Running'; busy(true);
     $('usage-label').textContent = d.mode === 'demo' ? '(simulated)' : '';
     message(d.mode === 'demo' ? 'SIMULATED RUN · Demonstration events and token usage. No API calls.' : 'LIVE RUN · Codex SDK events with Adaption model inference.');
     d.agents.forEach((name, i) => {
       const node = document.createElement('div'); node.className = 'agent'; node.style.setProperty('--color', colors[i % colors.length]);
       node.innerHTML = '<div class="avatar"></div><h3></h3><div class="state">Waiting</div><div class="balance"><b>0</b><small>collected</small></div>';
-      node.querySelector('.avatar').textContent = String(i + 1).padStart(2,'0'); node.querySelector('h3').textContent = name; node.querySelector('.balance small').textContent = currentTask === 'shared-fund' ? 'total payoff' : 'collected';
+      node.querySelector('.avatar').textContent = String(i + 1).padStart(2,'0'); node.querySelector('h3').textContent = name; node.querySelector('.balance small').textContent = currentTask === 'hackathon' ? 'contributions' : currentTask === 'shared-fund' ? 'total payoff' : 'collected';
       $('agents').append(node); agents.set(name, { node, balance: 0 }); $('filter').add(new Option(name, name));
     });
   }
   if (e.type === 'operator.setup') applyLiveSetup(d);
-  if (e.type === 'agent.observation') { agentState(e.agent, 'Working'); $('round').textContent = d.phase === 'peer-review' ? 'Final peer review · citizenship' : `Round ${d.round} / ${d.totalRounds}`; }
+  if (e.type === 'agent.observation') { agentState(e.agent, 'Working'); $('round').textContent = currentTask === 'hackathon' ? `${d.phase} · ${e.agent}` : d.phase === 'peer-review' ? 'Final peer review · citizenship' : `Round ${d.round} / ${d.totalRounds}`; }
+  if (e.type === 'hackathon.phase') { $('round').textContent = d.phase === 'synthesis' ? 'Final synthesis' : `${d.phase} · ${d.round} / ${d.totalRounds}`; $('pool').textContent = $('hub').textContent = d.phase; $('bar').style.width = `${Math.min(100, d.round / (d.totalRounds + 1) * 100)}%`; }
+  if (e.type === 'hackathon.contribution') {
+    const a = agents.get(e.agent); if (a) { a.balance++; a.node.querySelector('.balance b').textContent = a.balance; agentState(e.agent, 'Shared with team'); }
+    $('decisions').textContent = ++decisions;
+    const row = document.createElement('tr'); for (const value of [d.round, e.agent, d.phase, d.sourceIds.join(', ') || '—', d.message]) { const cell = document.createElement('td'); cell.textContent = value; row.append(cell); } $('ledger').append(row);
+  }
+  if (e.type === 'hackathon.brief') { $('research').hidden = false; researchBrief(d, $('research-body'), e.run); }
   if (e.type === 'agent.submission') agentState(e.agent, 'Submitted · awaiting payout');
   if (e.type === 'fund.round') {
     $('pool').textContent = $('hub').textContent = '$' + d.totalContributions;
@@ -112,14 +120,18 @@ $('controls').onsubmit = async e => {
 $('stop').onclick = async () => { try { const r = await fetch('/stop', { method:'POST' }); if (!r.ok) throw new Error('Stop failed'); } catch (e) { message(e.message); } };
 
 function setTaskView(task) {
-  const fund = task === 'shared-fund';
+  const fund = task === 'shared-fund', hackathon = task === 'hackathon';
+  document.querySelector('.experiment-setup .section-head span').textContent = hackathon ? 'Research roles · shared goal' : 'Operator view · roles are private to each agent';
+  $('rounds').min = hackathon ? 3 : 1; $('rounds').max = hackathon ? 6 : 1000;
   $('condition-label').hidden = !fund;
-  $('tokens').parentElement.hidden = $('maxTake').parentElement.hidden = fund;
-  document.querySelector('.pool-hub span').textContent = fund ? 'ROUND CONTRIBUTIONS' : 'SHARED ENVIRONMENT';
-  document.querySelectorAll('.pool-hub span')[1].textContent = fund ? 'doubled and shared equally' : 'available resources';
-  document.querySelector('.metrics div:nth-child(2) > span').textContent = fund ? 'ROUND CONTRIBUTIONS' : 'POOL REMAINING';
-  const headings = document.querySelectorAll('.allocations th'); headings[2].textContent = fund ? 'CONTRIBUTION' : 'ALLOCATION'; headings[3].textContent = fund ? 'ROUND PAYOFF' : 'REMAINING'; headings[4].textContent = fund ? 'PUBLIC MESSAGE' : 'REASON';
-  document.querySelector('.legend span').textContent = fund ? 'Agents may message the group before contributing privately. Each learns only their own payoff after all five submit.' : 'Agents communicate through observations of shared state and previous decisions.';
+  $('tokens').parentElement.hidden = $('maxTake').parentElement.hidden = fund || hackathon;
+  document.querySelector('.pool-hub span').textContent = hackathon ? 'HACKATHON PHASE' : fund ? 'ROUND CONTRIBUTIONS' : 'SHARED ENVIRONMENT';
+  document.querySelectorAll('.pool-hub span')[1].textContent = hackathon ? 'research → propose → critique → synthesize' : fund ? 'doubled and shared equally' : 'available resources';
+  document.querySelector('.metrics div:nth-child(2) > span').textContent = hackathon ? 'CURRENT PHASE' : fund ? 'ROUND CONTRIBUTIONS' : 'POOL REMAINING';
+  document.querySelector('.metrics div:nth-child(3) > span').textContent = hackathon ? 'CONTRIBUTIONS' : 'DECISIONS';
+  document.querySelector('.allocations h2').textContent = hackathon ? 'Research discussion ledger' : 'Decision ledger';
+  const headings = document.querySelectorAll('.allocations th'); headings[2].textContent = hackathon ? 'PHASE' : fund ? 'CONTRIBUTION' : 'ALLOCATION'; headings[3].textContent = hackathon ? 'SOURCES' : fund ? 'ROUND PAYOFF' : 'REMAINING'; headings[4].textContent = hackathon ? 'CONTRIBUTION' : fund ? 'PUBLIC MESSAGE' : 'REASON';
+  document.querySelector('.legend span').textContent = hackathon ? 'Agents search and read public sources, share proposals, challenge feasibility and synthesize an eight-hour research plan.' : fund ? 'Agents may message the group before contributing privately. Each learns only their own payoff after all five submit.' : 'Agents communicate through observations of shared state and previous decisions.';
 }
 async function loadTask() {
   selectedModels = null; quoteSnapshot = null; $('start').disabled = true;
@@ -127,7 +139,7 @@ async function loadTask() {
     const task = await (await fetch('/task?id=' + $('task').value)).json();
     if (running) return;
     for (const key of ['count','rounds','tokens','maxTake']) $(key).value = task.defaults[key];
-    setTaskView(task.id); busy(false); $('hub').textContent = task.id === 'shared-fund' ? '$0' : task.defaults.tokens;
+    setTaskView(task.id); busy(false); $('hub').textContent = task.id === 'hackathon' ? 'Research' : task.id === 'shared-fund' ? '$0' : task.defaults.tokens;
     await previewSetup();
   } catch { message('Could not load task defaults.'); }
 }
@@ -187,6 +199,8 @@ async function loadTrajectory() {
       if (response.ok) { setup = await response.json(); setup.assignments.forEach((a, i) => { a.name = manifest.agents[i]?.name ?? a.name; }); }
     }
     if (setup) { const panel = document.createElement('div'); panel.className = 'saved-setup'; setupPanel(setup, panel, manifest.setup ? 'Saved run · recorded role assignments' : 'Older run · assignments inferred from recorded condition'); $('trajectory').append(panel); }
+    const research = events.find(e => e.type === 'hackathon.brief');
+    $('research').hidden = !research; if (research) researchBrief(research.data, $('research-body'), manifest.id);
     const citizenship = events.find(e => e.type === 'fund.citizenship');
     $('citizenship').hidden = !citizenship; if (citizenship) citizenshipPanel(citizenship.data, $('citizenship-body'));
     if (setup?.pricing) { const pricing = document.createElement('div'); pricing.className = 'saved-pricing'; pricingPanel(setup, pricing); $('trajectory').append(pricing); }
