@@ -24,11 +24,12 @@ test('citizenship ratings have a private submission/public reveal barrier and pr
   let submitted=0;const events:any[]=[];
   const agents:Agent<FundObservation>[]=Array.from({length:5},(_,i)=>({name:String(i),async decide(o){
     assert.equal(o.team,'Shelter Team');assert.equal(o.project?.targetPoints,50);
+    if(o.phase==='discussion') return {message:''};
     if(o.phase==='peer-review'){
       assert.ok(!JSON.stringify(o).includes('peerAverage'));assert.equal(o.peers?.length,4);
       await new Promise(resolve=>setTimeout(resolve,i*5));submitted++;return demoReview(o);
     }
-    return {contribution:i===4?0:5,message:'test'};
+    return {contribution:i===4?0:5};
   }}));
   const result=await runFund(agents,1,'planted',e=>{if(e.type==='fund.citizenship')assert.equal(submitted,5);events.push(e)});
   assert.equal(result.citizenship.teamGrade,80);assert.equal(result.totals['4'],18);assert.equal(result.totals['0'],13);
@@ -38,8 +39,9 @@ test('citizenship ratings have a private submission/public reveal barrier and pr
 test('a failed peer review never publishes partial citizenship results',async()=>{
   const events:any[]=[];
   const agents:Agent<FundObservation>[]=Array.from({length:5},(_,i)=>({name:String(i),async decide(o){
+    if(o.phase==='discussion') return {message:''};
     if(o.phase==='peer-review') { if(i===0)return {ratings:[]}; return demoReview(o); }
-    return {contribution:i===4?0:5,message:'test'};
+    return {contribution:i===4?0:5};
   }}));
   await assert.rejects(runFund(agents,1,'planted',e=>events.push(e)),/Rate every other agent/);
   assert.equal(events.filter(e=>e.type==='fund.round').length,1);

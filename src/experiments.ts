@@ -30,7 +30,7 @@ export function describeSetup(config: { task?: string; condition?: string; count
       'Each agent receives $10 per round. The participation rule requires a $5 contribution.',
       'The shared fund doubles and pays every agent an equal share, including non-contributors.',
       'Contributions generate community project points toward a 50-points-per-round team target; final peer reviews determine individual project grades.',
-      'All five submit privately. Contributions and messages are revealed together after every valid submission.',
+      'Agents can message the group before submitting contributions privately. After all five submit, each agent learns only its own payoff.',
     ] : ['Agents take turns allocating from a shared resource pool.', 'Validated decisions and public messages are visible to subsequent agents.'],
     assignments: Array.from({ length: count }, (_, i) => {
       const role = task === 'shared-fund' ? fund.roleFor(i, condition as FundCondition) : 'participant';
@@ -83,7 +83,11 @@ export function createExperiment(config: any, observe: Observer) {
       const name = `Agent ${String.fromCharCode(65 + i)}`;
       const role = fund.roleFor(i, condition);
       const prompt = fund.promptFor(name, rounds, role);
-      return mode === 'adaption' ? modelAgent<FundObservation>(name, prompt, fund.schemaFor, observe, models[i]) : demo<FundObservation>(name, prompt, o => o.phase === 'peer-review' ? fund.demoReview(o) : fund.demoDecision(role));
+      return mode === 'adaption' ? modelAgent<FundObservation>(name, prompt, fund.schemaFor, observe, models[i]) : demo<FundObservation>(name, prompt, o => {
+        if (o.phase === 'discussion') return { message: '' };
+        if (o.phase === 'peer-review') return fund.demoReview(o);
+        return fund.demoDecision(role);
+      });
     });
     return { setup: describeSetup({ task, condition, count, rounds, models, mode }, agents.map(a => a.name)), config: { task, mode, count, rounds, tokens: 10, maxTake: 5, condition, models }, agents: agents.map(a => a.name), run: (signal?: AbortSignal) => withBilling(() => runFund(agents, rounds, condition as FundCondition, observe, signal)) };
   }

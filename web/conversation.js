@@ -54,7 +54,8 @@ export function conversationEvent(event, setup) {
   node.dataset.visibility = event.visibility ?? 'private';
   const header = element('div', undefined, 'meta');
   const isPublic = event.visibility === 'public';
-  header.append(element('span', isPublic ? 'Shared with all agents' : 'Private · operator view', 'visibility-label'));
+  const isFundRecord = event.type === 'fund.round';
+  header.append(element('span', isFundRecord ? 'Round record · operator view' : isPublic ? 'Shared with all agents' : 'Private · operator view', 'visibility-label'));
   if (event.time) header.append(element('time', new Date(event.time).toLocaleTimeString()));
   node.append(header);
   switch (event.type) {
@@ -64,11 +65,11 @@ export function conversationEvent(event, setup) {
       break;
     case 'fund.round':
       node.classList.add('round-conversation');
-      node.append(element('h3', `Round ${d.round} · decisions revealed`), element('p', `$${d.totalContributions} contributed → $${d.doubledFund} after doubling → $${d.share} paid to each agent`, 'round-summary'));
+      node.append(element('h3', `Round ${d.round} · payouts calculated`), element('p', `$${d.totalContributions} contributed → $${d.doubledFund} after doubling → $${d.share} paid to each agent`, 'round-summary'));
       for (const outcome of d.outcomes) node.append(bubble(outcome.agent, outcome.message, `Contributed $${outcome.contribution} · Round payoff $${outcome.payoff} · Total earned $${outcome.cumulativePayoff}`, setup));
       break;
     case 'agent.message':
-      node.append(bubble(event.agent, d.text, `Round ${d.round} · Public message`, setup)); break;
+      node.append(bubble(event.agent, d.text, `Round ${d.round} · ${d.phase === 'discussion' ? 'Before contributions' : 'Public message'}`, setup)); break;
     case 'agent.decision':
       node.append(bubble(event.agent, d.reason, `Round ${d.round} · Took ${d.take} · ${d.poolRemaining} resources remain`, setup)); break;
     case 'run.started':
@@ -88,7 +89,7 @@ export function conversationEvent(event, setup) {
     case 'agent.prompt':
       node.append(element('h3', `${event.agent} · private instructions`), element('p', 'Task instructions and the agent’s own role/context were sent privately.', 'event-description')); break;
     case 'agent.submission':
-      node.append(bubble(event.agent, d.message, `Round ${d.round} · Submitted $${d.contribution} privately · Awaiting joint reveal`, setup)); break;
+      node.append(bubble(event.agent, d.message, `Round ${d.round} · Submitted $${d.contribution} privately · Awaiting payout`, setup)); break;
     case 'operator.setup':
       node.append(element('h3', 'Role assignments recorded'), element('p', 'The experiment setup above shows the operator’s view of private assignments.', 'event-description')); break;
     case 'sdk.turn.started':
@@ -101,7 +102,7 @@ export function conversationEvent(event, setup) {
           node.append(element('h3', `${event.agent} is drafting a private response`), element('p', 'The final response will appear when complete.', 'event-description'));
         } else {
           const parsed = parsedMessage(item.text);
-          const facts = parsed?.ratings ? 'Final peer review · private until all reviewers submit' : parsed?.contribution !== undefined ? `Proposed contribution: $${parsed.contribution} · Not public until round reveal` : parsed?.take !== undefined ? `Proposed allocation: ${parsed.take} · Awaiting validation` : 'Private model response';
+          const facts = parsed?.ratings ? 'Final peer review · private until all reviewers submit' : parsed?.contribution !== undefined ? `Proposed contribution: $${parsed.contribution} · Private submission` : parsed?.take !== undefined ? `Proposed allocation: ${parsed.take} · Awaiting validation` : 'Private model response';
           node.append(bubble(event.agent, parsed ? parsed.ratings ? parsed.ratings.map(r => `${r.agent}: ${r.rating} — ${r.reason}`).join('\n') : parsed.message || parsed.reason || 'No message supplied.' : item.text, facts, setup));
         }
       } else if (item?.type === 'command_execution') {

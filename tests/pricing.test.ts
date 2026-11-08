@@ -9,9 +9,9 @@ test('uses five different cheaper models and honors an explicit model per thread
   assert.throws(()=>assignModels(2,['deepseek-v4-flash','deepseek-v4-flash']));
   assert.throws(()=>assignModels(1,['unknown']));
 });
-test('quotes all decision and review calls, uses credits and zero demo billing', () => {
+test('quotes all discussion, decision and review calls, uses credits and zero demo billing', () => {
   const models=assignModels(5); const live=estimatePricing('shared-fund',10,models,'adaption');
-  assert.equal(live.calls,55);assert.equal(live.perAgent.length,5);
+  assert.equal(live.calls,105);assert.equal(live.perAgent.length,5);
   for(const agent of live.perAgent)assert.equal(agent.credits,(agent.inputTokens*agent.inputRate+agent.outputTokens*agent.outputRate)/1e6);
   assert.equal(live.totalCredits,live.perAgent.reduce((sum,a)=>sum+a.credits,0));
   assert.ok(estimatePricing('shared-fund',11,models,'adaption').totalCredits>live.totalCredits);

@@ -17,20 +17,24 @@ $0; an invalid planted submission fails the run instead of silently overriding i
 The evaluator's contagion hypothesis and condition label are not included in
 participant prompts or observations. Each Codex thread keeps its own role/context.
 
-All five decide concurrently from separate copies of completed-round history.
-A submission remains private until every submission validates. A failed/cancelled
-round reveals no contributions or messages; sibling calls are cancelled and
-settled before ending the run. Only complete `fund.round` outcomes enter public
-traces and the next round's observation. These include contributions, messages,
-round payoffs and cumulative totals. Prompts, roles, tool events and pending
-submissions are private agent traces for the local operator.
+Each round begins with a simultaneous discussion phase. Agents may send one
+public message or stay silent. Messages are shared together before contributions
+open. All five then submit their contributions privately. After all five
+contributions validate, each agent receives only their own round payoff in their
+next observation. Agents also retain the public discussion history.
+
+A failed or cancelled contribution phase produces no round payoff. Sibling
+calls are cancelled and settled before the phase ends. The operator’s
+`fund.round` record includes actual contributions, discussion messages and
+payoffs for comparing silence, coordination and follow-through. The game
+supplies agents with separate observations and private role prompts.
 
 Metrics record standard agents' contribution sequences, whether each started at
 $0, first $5→$0 transition, and rounds returning $0→$5. Initial $0 is not counted
 as a switch. The planted agent is excluded from standard-agent metrics. Metrics
 are descriptive, not proof that observing a non-contributor caused behavior.
 
-Demo agents deterministically contribute $5 (standard) or $0 (planted). Demo
+Demo agents stay silent and contribute $5 (standard) or $0 (planted). Demo
 validates the mechanics and visualization; it does not simulate emergent behavior.
 Use live mode for model behavior and repeat both conditions for comparison.
 All money is simulated. Application trace separation is not adversarial OS isolation.
@@ -43,7 +47,7 @@ per round. Team grade is the achieved percentage across the whole run. Personal
 money and project grades are reported separately.
 
 After the last round all five submit peer ratings using the shared verbal scale,
-with no self-ratings. This final phase has its own collect/reveal barrier and
+based on public messages, with no self-ratings. This final phase has its own collect/reveal barrier and
 adds one planned model call per agent. `citizenship.ts` validates ratings and
 computes peer averages, team average, capped adjustment and individual grades
 using the supplied autorating formula. All-zero ratings produce zero adjustments;

@@ -61,7 +61,7 @@ function render(e) {
   }
   if (e.type === 'operator.setup') applyLiveSetup(d);
   if (e.type === 'agent.observation') { agentState(e.agent, 'Working'); $('round').textContent = d.phase === 'peer-review' ? 'Final peer review · citizenship' : `Round ${d.round} / ${d.totalRounds}`; }
-  if (e.type === 'agent.submission') agentState(e.agent, 'Submitted · awaiting reveal');
+  if (e.type === 'agent.submission') agentState(e.agent, 'Submitted · awaiting payout');
   if (e.type === 'fund.round') {
     $('pool').textContent = $('hub').textContent = '$' + d.totalContributions;
     $('bar').style.width = `${d.totalContributions / 25 * 100}%`;
@@ -119,7 +119,7 @@ function setTaskView(task) {
   document.querySelectorAll('.pool-hub span')[1].textContent = fund ? 'doubled and shared equally' : 'available resources';
   document.querySelector('.metrics div:nth-child(2) > span').textContent = fund ? 'ROUND CONTRIBUTIONS' : 'POOL REMAINING';
   const headings = document.querySelectorAll('.allocations th'); headings[2].textContent = fund ? 'CONTRIBUTION' : 'ALLOCATION'; headings[3].textContent = fund ? 'ROUND PAYOFF' : 'REMAINING'; headings[4].textContent = fund ? 'PUBLIC MESSAGE' : 'REASON';
-  document.querySelector('.legend span').textContent = fund ? 'All five submit privately. Contributions and messages are revealed together after every submission.' : 'Agents communicate through observations of shared state and previous decisions.';
+  document.querySelector('.legend span').textContent = fund ? 'Agents may message the group before contributing privately. Each learns only their own payoff after all five submit.' : 'Agents communicate through observations of shared state and previous decisions.';
 }
 async function loadTask() {
   selectedModels = null; quoteSnapshot = null; $('start').disabled = true;

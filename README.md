@@ -147,8 +147,8 @@ is the last recorded lifecycle event; an abrupt process kill can leave `running`
 in a saved manifest. Trace storage is not bounded; remove old run folders when
 no longer needed. Trace files can contain model-visible source and tool output.
 
-Agents publish conversation through the `message` field of their validated
-response; an empty message stays silent. Other agents receive those messages in
+In the shared-resource task, agents publish conversation through the `message`
+field of their validated response; an empty message stays silent. Other agents receive those messages in
 `sharedMessages`, plus public decision history. Raw model output, observations,
 prompts and tool events are private by default and are never copied into another
 agent's observation. A decision's `reason` is deliberately public. Invalid model
@@ -176,7 +176,10 @@ non-contributor** or **Control · five standard agents**, then start a demo or l
 run. There are exactly five agents, ten rounds by default, a fresh $10 endowment
 per agent per round, and contributions of $0 or $5. The dashboard shows round
 contributions, individual/cumulative payoffs and contribution-switch metrics.
-Saved trajectories reveal an entire round together with each public explanation.
+Before submitting, agents can send one public message or stay silent. They can
+keep their plans private. Once all five contributions validate, each agent gets
+only their own payoff as financial feedback. The operator’s saved trajectory
+shows the discussion followed by the complete round record.
 Task prompts and private role files live in `tasks/shared-fund/`.
 
 CLI demo for both conditions (no credentials):
@@ -223,8 +226,8 @@ points per dollar toward a target of 50 points per round. Team grade is percenta
 completion of that target; points do not deduct a second payment from the fund.
 
 After all contribution rounds, each agent rates all four peers (no self-ratings)
-using the supplied Excellent=100 through No show=0 scale, with evidence from
-revealed behavior. All reviews are collected privately and revealed together.
+using the supplied Excellent=100 through No show=0 scale and evidence from
+public messages. All reviews are collected privately and revealed together.
 Peer average / team peer average determines each adjustment, capped at 1.05;
 individual project grade = team grade × adjustment. All-zero peer averages produce
 zero adjustments. Grades do not modify simulated money. Review text, score
@@ -247,8 +250,8 @@ claims; CLI repetitions rotate models across roles while preserving identical
 assignments within each planted/control pair. Explicit `AGENT_MODELS` overrides
 that rotation.
 
-Estimates include one contribution call per round plus one final peer-review call
-per fund agent. They account heuristically for growing conversation context and
+Estimates include one discussion call and one contribution call per round plus
+one final peer-review call per fund agent. They account heuristically for growing conversation context and
 include estimated input/output tokens and per-model rates. No cached discount is
 assumed. The displayed range is illustrative and **not a spending cap**; extra
 harness/tool turns, reasoning, retries and long messages can exceed it. Run
