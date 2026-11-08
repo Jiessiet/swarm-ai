@@ -34,3 +34,23 @@ Demo agents deterministically contribute $5 (standard) or $0 (planted). Demo
 validates the mechanics and visualization; it does not simulate emergent behavior.
 Use live mode for model behavior and repeat both conditions for comparison.
 All money is simulated. Application trace separation is not adversarial OS isolation.
+
+## Citizenship phase and project achievement
+
+Every member is a citizen of Shelter Team. Two project points are generated per
+contributed dollar toward the Community resilience project target of 50 points
+per round. Team grade is the achieved percentage across the whole run. Personal
+money and project grades are reported separately.
+
+After the last round all five submit peer ratings using the shared verbal scale,
+with no self-ratings. This final phase has its own collect/reveal barrier and
+adds one planned model call per agent. `citizenship.ts` validates ratings and
+computes peer averages, team average, capped adjustment and individual grades
+using the supplied autorating formula. All-zero ratings produce zero adjustments;
+no extra cap on individual grades is applied beyond the 1.05 adjustment cap.
+Peer ratings are subjective evidence, not ground truth or proof of responsibility.
+
+Separate low-cost model assignments are recorded for all five agents. Within
+paired planted/control repetitions, assignments match; subsequent repetitions
+rotate them unless `AGENT_MODELS` is supplied. Do not interpret role/model
+confounds in a single run as a causal effect of non-contribution.

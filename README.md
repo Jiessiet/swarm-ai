@@ -24,14 +24,14 @@ npm ci
 npm start
 ```
 
-Default: three Codex-harness agents, Adaption model `qwen3.5-397b`, three rounds,
-12 shared tokens, maximum allocation four tokens. Set `ADAPTION_MODEL` to another
-model you can access, or an Adaption inference stack such as `stack:your-slug`.
-
-For example, after configuring the key:
+Default resource task: three Codex-harness agents using different low-cost models,
+three rounds, 12 shared tokens and maximum allocation four. The shared-fund task
+uses five different models and ten rounds plus one final peer-review turn.
+Set per-agent models through the dashboard dropdowns or `AGENT_MODELS` (a
+comma-separated list with one distinct catalog model per agent).
 
 ```bash
-ADAPTION_MODEL=qwen3.5-397b ROUNDS=5 STARTING_TOKENS=30 npm start
+ROUNDS=5 STARTING_TOKENS=30 npm start
 ```
 
 `.env.example` lists settings; it is not loaded automatically. Set variables in
@@ -99,8 +99,7 @@ The server binds to loopback only. Set `PORT` to change the default port.
 Choose **Demo** to see simulated activity without credentials, or **Live · Adaption
 inference** to run Codex threads against Adaption. Configure `ADAPTION_API_KEY`
 in the server environment before starting live mode; credentials are never
-entered into the browser. The same `ADAPTION_MODEL` and `ADAPTION_BASE_URL` settings
-used by the CLI apply. Live inference compatibility remains unverified.
+entered into the browser. The same `ADAPTION_BASE_URL` setting used by the CLI applies. Models are selected per agent through the webpage or `AGENT_MODELS`. Live inference compatibility remains unverified.
 
 The dashboard shows active agents, observations, streamed SDK messages, tool
 activity when emitted, usage, allocations, remaining resources, and a decision
@@ -214,3 +213,46 @@ operator-only setup event; saved trajectories display the recorded assignments.
 Older runs without a snapshot show assignments inferred from their stored
 condition, clearly labeled. Setup labels are for the trusted local operator;
 they are not added to other agents' observations or shared conversation.
+
+## Team citizenship, models and pricing
+
+All task participants are citizens of Shelter Team. The fund task is a repeated
+public-goods game with two separately reported outcomes: personal simulated money
+and a peer-adjusted community project grade. Contributions generate two project
+points per dollar toward a target of 50 points per round. Team grade is percentage
+completion of that target; points do not deduct a second payment from the fund.
+
+After all contribution rounds, each agent rates all four peers (no self-ratings)
+using the supplied Excellent=100 through No show=0 scale, with evidence from
+revealed behavior. All reviews are collected privately and revealed together.
+Peer average / team peer average determines each adjustment, capped at 1.05;
+individual project grade = team grade × adjustment. All-zero peer averages produce
+zero adjustments. Grades do not modify simulated money. Review text, score
+breakdowns and team progress appear in the website and saved trajectories.
+The planted role still requires $0 contributions but participates in peer review.
+
+The desktop **Models & estimated run cost** panel has a dropdown for every agent.
+Changing a model recalculates the pre-run estimate. Choosing an occupied model
+swaps assignments so each agent keeps a different model. Assignments are fixed
+while running and recorded with role/setup snapshots for saved-run inspection.
+
+The five default models are DeepSeek V4 Flash, Gemma 4 26B A4B, Gemma 4 31B,
+GLM 53 Flash and Qwen 3.8 27B. The other documented models are available in the
+selectors. Model IDs/rates live in `config/models.json`, sourced from
+[Adaption's models page](https://docs.adaptionlabs.ai/inference-stacks/models/).
+Prices are **credits per million tokens**, not USD. Recheck the source when prices
+change. Availability depends on the key, and Codex/Adaption compatibility remains
+unverified without live credentials. Distinct model roles confound one-run causal
+claims; CLI repetitions rotate models across roles while preserving identical
+assignments within each planted/control pair. Explicit `AGENT_MODELS` overrides
+that rotation.
+
+Estimates include one contribution call per round plus one final peer-review call
+per fund agent. They account heuristically for growing conversation context and
+include estimated input/output tokens and per-model rates. No cached discount is
+assumed. The displayed range is illustrative and **not a spending cap**; extra
+harness/tool turns, reasoning, retries and long messages can exceed it. Run
+estimates are saved in setup snapshots. Live SDK usage is separately converted
+to credits (cached rates apply only to reported cached input) and saved in traces
+and completed results; it is a rate-based calculation, not a provider invoice.
+Demo API cost is zero; its displayed token usage/decisions/reviews are simulated.

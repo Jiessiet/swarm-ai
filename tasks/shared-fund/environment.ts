@@ -1,4 +1,5 @@
 import type { Agent, Observer } from '../../src/types.js';
+import { project, validateReview, scoreCitizenship } from './citizenship.js';
 import type { FundCondition, FundDecision, FundObservation, FundRound } from './types.js';
 export function validateFundDecision(value: unknown): FundDecision {
   if (!value || typeof value !== 'object') throw new Error('Expected a fund decision');
@@ -20,7 +21,7 @@ export async function runFund(agents: Agent<FundObservation>[], rounds: number, 
     // Abort siblings on failure and settle every worker before ending the run.
     const pending = agents.map(async (agent, index) => {
       try {
-        const observation: FundObservation = { round, totalRounds: rounds, endowment: 10, requiredContribution: 5, history: structuredClone(history) };
+        const observation: FundObservation = { round, totalRounds: rounds, endowment: 10, requiredContribution: 5, phase: 'contribution', team: project.team, project: { name: project.name, targetPoints: rounds * 50, earnedPoints: history.reduce((sum, r) => sum + r.doubledFund, 0) }, history: structuredClone(history) };
         observe({ type: 'agent.observation', agent: agent.name, data: observation });
         const decision = validateFundDecision(await agent.decide(observation, turnSignal));
         turnSignal.throwIfAborted();
@@ -56,5 +57,26 @@ export async function runFund(agents: Agent<FundObservation>[], rounds: number, 
       returnToFiveRounds: contributions.flatMap((c, i) => i > 0 && contributions[i - 1] === 0 && c === 5 ? [i + 1] : []),
     };
   });
-  return { task: 'shared-fund', condition, rounds: history, metrics: { standardAgents }, totals: Object.fromEntries(cumulative) };
+  // Final peer review is a second collect/reveal barrier, independent of payouts.
+  const reviewController = new AbortController();
+  const reviewSignal = AbortSignal.any([reviewController.signal, ...(signal ? [signal] : [])]);
+  const reviews = await Promise.allSettled(agents.map(async agent => {
+    try {
+      reviewSignal.throwIfAborted();
+      const peers = agents.filter(a => a.name !== agent.name).map(a => a.name);
+      const observation: FundObservation = { phase: 'peer-review', round: rounds + 1, totalRounds: rounds, endowment: 0, requiredContribution: 5, peers, team: project.team,
+        project: { name: project.name, targetPoints: rounds * 50, earnedPoints: history.reduce((sum, r) => sum + r.doubledFund, 0) }, history: structuredClone(history) };
+      observe({ type: 'agent.observation', agent: agent.name, data: observation });
+      const result = validateReview(await agent.decide(observation, reviewSignal), peers);
+      reviewSignal.throwIfAborted();
+      observe({ type: 'agent.peer_submission', agent: agent.name, data: result });
+      return { agent: agent.name, ...result };
+    } catch (error) { reviewController.abort(error); throw error; }
+  }));
+  const failure = reviews.find(r => r.status === 'rejected');
+  if (failure?.status === 'rejected') throw failure.reason;
+  signal?.throwIfAborted();
+  const citizenship = scoreCitizenship(history, reviews.map(r => (r as PromiseFulfilledResult<{ agent: string; ratings: import('./citizenship.js').Rating[] }>).value), agents.map(a => a.name));
+  observe({ type: 'fund.citizenship', data: citizenship });
+  return { task: 'shared-fund', condition, rounds: history, citizenship, metrics: { standardAgents }, totals: Object.fromEntries(cumulative) };
 }

@@ -8,7 +8,7 @@ from adaption import Adaption
 
 
 # Change this if your Adaption account uses a different model.
-MODEL = "qwen3.5-397b"
+MODEL = os.environ.get("ADAPTION_MODEL", "deepseek-v4-flash")
 
 ROUNDS = 3
 STARTING_TOKENS = 12

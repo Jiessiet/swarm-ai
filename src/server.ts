@@ -36,7 +36,7 @@ export function createDashboard() {
         res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(trajectory)); return;
       }
       if (req.method === 'GET' && url.pathname === '/setup') {
-        const setup = describeSetup({ task: url.searchParams.get('task') ?? undefined, condition: url.searchParams.get('condition') ?? undefined, count: url.searchParams.has('count') ? Number(url.searchParams.get('count')) : undefined, rounds: url.searchParams.has('rounds') ? Number(url.searchParams.get('rounds')) : undefined });
+        const setup = describeSetup({ task: url.searchParams.get('task') ?? undefined, condition: url.searchParams.get('condition') ?? undefined, count: url.searchParams.has('count') ? Number(url.searchParams.get('count')) : undefined, mode: url.searchParams.get('mode') ?? 'demo', models: url.searchParams.has('models') ? url.searchParams.get('models')!.split(',') : undefined, rounds: url.searchParams.has('rounds') ? Number(url.searchParams.get('rounds')) : undefined });
         res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(setup)); return;
       }
       if (req.method === 'GET' && url.pathname === '/task') {
@@ -80,7 +80,7 @@ export function createDashboard() {
         })();
         return;
       }
-      const files: Record<string, [string, string]> = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/conversation.js': ['conversation.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'] };
+      const files: Record<string, [string, string]> = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/conversation.js': ['conversation.js', 'text/javascript'], '/pricing.js': ['pricing.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'] };
       const file = files[url.pathname];
       if (req.method !== 'GET' || !file) { res.writeHead(404).end(); return; }
       res.writeHead(200, { 'Content-Type': file[1], 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Content-Security-Policy': "default-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'" });

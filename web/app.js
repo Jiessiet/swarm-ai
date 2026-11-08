@@ -1,8 +1,9 @@
+import { pricingPanel, citizenshipPanel } from './pricing.js';
 import { conversationEvent, setupPanel } from './conversation.js';
 const $ = id => document.getElementById(id);
 const colors = ['#b6dfa0','#a4c4ea','#d8bae8','#e6c18b','#88cfc3','#db9d9d','#bfc98b','#a8abd9'];
-let agents = new Map(), total = 0, decisions = 0, usage = 0, count = 0, entries = [], lastId = 0, configured = false, running = false, currentTask = 'shared-resource', liveSetup = null, draftNodes = new Map();
-function busy(value) { running = value; $('start').disabled = value; $('stop').disabled = !value; for (const input of $('controls').querySelectorAll('input,select')) input.disabled = value; if (!value && $('task').value === 'shared-fund') for (const key of ['count','tokens','maxTake']) $(key).disabled = true; }
+let agents = new Map(), total = 0, decisions = 0, usage = 0, count = 0, entries = [], lastId = 0, configured = false, running = false, currentTask = 'shared-resource', liveSetup = null, draftNodes = new Map(), selectedModels = null, quoteSnapshot = null, actualCredits = 0;
+function busy(value) { running = value; $('start').disabled = value; $('stop').disabled = !value; for (const input of document.querySelectorAll('#controls input,#controls select,#pricing select')) input.disabled = value; if (!value && $('task').value === 'shared-fund') for (const key of ['count','tokens','maxTake']) $(key).disabled = true; }
 function message(text) { $('notice').textContent = text; }
 function agentState(name, state) { const a = agents.get(name); if (a) { a.node.classList.toggle('active', state === 'Working'); a.node.querySelector('.state').textContent = state; } }
 function addEvent(e) {
@@ -24,13 +25,16 @@ function addEvent(e) {
   if ($('follow').checked) $('feed').scrollTop = $('feed').scrollHeight;
 }
 function applyLiveSetup(setup) {
-  liveSetup = setup; setupPanel(setup, $('setup'), 'Recorded setup for this run');
+  liveSetup = setup; selectedModels = setup.assignments.map(a => a.model); quoteSnapshot = setup; pricingPanel(setup, $('pricing'), changeModel);
+  for (const select of $('pricing').querySelectorAll('select')) select.disabled = running;
+  setupPanel(setup, $('setup'), 'Recorded setup for this run');
   for (const [name, agent] of agents) {
-    agent.node.querySelector('.agent-role')?.remove();
+    agent.node.querySelector('.agent-role')?.remove(); agent.node.querySelector('.agent-model')?.remove();
     const assignment = setup.assignments.find(a => a.name === name);
     if (assignment) {
       const badge = document.createElement('span'); badge.className = 'agent-role' + (assignment.role === 'planted' ? ' planted-role' : ''); badge.textContent = assignment.label;
       agent.node.querySelector('h3').after(badge);
+      if (assignment.model) { const model = document.createElement('span'); model.className = 'agent-model'; model.textContent = assignment.model; badge.after(model); }
       agent.node.classList.toggle('non-contributor', assignment.role === 'planted');
     }
   }
@@ -40,7 +44,7 @@ function render(e) {
   if (e.id <= lastId) return; lastId = e.id;
   const d = e.data;
   if (e.type === 'run.started') {
-    liveSetup = null; draftNodes.clear();
+    previewVersion++; liveSetup = null; draftNodes.clear(); actualCredits = 0; $('usage-cost').textContent = ''; $('citizenship').hidden = true;
     currentTask = d.task ?? 'shared-resource'; setTaskView(currentTask);
     $('fund-metrics').hidden = true;
     agents = new Map(); entries = []; decisions = usage = count = 0; total = d.tokens;
@@ -56,7 +60,7 @@ function render(e) {
     });
   }
   if (e.type === 'operator.setup') applyLiveSetup(d);
-  if (e.type === 'agent.observation') { agentState(e.agent, 'Working'); $('round').textContent = `Round ${d.round} / ${d.totalRounds}`; }
+  if (e.type === 'agent.observation') { agentState(e.agent, 'Working'); $('round').textContent = d.phase === 'peer-review' ? 'Final peer review · citizenship' : `Round ${d.round} / ${d.totalRounds}`; }
   if (e.type === 'agent.submission') agentState(e.agent, 'Submitted · awaiting reveal');
   if (e.type === 'fund.round') {
     $('pool').textContent = $('hub').textContent = '$' + d.totalContributions;
@@ -72,6 +76,9 @@ function render(e) {
     $('pool').textContent = $('hub').textContent = d.poolRemaining; $('bar').style.width = `${d.poolRemaining / total * 100}%`; $('decisions').textContent = ++decisions;
     const row = document.createElement('tr'); for (const value of [d.round, e.agent, `+${d.take}`, d.poolRemaining, d.reason]) { const cell = document.createElement('td'); cell.textContent = value; row.append(cell); } $('ledger').append(row);
   }
+  if (e.type === 'fund.citizenship') { $('citizenship').hidden = false; citizenshipPanel(d, $('citizenship-body')); }
+  if (e.type === 'agent.usage') { actualCredits += d.credits; $('usage-cost').textContent = `Reported usage so far: ${actualCredits.toFixed(6)} credits (rate-based calculation, not an invoice).`; }
+  if (e.type === 'operator.billing') $('usage-cost').textContent = `Run usage cost: ${d.credits.toFixed(6)} credits${d.simulated ? ' · demo, no API charges' : ' · from reported usage, not an invoice'}`;
   if (e.type === 'sdk.turn.completed' && d.usage) { usage += d.usage.input_tokens + d.usage.output_tokens; $('usage').textContent = usage.toLocaleString(); }
   if (e.type === 'run.completed' && d.metrics) showMetrics(d.metrics);
   if (['run.completed','run.failed','run.stopped'].includes(e.type)) { busy(false); $('status').textContent = e.type.split('.')[1]; agents.forEach((_, name) => agentState(name, 'Idle')); if (d.message) message(d.message); }
@@ -93,9 +100,11 @@ $('filter').onchange = $('live-scope').onchange = () => entries.forEach(filterNo
 $('controls').onsubmit = async e => {
   e.preventDefault(); if (running) return;
   if ($('mode').value === 'adaption' && !configured) { message('Set ADAPTION_API_KEY in the server environment, then restart npm run dashboard.'); return; }
+  await previewSetup();
+  if (!quoteSnapshot) { message('Wait for a valid model assignment and price estimate before starting.'); return; }
   busy(true);
   try {
-    const body = { mode: $('mode').value, task: $('task').value, condition: $('condition').value }; for (const key of ['count','rounds','tokens','maxTake']) body[key] = Number($(key).value);
+    const body = { mode: $('mode').value, task: $('task').value, condition: $('condition').value, models: selectedModels }; for (const key of ['count','rounds','tokens','maxTake']) body[key] = Number($(key).value);
     const response = await fetch('/run', { method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify(body) });
     if (!response.ok) throw new Error(await response.text());
   } catch (error) { message(error.message); busy(false); }
@@ -113,6 +122,7 @@ function setTaskView(task) {
   document.querySelector('.legend span').textContent = fund ? 'All five submit privately. Contributions and messages are revealed together after every submission.' : 'Agents communicate through observations of shared state and previous decisions.';
 }
 async function loadTask() {
+  selectedModels = null; quoteSnapshot = null; $('start').disabled = true;
   try {
     const task = await (await fetch('/task?id=' + $('task').value)).json();
     if (running) return;
@@ -128,19 +138,28 @@ function showMetrics(metrics) {
   }
 }
 let previewVersion = 0;
+function changeModel(index, model) {
+  if (running) return;
+  const previous = selectedModels[index]; const other = selectedModels.indexOf(model);
+  selectedModels[index] = model; if (other >= 0 && other !== index) selectedModels[other] = previous;
+  previewSetup();
+}
 async function previewSetup() {
   const version = ++previewVersion;
   if (running) return;
+  quoteSnapshot = null; $('start').disabled = true;
   try {
-    const query = new URLSearchParams({ task: $('task').value, condition: $('condition').value, count: $('count').value, rounds: $('rounds').value });
+    const query = new URLSearchParams({ task: $('task').value, condition: $('condition').value, count: $('count').value, rounds: $('rounds').value, mode: $('mode').value });
+    if (selectedModels && selectedModels.length === Number($('count').value)) query.set('models', selectedModels.join(','));
     const response = await fetch('/setup?' + query);
-    if (!response.ok) return;
+    if (!response.ok) throw new Error(await response.text());
     const setup = await response.json();
     if (running || version !== previewVersion) return;
-    setupPanel(setup, $('setup'), 'Next run · setup preview');
-  } catch { message('Could not load setup preview.'); }
+    quoteSnapshot = setup; selectedModels = setup.assignments.map(a => a.model);
+    setupPanel(setup, $('setup'), 'Next run · setup preview'); pricingPanel(setup, $('pricing'), changeModel); $('start').disabled = false;
+  } catch { if (version === previewVersion) { quoteSnapshot = null; $('start').disabled = true; message('Could not load setup and pricing. Check the selected models and settings.'); } }
 }
-for (const key of ['condition', 'count', 'rounds']) $(key).addEventListener('input', previewSetup);
+for (const key of ['condition', 'count', 'rounds', 'mode']) $(key).addEventListener('input', previewSetup);
 $('task').onchange = loadTask;
 loadTask();
 
@@ -168,6 +187,9 @@ async function loadTrajectory() {
       if (response.ok) { setup = await response.json(); setup.assignments.forEach((a, i) => { a.name = manifest.agents[i]?.name ?? a.name; }); }
     }
     if (setup) { const panel = document.createElement('div'); panel.className = 'saved-setup'; setupPanel(setup, panel, manifest.setup ? 'Saved run · recorded role assignments' : 'Older run · assignments inferred from recorded condition'); $('trajectory').append(panel); }
+    const citizenship = events.find(e => e.type === 'fund.citizenship');
+    $('citizenship').hidden = !citizenship; if (citizenship) citizenshipPanel(citizenship.data, $('citizenship-body'));
+    if (setup?.pricing) { const pricing = document.createElement('div'); pricing.className = 'saved-pricing'; pricingPanel(setup, pricing); $('trajectory').append(pricing); }
     const final = events.find(e => e.type === 'run.completed');
     $('fund-metrics').hidden = true; if (final?.data?.metrics) showMetrics(final.data.metrics);
     for (const event of events) {

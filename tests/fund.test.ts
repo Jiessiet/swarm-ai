@@ -1,10 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { runFund, validateFundDecision } from '../tasks/shared-fund/environment.js';
-import { promptFor, roleFor } from '../tasks/shared-fund/definition.js';
+import { promptFor, roleFor, demoReview } from '../tasks/shared-fund/definition.js';
 import type { Agent } from '../src/types.js';
 import type { FundObservation } from '../tasks/shared-fund/types.js';
-const agents = (values: number[]): Agent<FundObservation>[] => values.map((c, i) => ({ name: String(i), async decide() { return { contribution: c, message: 'test' }; } }));
+const agents = (values: number[]): Agent<FundObservation>[] => values.map((c, i) => ({ name: String(i), async decide(o) { if (o.phase === 'peer-review') return demoReview(o); return { contribution: c, message: 'test' }; } }));
 test('fund payouts match cooperative and planted examples', async () => {
   const control = await runFund(agents([5,5,5,5,5]), 1, 'control');
   assert.ok(control.rounds[0].outcomes.every(o => o.payoff === 15));
@@ -16,6 +16,7 @@ test('fund payouts match cooperative and planted examples', async () => {
 test('round barrier withholds all current-round decisions and isolates history', async () => {
   let received = 0; const publicEvents: any[] = [];
   const group: Agent<FundObservation>[] = Array.from({ length:5 }, (_, i) => ({name: String(i), async decide(o) {
+    if (o.phase === 'peer-review') return demoReview(o);
     assert.equal(o.history.length, o.round - 1);
     if (o.round === 1) { received++; await new Promise(resolve => setTimeout(resolve, i * 10)); assert.ok(!publicEvents.length); }
     if (o.round === 2) { assert.equal(o.history[0].outcomes[0].message, 'test'); o.history[0].outcomes[0].message = 'mutated'; }
@@ -36,7 +37,7 @@ test('invalid submissions never reveal a partial round and settle cancelled sibl
 });
 test('metrics distinguish initial non-contribution, switches, and returns', async () => {
   const group = agents([5,5,5,5,0]);
-  group[0].decide = async o => ({ contribution: o.round === 2 ? 0 : 5, message:'x' });
+  group[0].decide = async o => o.phase === 'peer-review' ? demoReview(o) : ({ contribution: o.round === 2 ? 0 : 5, message:'x' });
   const result = await runFund(group, 3, 'planted');
   assert.equal(result.metrics.standardAgents[0].firstSwitchToZero, 2);
   assert.deepEqual(result.metrics.standardAgents[0].returnToFiveRounds,[3]);
