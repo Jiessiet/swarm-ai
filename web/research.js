@@ -4,11 +4,13 @@ function list(target, title, items) { target.append(el('h3', title)); const ul =
 export function researchBrief(result, target, runId) {
   const b = result.brief; target.replaceChildren();
   target.append(el('p', result.simulated ? 'SIMULATED DEMO · No browsing or empirical trials performed.' : 'RESEARCH PLAN · Empirical experiment not yet run.'), el('h2', b?.title ?? 'Partial hackathon record'));
+  if (result.network) target.append(el('p', `${result.network.count} agents · ${result.network.edges.length} directed communication channels · final network revision ${result.network.revision}. Synthesis receives only incoming-neighbor context.`));
   if (result.evidence) target.append(el('p', `${result.evidence.searchResults} search results · ${result.evidence.pagesRead} pages read · ${result.evidence.citedSources} cited sources. ${result.evidence.note}`));
   if (runId) { const download = el('a', b ? 'Download research brief (.md)' : 'Download partial record (.md)'); download.href = `/runs/${encodeURIComponent(runId)}/brief.md`; download.download = 'research-brief.md'; target.append(download); }
+  if (result.errors?.length) list(target, 'Agent errors', result.errors.map(e => `${e.agent}: ${e.message} · ${e.phase}, round ${e.round}, attempt ${e.attempt} · ${e.retrying ? 'retrying' : 'turn skipped'}`));
   if (result.timeouts?.length) list(target, 'Timed-out turns · skipped', result.timeouts.map(t => `${t.message} · ${t.phase}, round ${t.round}`));
   if (!b) {
-    section(target, 'No final brief', 'All synthesis attempts timed out. The discussion and retrieved sources are saved; no empirical experiment was run.');
+    section(target, 'No final brief', 'All synthesis attempts failed or timed out. The discussion and retrieved sources are saved; no empirical experiment was run.');
     for (const contribution of result.contributions ?? []) section(target, `${contribution.agent} · ${contribution.phase} · round ${contribution.round}`, contribution.message);
     return;
   }

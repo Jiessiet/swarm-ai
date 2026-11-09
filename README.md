@@ -1,6 +1,6 @@
 # swarm-ai
 
-A collaborative **one-day swarm AI safety research hackathon**. Five agents search
+A collaborative **one-day swarm AI safety research hackathon**. Five agents by default search
 online sources, discuss research ideas, challenge each other's assumptions, and
 converge on a small empirical project a team can implement and evaluate in eight
 hours. The output is a cited research brief with a hypothesis, baseline,
@@ -70,12 +70,39 @@ continue. The agent can participate again in the next round. Already retrieved
 sources and completed contributions are kept, and later agents see which turns
 were missed. The dashboard, saved traces, JSON and Markdown show skipped turns.
 
-If the synthesis lead times out, another agent is asked to write the brief. If
-all five synthesis attempts time out, the run saves a clearly labeled **partial
+Provider errors and invalid responses are recorded and retried once with error
+feedback. If the retry also fails, only that turn is skipped; the agent returns
+in later rounds. Invalid citations, malformed briefs and exhausted web budgets
+follow the same bounded recovery, without admitting invalid output or exceeding
+research budgets. Errors appear in team observations, the dashboard and exports.
+Retries can add model calls and cost.
+
+If the synthesis lead fails or times out, another agent is asked to write the brief. If
+all five synthesizers fail or time out, the run saves a clearly labeled **partial
 record** with contributions and sources, and marks the saved run `partial`.
-Stop still cancels the whole run immediately. Other model/validation errors
-continue to fail the run; recovery applies specifically to agent turn timeouts.
+Stop still cancels the whole run immediately. Invalid run settings still fail
+before the hackathon starts.
 The retained resource/fund tasks keep their strict participant-failure behavior.
+
+## Editable communication network
+
+The dashboard is a dark research observatory inspired by [AI Safety HOT](https://aisafetyhot.com/en), with an animated swarm and a functional network editor.
+
+- Start with five agents; select **2–100 agents** before a run. Models may repeat across any number of agents. Default roles cycle through the research specialties, and every agent has a unique name (A–Z, AA–CV).
+- Choose **Mesh**, **Hub**, **Ring**, **Pipeline →**, or **Clusters**. Mesh/ring/hub/cluster links are bidirectional; the pipeline is directed.
+- Select a node to inspect its role, model, incoming channels and outgoing recipients. Toggle **Receives from** checkboxes to edit incoming channels.
+- Use **Connect nodes**, then select a source and a destination to toggle a channel. **Two-way** toggles both directions. Select a link and choose **Remove this link** to disconnect it.
+- Drag nodes to arrange the diagram, or focus a node and use arrow keys. Positions change the layout; channels change communication.
+- During a run, graph edits apply to the **next decision**. The in-flight response uses the network snapshot it started with. Agent count and models are fixed until the run ends. Roles remain editable.
+- Contributions and retrieved sources are visible only to the agent itself and its incoming neighbors. Cited sources can be explicitly relayed through a neighbor's validated contribution. Synthesis has no global visibility bypass; disconnected groups may produce an incomplete perspective.
+- In an agent's inspector, edit **Role title** and **Role instructions**, then choose **Apply role**. This works before and during a run. Live changes apply to the next decision (including retries); a response in progress keeps the role snapshot it started with. Role edits do not change its model, network links, turn order, or the synthesis output schema.
+- Role changes are validated, revisioned and recorded as `hackathon.roles` events. Contributions record the role used at decision time; final JSON includes the final role assignments. Unsaved edits survive incoming status updates.
+- Research decisions use fresh SDK threads so network-restricted context does not remain in a persistent model conversation. Own validated contributions remain visible as the agent's work history.
+- The operator retains the full archive. Initial topology, live changes, revisions and final topology are recorded. Operator visibility does not imply agent visibility.
+- Ambient particles are decoration. Brighter traveling pulses correspond to actual validated contributions and their recipients. **Pause motion** and the system reduced-motion preference stop ambient animation.
+- Edit the research objective above the graph before starting a live run. Demo mode uses deterministic example research and performs no browsing or model calls.
+
+`GET /network` returns the active research run's graph. `POST /network` accepts `{runId, revision, network: {count, edges: [{from, to}]}}`; indices are zero-based. Stale revisions, invalid edges and changes to team size are rejected. This API retains the dashboard's local host and origin checks.
 
 ## Internet research
 
@@ -172,3 +199,89 @@ The original Python `experiment.py` is a separate standalone experiment requirin
 its pinned Python dependencies and `ADAPTION_API_KEY`. See
 [tasks/README.md](tasks/README.md) and
 [tasks/shared-fund/README.md](tasks/shared-fund/README.md) for the retained games.
+
+
+`GET /roles` returns the active run's role settings. `POST /roles` accepts
+`{runId, revision, roles: [{title, instructions}, ...]}`. Titles are required
+(1–80 characters); instructions may contain up to 2,000 characters. Exactly one
+assignment per agent is required. Stale revisions and mismatched run IDs are rejected.
+
+
+## What the agents actually did
+
+The dashboard's **Activity & analysis** section explains each research run using
+its saved trace. It updates during a run and also works for completed, partial,
+stopped and failed runs selected in the archive. It makes no extra model calls.
+
+- A run-wide summary covers participation, research evidence, context exposure,
+  network/role edits, retries, timeouts and the final outcome. Evidence buttons
+  jump to the supporting recorded actions.
+- A timeline shows actions by agent and elapsed time. Filter by agent involvement
+  or action type; scrub, step, or replay to inspect the whole run.
+- The read-only swarm replay shows the topology at each decision, routes for a
+  contribution, and peer work appearing in a decision context. Selecting an action
+  highlights its actual agent in the live graph when it belongs to that run.
+  Selecting a live node filters the report, and agent cards connect back to nodes.
+- Details show the complete contribution or tool request/result, the role used,
+  source links, recorded recipients, and agents whose later contexts included
+  that work. Contributions present in the final synthesis context and sources
+  cited in the brief are explicitly linked to that outcome.
+- **Open recorded event** jumps to its saved archive entry; **Read final research
+  brief** opens the matching run's brief. Archive replay never changes a live
+  communication graph or role assignment.
+- Per-agent cards summarize actual contribution counts, searches/reads, distinct
+  citations, peer context, role history, failures, retries, timeouts, reported
+  tokens and median recorded decision latency. Unknown metrics remain unknown.
+- The report distinguishes availability from observed context exposure. Neither
+  proves agreement, private intent or causal influence. The research task plans
+  an experiment; it does not run the proposed empirical experiment. Demo activity
+  remains explicitly labeled simulated.
+
+`GET /runs/:id/analysis` returns the sanitized computed report.
+`GET /runs/:id/analysis.md` downloads the complete report and action history.
+The analysis combines public records, each agent's context/usage metadata and
+operator terminal errors. It does not include private prompts, raw SDK messages
+or reasoning text, and preserves the existing public/private trace endpoints.
+Older runs with no recorded topology show that gap instead of invented edges.
+
+
+The behavior section uses a compact trajectory layout inspired by
+[SwarmHarm's trajectory explorer](https://swarmharm.com/?case=r136&phase=1):
+a selected-record panel beside a read-only swarm view, one timeline and playback
+bar below, and an always-visible short run summary. Detailed behavior analysis,
+per-agent metrics, complete history and interpretation limits are expandable.
+The replay supports **Orbit** and **Flow** layouts; **Outcome** opens the final
+brief or selects the recorded failure/partial outcome when no brief exists.
+
+
+## Shared models, larger swarms and saved roles
+
+- In **Models & experiment setup**, each model dropdown is independent. Selecting
+  the same model for another agent no longer swaps the first agent's assignment.
+  **Model for all agents → Apply to all** sets a single model for the whole team.
+- The research task accepts **2–100 agents**. Agent count and model changes still
+  happen between runs. CLI users can set `AGENT_COUNT=100`; `AGENT_MODELS` may
+  contain repeated catalog model IDs, one per agent.
+- Teams of more than ten agents start with a bidirectional ring to keep the
+  default network sparse. All existing topology presets, including a full
+  100-agent mesh (9,900 directed channels), remain available.
+- For more than twenty agents, the graph uses a grid and shows the selected
+  agent's channels. All nodes remain selectable, and **Inspect agent** provides
+  direct access to every role and connection. The replay uses the same approach;
+  its timeline scrolls, and large graph snapshots are deduplicated in reports.
+- To reuse roles, enter a **Preset name** above the graph and choose **Save current
+  roles**. This saves the applied role titles and instructions for the entire
+  team. Saving the same name updates that preset.
+- Choose a **Saved role team → Load roles** to restore its team size and roles
+  before a run. Loading preserves model choices and the research objective.
+  During a run, a preset with the same agent count can be applied live; it follows
+  the existing next-decision rule. A different team size must wait until the run ends.
+- Presets persist in `data/role-presets.json` in the sandbox folder, across browser
+  refreshes and server restarts. This local library is ignored by Git. Set
+  `ROLE_PRESET_FILE` if a different storage path is needed. Browser origin/port
+  changes do not lose presets when servers use the same library file.
+
+The local role library API is `GET /role-presets`, `GET /role-presets/:id`, and
+`POST /role-presets` with `{name, roles: [{title, instructions}, ...]}`. It uses the
+same localhost/origin checks as the rest of the dashboard, validates every role,
+and writes the library atomically.

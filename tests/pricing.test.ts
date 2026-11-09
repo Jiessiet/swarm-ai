@@ -6,7 +6,7 @@ test('uses five different cheaper models and honors an explicit model per thread
   const models = assignModels(5); assert.equal(new Set(models).size, 5);
   assert.ok(!models.includes('qwen3.5-397b')); assert.ok(!models.includes('glm-5.2'));
   for (const model of models) assert.equal(adaptionHarnessOptions({ ADAPTION_API_KEY:'test', ADAPTION_MODEL:model }).thread.model,model);
-  assert.throws(()=>assignModels(2,['deepseek-v4-flash','deepseek-v4-flash']));
+  assert.deepEqual(assignModels(2,['deepseek-v4-flash','deepseek-v4-flash']),['deepseek-v4-flash','deepseek-v4-flash']);
   assert.throws(()=>assignModels(1,['unknown']));
 });
 test('quotes all discussion, decision and review calls, uses credits and zero demo billing', () => {

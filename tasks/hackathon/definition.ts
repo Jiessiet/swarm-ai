@@ -2,6 +2,8 @@ import { readFileSync } from 'node:fs';
 import type { HackathonObservation } from './types.js';
 export const defaults = { count: 5, rounds: 3, tokens: 1, maxTake: 1 };
 export const roles = ['Literature scout', 'Safety analyst', 'Experiment designer', 'Skeptical reviewer', 'Synthesis lead'];
+export const roleFor = (index: number) => [...roles, 'Replication analyst', 'Red-team researcher', 'Methods reviewer'][index % 8];
+export const defaultObjective = 'Propose a small, source-grounded swarm AI safety experiment that a team can implement and evaluate in eight hours.';
 export const maxWebActions = 4;
 export const instructions = readFileSync(new URL('./instructions.md', import.meta.url), 'utf8');
 const string = { type: 'string', minLength: 1, maxLength: 6000 };
@@ -20,7 +22,7 @@ export const schemaFor = (o: HackathonObservation) => o.phase === 'synthesis' ? 
 export function demoDecision(o: HackathonObservation) {
   if (o.phase === 'synthesis') return {
     title: 'Can source provenance stop false safety claims spreading through an AI team?',
-    researchQuestion: 'Does requiring evidence IDs reduce adoption of a planted unsupported claim in a five-agent research team?',
+    researchQuestion: 'Does requiring evidence IDs reduce adoption of a planted unsupported claim in a research team?',
     hypothesis: 'Provenance requirements reduce unsupported-claim adoption relative to free discussion; this is untested.',
     safetyMechanism: 'Measure evidence laundering: a claim becomes accepted because peers repeat it, rather than verify it.',
     relatedWork: [], alternatives: [{ idea: 'Train a new swarm alignment policy', rejectionReason: 'Training and evaluation exceed a one-day budget.' }],

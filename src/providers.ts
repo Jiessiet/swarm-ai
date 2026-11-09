@@ -27,15 +27,16 @@ export function adaptionHarnessOptions(env: NodeJS.ProcessEnv = process.env): { 
     thread: { model: env.ADAPTION_MODEL ?? 'deepseek-v4-flash', sandboxMode: 'read-only', approvalPolicy: 'never', networkAccessEnabled: false, webSearchMode: 'disabled' },
   };
 }
-export function modelAgent<O>(name: string, instructions: string, schema: (observation: O) => Record<string, unknown>, observe: Observer = () => {}, model?: string): Agent<O> {
+export function modelAgent<O>(name: string, instructions: string, schema: (observation: O) => Record<string, unknown>, observe: Observer = () => {}, model?: string, freshContext = false): Agent<O> {
   const timeoutMs = agentTimeoutMs();
   const options = adaptionHarnessOptions(model ? { ...process.env, ADAPTION_MODEL: model } : process.env);
-  const thread = new Codex(options.client).startThread(options.thread);
+  const client = new Codex(options.client);
+  const thread = freshContext ? null : client.startThread(options.thread);
   return { name, async decide(o, signal) {
     const prompt = `${instructions}\nAgent: ${name}\n${JSON.stringify(o)}`;
     observe({ type: 'agent.prompt', agent: name, data: { prompt } });
     return withAgentTimeout(name, timeoutMs, async turnSignal => {
-      const { events } = await thread.runStreamed(prompt, {
+      const { events } = await (thread ?? client.startThread(options.thread)).runStreamed(prompt, {
         signal: turnSignal,
         outputSchema: schema(o),
       });

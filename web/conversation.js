@@ -1,4 +1,3 @@
-import { researchBrief } from './research.js';
 // Render untrusted agent content using textContent; raw payloads stay collapsed.
 const colors = ['#b6dfa0','#a4c4ea','#d8bae8','#e6c18b','#88cfc3','#db9d9d','#bfc98b','#a8abd9'];
 function element(tag, text, className) {
@@ -20,6 +19,15 @@ export function setupPanel(setup, target, caption = 'Current experiment') {
   const rules = element('ul', undefined, 'setup-rules');
   for (const rule of setup.rules) rules.append(element('li', rule)); target.append(rules);
   if (setup.citizenship) { target.append(element('p', `${setup.citizenship.team}: ${setup.citizenship.objective}`, 'team-goal'), element('p', setup.citizenship.scoring, 'setup-summary')); }
+  if (setup.network) {
+    target.append(element('h3', `Communication network · ${setup.network.edges.length} directed channels`));
+    const routing = element('ul', undefined, 'setup-rules');
+    setup.assignments.forEach((agent, i) => {
+      const incoming = setup.network.edges.filter(e => e.to === i).map(e => setup.assignments[e.from]?.name);
+      routing.append(element('li', `${agent.name} receives from ${incoming.join(', ') || 'no one (independent)'}.`));
+    });
+    target.append(routing);
+  }
   const assignments = element('div', undefined, 'role-grid');
   setup.assignments.forEach((agent, index) => {
     const card = element('div', undefined, `role-card ${agent.role === 'planted' ? 'planted' : ''}`);
@@ -31,13 +39,13 @@ export function setupPanel(setup, target, caption = 'Current experiment') {
   target.append(assignments);
 }
 function roleLabel(name, setup) { return setup?.assignments?.find(a => a.name === name)?.label; }
-function bubble(name, text, facts, setup) {
+function bubble(name, text, facts, setup, recordedRole) {
   const node = element('div', undefined, 'conversation-bubble'); node.dataset.speaker = name;
   const header = element('div', undefined, 'speaker');
   const index = setup?.assignments?.findIndex(a => a.name === name) ?? -1;
   node.style.setProperty('--agent-color', colors[(index >= 0 ? index : 0) % colors.length]);
   header.append(element('b', name));
-  const role = roleLabel(name, setup); if (role) header.append(element('span', role, 'speaker-role'));
+  const role = recordedRole ?? roleLabel(name, setup); if (role) header.append(element('span', role, 'speaker-role'));
   node.append(header);
   if (text) node.append(element('p', text, 'spoken-message'));
   if (facts) node.append(element('div', facts, 'decision-facts'));
@@ -56,23 +64,31 @@ export function conversationEvent(event, setup) {
   const header = element('div', undefined, 'meta');
   const isPublic = event.visibility === 'public';
   const isFundRecord = event.type === 'fund.round';
-  header.append(element('span', isFundRecord ? 'Round record · operator view' : isPublic ? 'Shared with all agents' : 'Private · operator view', 'visibility-label'));
+  header.append(element('span', isFundRecord ? 'Round record · operator view' : isPublic ? 'Operator view · team activity' : 'Private · operator view', 'visibility-label'));
   if (event.time) header.append(element('time', new Date(event.time).toLocaleTimeString()));
   node.append(header);
   switch (event.type) {
+    case 'hackathon.roles':
+      node.append(element('h3', 'Agent roles updated'), element('p', `${d.changedAgents.join(', ') || 'Team roles'} · revision ${d.roles.revision}. New assignments apply to subsequent decisions.`, 'event-description')); break;
+    case 'hackathon.network':
+      node.append(element('h3', 'Communication network updated'), element('p', `Revision ${d.network.revision} · ${d.network.edges.length} directed channels. Applied to subsequent decisions.`, 'event-description')); break;
+    case 'hackathon.agent.error':
+      node.append(element('h3', `${event.agent} · ${d.retrying ? 'retrying after error' : 'turn skipped after error'}`), element('p', `${d.message} (${d.phase}, round ${d.round}, attempt ${d.attempt}). ${d.retrying ? 'Retrying with error feedback.' : 'The team continues; this agent can return next round.'}`, 'event-description')); break;
     case 'hackathon.agent.timeout':
       node.append(element('h3', `${event.agent} · turn timed out`), element('p', `${d.message} (${d.phase}, round ${d.round}). Turn skipped; the team continues.`, 'event-description')); break;
     case 'hackathon.phase':
       node.append(element('h3', `Hackathon · ${d.phase}`)); break;
     case 'hackathon.contribution':
-      node.append(bubble(event.agent, d.message, `${d.phase} · Round ${d.round} · Sources: ${d.sourceIds.join(', ') || 'none'}`, setup)); break;
+      node.append(bubble(event.agent, d.message, `${d.phase} · Round ${d.round} · Sources: ${d.sourceIds.join(', ') || 'none'}${d.recipients ? ' · Sent to: ' + (d.recipients.join(', ') || 'no neighbors') : ''}`, setup, d.role)); break;
     case 'hackathon.web.request':
       node.append(element('h3', `${event.agent} · ${d.action === 'search' ? 'searching' : 'reading'} the web`), element('p', d.query || d.url)); break;
     case 'hackathon.web.result':
       node.append(element('h3', `${event.agent} · web research`), element('p', d.error || `Retrieved ${d.results.length} source(s)`));
       for (const source of d.results ?? []) node.append(element('p', `${source.id} · ${source.title} · ${source.url} (${source.kind})`)); break;
     case 'hackathon.brief':
-      researchBrief(d, node, event.run); node.dataset.agents = JSON.stringify(setup?.assignments.map(a => a.name) ?? []); break;
+      node.append(element('h3', d.brief?.title ?? 'Partial research saved'), element('p', d.brief?.researchQuestion ?? 'The discussion and sources were saved without a final synthesis.', 'event-description'));
+      { const link = element('a', 'Read the research brief ↓'); link.href = '#research'; node.append(link); }
+      node.dataset.agents = JSON.stringify(setup?.assignments.map(a => a.name) ?? []); break;
     case 'fund.citizenship':
       node.append(element('h3', 'Team citizenship · final peer review'), element('p', `${d.project.name}: ${d.projectPoints}/${d.projectTarget} points. Team grade ${d.teamGrade.toFixed(1)}.`, 'round-summary'));
       for (const agent of d.agents) node.append(bubble(agent.agent, `Peer average ${agent.peerAverage.toFixed(1)} · adjustment ${agent.adjustmentFactor.toFixed(3)} · individual project grade ${agent.individualGrade.toFixed(1)}`, 'Earnings are unchanged by citizenship grades.', setup));
@@ -89,7 +105,7 @@ export function conversationEvent(event, setup) {
     case 'run.started':
       node.append(element('h3', 'Experiment started'), element('p', `${d.agents?.length ?? 'All'} agents are participating${d.mode === 'demo' ? ' in a simulated demonstration' : ' using Adaption inference'}.`, 'event-description')); break;
     case 'run.completed':
-      node.append(element('h3', 'Experiment completed'), element('p', d.completion === 'partial' ? 'Partial research saved. All synthesis attempts timed out; no final brief was produced.' : d.brief ? 'The one-day research plan is ready. Proposed empirical work has not been run.' : d.rounds ? `${d.rounds.length} rounds finished. Review each agent’s contribution history below.` : 'All committed decisions have been saved.', 'event-description')); break;
+      node.append(element('h3', 'Experiment completed'), element('p', d.completion === 'partial' ? 'Partial research saved. All synthesis attempts failed or timed out; no final brief was produced.' : d.brief ? 'The one-day research plan is ready. Proposed empirical work has not been run.' : d.rounds ? `${d.rounds.length} rounds finished. Review each agent’s contribution history below.` : 'All committed decisions have been saved.', 'event-description')); break;
     case 'run.stopped': case 'run.failed': case 'sdk.error': case 'sdk.turn.failed':
       node.classList.add('error'); node.append(element('h3', event.type.includes('stopped') ? 'Experiment stopped' : 'A problem interrupted the run'), element('p', d.message ?? d.error?.message ?? 'See technical details for the error.', 'event-description')); break;
     case 'agent.peer_submission':

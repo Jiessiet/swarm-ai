@@ -1,0 +1,223 @@
+{
+  "id": "116a3ddb-2823-4f0a-88e0-f148c729ce53",
+  "created": "2026-11-09T02:33:18.217Z",
+  "status": "failed",
+  "config": {
+    "task": "hackathon",
+    "mode": "adaption",
+    "count": 5,
+    "rounds": 6,
+    "agentTimeoutSeconds": 600,
+    "tokens": 1,
+    "maxTake": 1,
+    "models": [
+      "deepseek-v4-flash",
+      "gemma-4-26b-a4b-it",
+      "gemma-4-31b-it",
+      "glm-53-flash",
+      "qwen3.8-27b"
+    ]
+  },
+  "agents": [
+    {
+      "name": "Agent A",
+      "id": "agent-1"
+    },
+    {
+      "name": "Agent B",
+      "id": "agent-2"
+    },
+    {
+      "name": "Agent C",
+      "id": "agent-3"
+    },
+    {
+      "name": "Agent D",
+      "id": "agent-4"
+    },
+    {
+      "name": "Agent E",
+      "id": "agent-5"
+    }
+  ],
+  "setup": {
+    "agentTimeoutSeconds": 600,
+    "task": "hackathon",
+    "title": "Swarm AI safety · one-day research hackathon",
+    "condition": null,
+    "rounds": 6,
+    "citizenship": {
+      "team": "Research team",
+      "objective": "Collaborate on a source-grounded, falsifiable swarm AI safety project feasible in eight hours.",
+      "scoring": "Deliver a cited research brief, experiment protocol, baseline, metrics, schedule, limitations and pitch. Findings remain hypotheses until tested."
+    },
+    "pricing": {
+      "source": "https://docs.adaptionlabs.ai/inference-stacks/models/",
+      "verifiedAt": "2026-11-08T02:47:37.156501+00:00",
+      "mode": "adaption",
+      "perAgent": [
+        {
+          "index": 0,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 1181500,
+          "outputTokens": 12000,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.0541057,
+          "expectedCharge": 0.0541057,
+          "calls": 10
+        },
+        {
+          "index": 1,
+          "model": "gemma-4-26b-a4b-it",
+          "inputTokens": 1181500,
+          "outputTokens": 12000,
+          "inputRate": 0.0765,
+          "outputRate": 0.255,
+          "credits": 0.09344475,
+          "expectedCharge": 0.09344475,
+          "calls": 10
+        },
+        {
+          "index": 2,
+          "model": "gemma-4-31b-it",
+          "inputTokens": 1181500,
+          "outputTokens": 12000,
+          "inputRate": 0.09,
+          "outputRate": 0.34,
+          "credits": 0.110415,
+          "expectedCharge": 0.110415,
+          "calls": 10
+        },
+        {
+          "index": 3,
+          "model": "glm-53-flash",
+          "inputTokens": 1181500,
+          "outputTokens": 12000,
+          "inputRate": 0.15,
+          "outputRate": 0.5,
+          "credits": 0.183225,
+          "expectedCharge": 0.183225,
+          "calls": 10
+        },
+        {
+          "index": 4,
+          "model": "qwen3.8-27b",
+          "inputTokens": 1551000,
+          "outputTokens": 16000,
+          "inputRate": 0.039,
+          "outputRate": 1.25,
+          "credits": 0.080489,
+          "expectedCharge": 0.080489,
+          "calls": 11
+        }
+      ],
+      "totalCredits": 0.52167945,
+      "expectedCharge": 0.52167945,
+      "calls": 51,
+      "range": {
+        "low": 0.260839725,
+        "high": 1.0433589
+      },
+      "assumptions": "Planning allowance: four web-action turns per agent plus collaboration rounds and one final synthesis. Assumes 6,000 additional context tokens per round, accumulated thread history, 1,200 output tokens per turn and a larger final brief. Search-provider fees are excluded. Synthesis failover can add up to four extra model turns beyond this quote. Actual usage varies; this is not a cap. Demo performs no web or model calls."
+    },
+    "catalog": {
+      "source": "https://docs.adaptionlabs.ai/inference-stacks/models/",
+      "verifiedAt": "2026-11-08T02:47:37.156501+00:00",
+      "unit": "credits per million tokens",
+      "models": [
+        {
+          "id": "deepseek-v4-flash",
+          "input": 0.04444,
+          "cachedInput": 0.001414,
+          "output": 0.13332
+        },
+        {
+          "id": "gemma-4-26b-a4b-it",
+          "input": 0.0765,
+          "cachedInput": 0.0425,
+          "output": 0.255
+        },
+        {
+          "id": "gemma-4-31b-it",
+          "input": 0.09,
+          "cachedInput": 0.05,
+          "output": 0.34
+        },
+        {
+          "id": "glm-53-flash",
+          "input": 0.15,
+          "cachedInput": 0.03,
+          "output": 0.5
+        },
+        {
+          "id": "qwen3.8-27b",
+          "input": 0.039,
+          "cachedInput": 0.0039,
+          "output": 1.25
+        },
+        {
+          "id": "qwen3.5-397b",
+          "input": 0.55,
+          "cachedInput": 0.225,
+          "output": 3.5
+        },
+        {
+          "id": "glm-5.2",
+          "input": 1.4,
+          "cachedInput": 0.26,
+          "output": 4.4
+        }
+      ]
+    },
+    "rules": [
+      "Research → proposals → critique → final synthesis; each contribution is shared before the next agent responds.",
+      "Each agent can request up to four search/page-read actions per run. Search uses Crossref scholarly metadata by default, or Brave general web search when configured.",
+      "All agents share retrieved sources and discuss evidence. Web failures are explicit; citations must refer to retrieved sources.",
+      "Agent turns have a 600-second deadline. Timed-out turns are skipped; synthesis falls back to another agent.",
+      "The final brief plans one eight-hour day. This task does not execute the proposed empirical experiment."
+    ],
+    "assignments": [
+      {
+        "name": "Agent A",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent B",
+        "model": "gemma-4-26b-a4b-it",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent C",
+        "model": "gemma-4-31b-it",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent D",
+        "model": "glm-53-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent E",
+        "model": "qwen3.8-27b",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      }
+    ]
+  }
+}

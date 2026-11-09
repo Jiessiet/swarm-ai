@@ -1,0 +1,4924 @@
+{
+  "id": "398b5193-de0c-4094-8d8f-674ca5199ad0",
+  "created": "2026-11-09T05:17:44.623Z",
+  "status": "stopped",
+  "config": {
+    "task": "hackathon",
+    "mode": "demo",
+    "count": 100,
+    "rounds": 3,
+    "objective": "Propose a small, source-grounded swarm AI safety experiment that a team can implement and evaluate in eight hours.",
+    "roles": [
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Synthesis lead",
+        "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Replication analyst",
+        "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Red-team researcher",
+        "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Methods reviewer",
+        "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Synthesis lead",
+        "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Replication analyst",
+        "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Red-team researcher",
+        "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Methods reviewer",
+        "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Synthesis lead",
+        "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Replication analyst",
+        "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Red-team researcher",
+        "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Methods reviewer",
+        "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Synthesis lead",
+        "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Replication analyst",
+        "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Red-team researcher",
+        "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Methods reviewer",
+        "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Synthesis lead",
+        "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Replication analyst",
+        "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Red-team researcher",
+        "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Methods reviewer",
+        "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Synthesis lead",
+        "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Replication analyst",
+        "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Red-team researcher",
+        "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Methods reviewer",
+        "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Synthesis lead",
+        "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Replication analyst",
+        "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Red-team researcher",
+        "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Methods reviewer",
+        "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Synthesis lead",
+        "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Replication analyst",
+        "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Red-team researcher",
+        "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Methods reviewer",
+        "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Synthesis lead",
+        "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Replication analyst",
+        "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Red-team researcher",
+        "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Methods reviewer",
+        "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Synthesis lead",
+        "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Replication analyst",
+        "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Red-team researcher",
+        "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Methods reviewer",
+        "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Synthesis lead",
+        "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Replication analyst",
+        "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Red-team researcher",
+        "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Methods reviewer",
+        "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Synthesis lead",
+        "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Replication analyst",
+        "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Red-team researcher",
+        "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Methods reviewer",
+        "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Literature scout",
+        "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Safety analyst",
+        "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Experiment designer",
+        "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "title": "Skeptical reviewer",
+        "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      }
+    ],
+    "network": {
+      "count": 100,
+      "revision": 0,
+      "edges": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 0,
+          "to": 99
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 2,
+          "to": 3
+        },
+        {
+          "from": 2,
+          "to": 1
+        },
+        {
+          "from": 3,
+          "to": 4
+        },
+        {
+          "from": 3,
+          "to": 2
+        },
+        {
+          "from": 4,
+          "to": 5
+        },
+        {
+          "from": 4,
+          "to": 3
+        },
+        {
+          "from": 5,
+          "to": 6
+        },
+        {
+          "from": 5,
+          "to": 4
+        },
+        {
+          "from": 6,
+          "to": 7
+        },
+        {
+          "from": 6,
+          "to": 5
+        },
+        {
+          "from": 7,
+          "to": 8
+        },
+        {
+          "from": 7,
+          "to": 6
+        },
+        {
+          "from": 8,
+          "to": 9
+        },
+        {
+          "from": 8,
+          "to": 7
+        },
+        {
+          "from": 9,
+          "to": 10
+        },
+        {
+          "from": 9,
+          "to": 8
+        },
+        {
+          "from": 10,
+          "to": 11
+        },
+        {
+          "from": 10,
+          "to": 9
+        },
+        {
+          "from": 11,
+          "to": 12
+        },
+        {
+          "from": 11,
+          "to": 10
+        },
+        {
+          "from": 12,
+          "to": 13
+        },
+        {
+          "from": 12,
+          "to": 11
+        },
+        {
+          "from": 13,
+          "to": 14
+        },
+        {
+          "from": 13,
+          "to": 12
+        },
+        {
+          "from": 14,
+          "to": 15
+        },
+        {
+          "from": 14,
+          "to": 13
+        },
+        {
+          "from": 15,
+          "to": 16
+        },
+        {
+          "from": 15,
+          "to": 14
+        },
+        {
+          "from": 16,
+          "to": 17
+        },
+        {
+          "from": 16,
+          "to": 15
+        },
+        {
+          "from": 17,
+          "to": 18
+        },
+        {
+          "from": 17,
+          "to": 16
+        },
+        {
+          "from": 18,
+          "to": 19
+        },
+        {
+          "from": 18,
+          "to": 17
+        },
+        {
+          "from": 19,
+          "to": 20
+        },
+        {
+          "from": 19,
+          "to": 18
+        },
+        {
+          "from": 20,
+          "to": 21
+        },
+        {
+          "from": 20,
+          "to": 19
+        },
+        {
+          "from": 21,
+          "to": 22
+        },
+        {
+          "from": 21,
+          "to": 20
+        },
+        {
+          "from": 22,
+          "to": 23
+        },
+        {
+          "from": 22,
+          "to": 21
+        },
+        {
+          "from": 23,
+          "to": 24
+        },
+        {
+          "from": 23,
+          "to": 22
+        },
+        {
+          "from": 24,
+          "to": 25
+        },
+        {
+          "from": 24,
+          "to": 23
+        },
+        {
+          "from": 25,
+          "to": 26
+        },
+        {
+          "from": 25,
+          "to": 24
+        },
+        {
+          "from": 26,
+          "to": 27
+        },
+        {
+          "from": 26,
+          "to": 25
+        },
+        {
+          "from": 27,
+          "to": 28
+        },
+        {
+          "from": 27,
+          "to": 26
+        },
+        {
+          "from": 28,
+          "to": 29
+        },
+        {
+          "from": 28,
+          "to": 27
+        },
+        {
+          "from": 29,
+          "to": 30
+        },
+        {
+          "from": 29,
+          "to": 28
+        },
+        {
+          "from": 30,
+          "to": 31
+        },
+        {
+          "from": 30,
+          "to": 29
+        },
+        {
+          "from": 31,
+          "to": 32
+        },
+        {
+          "from": 31,
+          "to": 30
+        },
+        {
+          "from": 32,
+          "to": 33
+        },
+        {
+          "from": 32,
+          "to": 31
+        },
+        {
+          "from": 33,
+          "to": 34
+        },
+        {
+          "from": 33,
+          "to": 32
+        },
+        {
+          "from": 34,
+          "to": 35
+        },
+        {
+          "from": 34,
+          "to": 33
+        },
+        {
+          "from": 35,
+          "to": 36
+        },
+        {
+          "from": 35,
+          "to": 34
+        },
+        {
+          "from": 36,
+          "to": 37
+        },
+        {
+          "from": 36,
+          "to": 35
+        },
+        {
+          "from": 37,
+          "to": 38
+        },
+        {
+          "from": 37,
+          "to": 36
+        },
+        {
+          "from": 38,
+          "to": 39
+        },
+        {
+          "from": 38,
+          "to": 37
+        },
+        {
+          "from": 39,
+          "to": 40
+        },
+        {
+          "from": 39,
+          "to": 38
+        },
+        {
+          "from": 40,
+          "to": 41
+        },
+        {
+          "from": 40,
+          "to": 39
+        },
+        {
+          "from": 41,
+          "to": 42
+        },
+        {
+          "from": 41,
+          "to": 40
+        },
+        {
+          "from": 42,
+          "to": 43
+        },
+        {
+          "from": 42,
+          "to": 41
+        },
+        {
+          "from": 43,
+          "to": 44
+        },
+        {
+          "from": 43,
+          "to": 42
+        },
+        {
+          "from": 44,
+          "to": 45
+        },
+        {
+          "from": 44,
+          "to": 43
+        },
+        {
+          "from": 45,
+          "to": 46
+        },
+        {
+          "from": 45,
+          "to": 44
+        },
+        {
+          "from": 46,
+          "to": 47
+        },
+        {
+          "from": 46,
+          "to": 45
+        },
+        {
+          "from": 47,
+          "to": 48
+        },
+        {
+          "from": 47,
+          "to": 46
+        },
+        {
+          "from": 48,
+          "to": 49
+        },
+        {
+          "from": 48,
+          "to": 47
+        },
+        {
+          "from": 49,
+          "to": 50
+        },
+        {
+          "from": 49,
+          "to": 48
+        },
+        {
+          "from": 50,
+          "to": 51
+        },
+        {
+          "from": 50,
+          "to": 49
+        },
+        {
+          "from": 51,
+          "to": 52
+        },
+        {
+          "from": 51,
+          "to": 50
+        },
+        {
+          "from": 52,
+          "to": 53
+        },
+        {
+          "from": 52,
+          "to": 51
+        },
+        {
+          "from": 53,
+          "to": 54
+        },
+        {
+          "from": 53,
+          "to": 52
+        },
+        {
+          "from": 54,
+          "to": 55
+        },
+        {
+          "from": 54,
+          "to": 53
+        },
+        {
+          "from": 55,
+          "to": 56
+        },
+        {
+          "from": 55,
+          "to": 54
+        },
+        {
+          "from": 56,
+          "to": 57
+        },
+        {
+          "from": 56,
+          "to": 55
+        },
+        {
+          "from": 57,
+          "to": 58
+        },
+        {
+          "from": 57,
+          "to": 56
+        },
+        {
+          "from": 58,
+          "to": 59
+        },
+        {
+          "from": 58,
+          "to": 57
+        },
+        {
+          "from": 59,
+          "to": 60
+        },
+        {
+          "from": 59,
+          "to": 58
+        },
+        {
+          "from": 60,
+          "to": 61
+        },
+        {
+          "from": 60,
+          "to": 59
+        },
+        {
+          "from": 61,
+          "to": 62
+        },
+        {
+          "from": 61,
+          "to": 60
+        },
+        {
+          "from": 62,
+          "to": 63
+        },
+        {
+          "from": 62,
+          "to": 61
+        },
+        {
+          "from": 63,
+          "to": 64
+        },
+        {
+          "from": 63,
+          "to": 62
+        },
+        {
+          "from": 64,
+          "to": 65
+        },
+        {
+          "from": 64,
+          "to": 63
+        },
+        {
+          "from": 65,
+          "to": 66
+        },
+        {
+          "from": 65,
+          "to": 64
+        },
+        {
+          "from": 66,
+          "to": 67
+        },
+        {
+          "from": 66,
+          "to": 65
+        },
+        {
+          "from": 67,
+          "to": 68
+        },
+        {
+          "from": 67,
+          "to": 66
+        },
+        {
+          "from": 68,
+          "to": 69
+        },
+        {
+          "from": 68,
+          "to": 67
+        },
+        {
+          "from": 69,
+          "to": 70
+        },
+        {
+          "from": 69,
+          "to": 68
+        },
+        {
+          "from": 70,
+          "to": 71
+        },
+        {
+          "from": 70,
+          "to": 69
+        },
+        {
+          "from": 71,
+          "to": 72
+        },
+        {
+          "from": 71,
+          "to": 70
+        },
+        {
+          "from": 72,
+          "to": 73
+        },
+        {
+          "from": 72,
+          "to": 71
+        },
+        {
+          "from": 73,
+          "to": 74
+        },
+        {
+          "from": 73,
+          "to": 72
+        },
+        {
+          "from": 74,
+          "to": 75
+        },
+        {
+          "from": 74,
+          "to": 73
+        },
+        {
+          "from": 75,
+          "to": 76
+        },
+        {
+          "from": 75,
+          "to": 74
+        },
+        {
+          "from": 76,
+          "to": 77
+        },
+        {
+          "from": 76,
+          "to": 75
+        },
+        {
+          "from": 77,
+          "to": 78
+        },
+        {
+          "from": 77,
+          "to": 76
+        },
+        {
+          "from": 78,
+          "to": 79
+        },
+        {
+          "from": 78,
+          "to": 77
+        },
+        {
+          "from": 79,
+          "to": 80
+        },
+        {
+          "from": 79,
+          "to": 78
+        },
+        {
+          "from": 80,
+          "to": 81
+        },
+        {
+          "from": 80,
+          "to": 79
+        },
+        {
+          "from": 81,
+          "to": 82
+        },
+        {
+          "from": 81,
+          "to": 80
+        },
+        {
+          "from": 82,
+          "to": 83
+        },
+        {
+          "from": 82,
+          "to": 81
+        },
+        {
+          "from": 83,
+          "to": 84
+        },
+        {
+          "from": 83,
+          "to": 82
+        },
+        {
+          "from": 84,
+          "to": 85
+        },
+        {
+          "from": 84,
+          "to": 83
+        },
+        {
+          "from": 85,
+          "to": 86
+        },
+        {
+          "from": 85,
+          "to": 84
+        },
+        {
+          "from": 86,
+          "to": 87
+        },
+        {
+          "from": 86,
+          "to": 85
+        },
+        {
+          "from": 87,
+          "to": 88
+        },
+        {
+          "from": 87,
+          "to": 86
+        },
+        {
+          "from": 88,
+          "to": 89
+        },
+        {
+          "from": 88,
+          "to": 87
+        },
+        {
+          "from": 89,
+          "to": 90
+        },
+        {
+          "from": 89,
+          "to": 88
+        },
+        {
+          "from": 90,
+          "to": 91
+        },
+        {
+          "from": 90,
+          "to": 89
+        },
+        {
+          "from": 91,
+          "to": 92
+        },
+        {
+          "from": 91,
+          "to": 90
+        },
+        {
+          "from": 92,
+          "to": 93
+        },
+        {
+          "from": 92,
+          "to": 91
+        },
+        {
+          "from": 93,
+          "to": 94
+        },
+        {
+          "from": 93,
+          "to": 92
+        },
+        {
+          "from": 94,
+          "to": 95
+        },
+        {
+          "from": 94,
+          "to": 93
+        },
+        {
+          "from": 95,
+          "to": 96
+        },
+        {
+          "from": 95,
+          "to": 94
+        },
+        {
+          "from": 96,
+          "to": 97
+        },
+        {
+          "from": 96,
+          "to": 95
+        },
+        {
+          "from": 97,
+          "to": 98
+        },
+        {
+          "from": 97,
+          "to": 96
+        },
+        {
+          "from": 98,
+          "to": 99
+        },
+        {
+          "from": 98,
+          "to": 97
+        },
+        {
+          "from": 99,
+          "to": 0
+        },
+        {
+          "from": 99,
+          "to": 98
+        }
+      ]
+    },
+    "agentTimeoutSeconds": 600,
+    "tokens": 1,
+    "maxTake": 1,
+    "models": [
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash",
+      "deepseek-v4-flash"
+    ]
+  },
+  "agents": [
+    {
+      "name": "Agent A",
+      "id": "agent-1"
+    },
+    {
+      "name": "Agent B",
+      "id": "agent-2"
+    },
+    {
+      "name": "Agent C",
+      "id": "agent-3"
+    },
+    {
+      "name": "Agent D",
+      "id": "agent-4"
+    },
+    {
+      "name": "Agent E",
+      "id": "agent-5"
+    },
+    {
+      "name": "Agent F",
+      "id": "agent-6"
+    },
+    {
+      "name": "Agent G",
+      "id": "agent-7"
+    },
+    {
+      "name": "Agent H",
+      "id": "agent-8"
+    },
+    {
+      "name": "Agent I",
+      "id": "agent-9"
+    },
+    {
+      "name": "Agent J",
+      "id": "agent-10"
+    },
+    {
+      "name": "Agent K",
+      "id": "agent-11"
+    },
+    {
+      "name": "Agent L",
+      "id": "agent-12"
+    },
+    {
+      "name": "Agent M",
+      "id": "agent-13"
+    },
+    {
+      "name": "Agent N",
+      "id": "agent-14"
+    },
+    {
+      "name": "Agent O",
+      "id": "agent-15"
+    },
+    {
+      "name": "Agent P",
+      "id": "agent-16"
+    },
+    {
+      "name": "Agent Q",
+      "id": "agent-17"
+    },
+    {
+      "name": "Agent R",
+      "id": "agent-18"
+    },
+    {
+      "name": "Agent S",
+      "id": "agent-19"
+    },
+    {
+      "name": "Agent T",
+      "id": "agent-20"
+    },
+    {
+      "name": "Agent U",
+      "id": "agent-21"
+    },
+    {
+      "name": "Agent V",
+      "id": "agent-22"
+    },
+    {
+      "name": "Agent W",
+      "id": "agent-23"
+    },
+    {
+      "name": "Agent X",
+      "id": "agent-24"
+    },
+    {
+      "name": "Agent Y",
+      "id": "agent-25"
+    },
+    {
+      "name": "Agent Z",
+      "id": "agent-26"
+    },
+    {
+      "name": "Agent AA",
+      "id": "agent-27"
+    },
+    {
+      "name": "Agent AB",
+      "id": "agent-28"
+    },
+    {
+      "name": "Agent AC",
+      "id": "agent-29"
+    },
+    {
+      "name": "Agent AD",
+      "id": "agent-30"
+    },
+    {
+      "name": "Agent AE",
+      "id": "agent-31"
+    },
+    {
+      "name": "Agent AF",
+      "id": "agent-32"
+    },
+    {
+      "name": "Agent AG",
+      "id": "agent-33"
+    },
+    {
+      "name": "Agent AH",
+      "id": "agent-34"
+    },
+    {
+      "name": "Agent AI",
+      "id": "agent-35"
+    },
+    {
+      "name": "Agent AJ",
+      "id": "agent-36"
+    },
+    {
+      "name": "Agent AK",
+      "id": "agent-37"
+    },
+    {
+      "name": "Agent AL",
+      "id": "agent-38"
+    },
+    {
+      "name": "Agent AM",
+      "id": "agent-39"
+    },
+    {
+      "name": "Agent AN",
+      "id": "agent-40"
+    },
+    {
+      "name": "Agent AO",
+      "id": "agent-41"
+    },
+    {
+      "name": "Agent AP",
+      "id": "agent-42"
+    },
+    {
+      "name": "Agent AQ",
+      "id": "agent-43"
+    },
+    {
+      "name": "Agent AR",
+      "id": "agent-44"
+    },
+    {
+      "name": "Agent AS",
+      "id": "agent-45"
+    },
+    {
+      "name": "Agent AT",
+      "id": "agent-46"
+    },
+    {
+      "name": "Agent AU",
+      "id": "agent-47"
+    },
+    {
+      "name": "Agent AV",
+      "id": "agent-48"
+    },
+    {
+      "name": "Agent AW",
+      "id": "agent-49"
+    },
+    {
+      "name": "Agent AX",
+      "id": "agent-50"
+    },
+    {
+      "name": "Agent AY",
+      "id": "agent-51"
+    },
+    {
+      "name": "Agent AZ",
+      "id": "agent-52"
+    },
+    {
+      "name": "Agent BA",
+      "id": "agent-53"
+    },
+    {
+      "name": "Agent BB",
+      "id": "agent-54"
+    },
+    {
+      "name": "Agent BC",
+      "id": "agent-55"
+    },
+    {
+      "name": "Agent BD",
+      "id": "agent-56"
+    },
+    {
+      "name": "Agent BE",
+      "id": "agent-57"
+    },
+    {
+      "name": "Agent BF",
+      "id": "agent-58"
+    },
+    {
+      "name": "Agent BG",
+      "id": "agent-59"
+    },
+    {
+      "name": "Agent BH",
+      "id": "agent-60"
+    },
+    {
+      "name": "Agent BI",
+      "id": "agent-61"
+    },
+    {
+      "name": "Agent BJ",
+      "id": "agent-62"
+    },
+    {
+      "name": "Agent BK",
+      "id": "agent-63"
+    },
+    {
+      "name": "Agent BL",
+      "id": "agent-64"
+    },
+    {
+      "name": "Agent BM",
+      "id": "agent-65"
+    },
+    {
+      "name": "Agent BN",
+      "id": "agent-66"
+    },
+    {
+      "name": "Agent BO",
+      "id": "agent-67"
+    },
+    {
+      "name": "Agent BP",
+      "id": "agent-68"
+    },
+    {
+      "name": "Agent BQ",
+      "id": "agent-69"
+    },
+    {
+      "name": "Agent BR",
+      "id": "agent-70"
+    },
+    {
+      "name": "Agent BS",
+      "id": "agent-71"
+    },
+    {
+      "name": "Agent BT",
+      "id": "agent-72"
+    },
+    {
+      "name": "Agent BU",
+      "id": "agent-73"
+    },
+    {
+      "name": "Agent BV",
+      "id": "agent-74"
+    },
+    {
+      "name": "Agent BW",
+      "id": "agent-75"
+    },
+    {
+      "name": "Agent BX",
+      "id": "agent-76"
+    },
+    {
+      "name": "Agent BY",
+      "id": "agent-77"
+    },
+    {
+      "name": "Agent BZ",
+      "id": "agent-78"
+    },
+    {
+      "name": "Agent CA",
+      "id": "agent-79"
+    },
+    {
+      "name": "Agent CB",
+      "id": "agent-80"
+    },
+    {
+      "name": "Agent CC",
+      "id": "agent-81"
+    },
+    {
+      "name": "Agent CD",
+      "id": "agent-82"
+    },
+    {
+      "name": "Agent CE",
+      "id": "agent-83"
+    },
+    {
+      "name": "Agent CF",
+      "id": "agent-84"
+    },
+    {
+      "name": "Agent CG",
+      "id": "agent-85"
+    },
+    {
+      "name": "Agent CH",
+      "id": "agent-86"
+    },
+    {
+      "name": "Agent CI",
+      "id": "agent-87"
+    },
+    {
+      "name": "Agent CJ",
+      "id": "agent-88"
+    },
+    {
+      "name": "Agent CK",
+      "id": "agent-89"
+    },
+    {
+      "name": "Agent CL",
+      "id": "agent-90"
+    },
+    {
+      "name": "Agent CM",
+      "id": "agent-91"
+    },
+    {
+      "name": "Agent CN",
+      "id": "agent-92"
+    },
+    {
+      "name": "Agent CO",
+      "id": "agent-93"
+    },
+    {
+      "name": "Agent CP",
+      "id": "agent-94"
+    },
+    {
+      "name": "Agent CQ",
+      "id": "agent-95"
+    },
+    {
+      "name": "Agent CR",
+      "id": "agent-96"
+    },
+    {
+      "name": "Agent CS",
+      "id": "agent-97"
+    },
+    {
+      "name": "Agent CT",
+      "id": "agent-98"
+    },
+    {
+      "name": "Agent CU",
+      "id": "agent-99"
+    },
+    {
+      "name": "Agent CV",
+      "id": "agent-100"
+    }
+  ],
+  "setup": {
+    "roleSettings": {
+      "revision": 0,
+      "assignments": [
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Synthesis lead",
+          "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Replication analyst",
+          "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Red-team researcher",
+          "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Methods reviewer",
+          "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Synthesis lead",
+          "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Replication analyst",
+          "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Red-team researcher",
+          "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Methods reviewer",
+          "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Synthesis lead",
+          "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Replication analyst",
+          "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Red-team researcher",
+          "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Methods reviewer",
+          "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Synthesis lead",
+          "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Replication analyst",
+          "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Red-team researcher",
+          "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Methods reviewer",
+          "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Synthesis lead",
+          "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Replication analyst",
+          "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Red-team researcher",
+          "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Methods reviewer",
+          "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Synthesis lead",
+          "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Replication analyst",
+          "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Red-team researcher",
+          "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Methods reviewer",
+          "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Synthesis lead",
+          "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Replication analyst",
+          "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Red-team researcher",
+          "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Methods reviewer",
+          "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Synthesis lead",
+          "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Replication analyst",
+          "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Red-team researcher",
+          "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Methods reviewer",
+          "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Synthesis lead",
+          "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Replication analyst",
+          "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Red-team researcher",
+          "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Methods reviewer",
+          "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Synthesis lead",
+          "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Replication analyst",
+          "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Red-team researcher",
+          "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Methods reviewer",
+          "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Synthesis lead",
+          "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Replication analyst",
+          "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Red-team researcher",
+          "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Methods reviewer",
+          "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Synthesis lead",
+          "instructions": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Replication analyst",
+          "instructions": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Red-team researcher",
+          "instructions": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Methods reviewer",
+          "instructions": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Literature scout",
+          "instructions": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Safety analyst",
+          "instructions": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Experiment designer",
+          "instructions": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+        },
+        {
+          "title": "Skeptical reviewer",
+          "instructions": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+        }
+      ]
+    },
+    "agentTimeoutSeconds": 600,
+    "network": {
+      "count": 100,
+      "revision": 0,
+      "edges": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 0,
+          "to": 99
+        },
+        {
+          "from": 1,
+          "to": 0
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 1
+        },
+        {
+          "from": 2,
+          "to": 3
+        },
+        {
+          "from": 3,
+          "to": 2
+        },
+        {
+          "from": 3,
+          "to": 4
+        },
+        {
+          "from": 4,
+          "to": 3
+        },
+        {
+          "from": 4,
+          "to": 5
+        },
+        {
+          "from": 5,
+          "to": 4
+        },
+        {
+          "from": 5,
+          "to": 6
+        },
+        {
+          "from": 6,
+          "to": 5
+        },
+        {
+          "from": 6,
+          "to": 7
+        },
+        {
+          "from": 7,
+          "to": 6
+        },
+        {
+          "from": 7,
+          "to": 8
+        },
+        {
+          "from": 8,
+          "to": 7
+        },
+        {
+          "from": 8,
+          "to": 9
+        },
+        {
+          "from": 9,
+          "to": 8
+        },
+        {
+          "from": 9,
+          "to": 10
+        },
+        {
+          "from": 10,
+          "to": 9
+        },
+        {
+          "from": 10,
+          "to": 11
+        },
+        {
+          "from": 11,
+          "to": 10
+        },
+        {
+          "from": 11,
+          "to": 12
+        },
+        {
+          "from": 12,
+          "to": 11
+        },
+        {
+          "from": 12,
+          "to": 13
+        },
+        {
+          "from": 13,
+          "to": 12
+        },
+        {
+          "from": 13,
+          "to": 14
+        },
+        {
+          "from": 14,
+          "to": 13
+        },
+        {
+          "from": 14,
+          "to": 15
+        },
+        {
+          "from": 15,
+          "to": 14
+        },
+        {
+          "from": 15,
+          "to": 16
+        },
+        {
+          "from": 16,
+          "to": 15
+        },
+        {
+          "from": 16,
+          "to": 17
+        },
+        {
+          "from": 17,
+          "to": 16
+        },
+        {
+          "from": 17,
+          "to": 18
+        },
+        {
+          "from": 18,
+          "to": 17
+        },
+        {
+          "from": 18,
+          "to": 19
+        },
+        {
+          "from": 19,
+          "to": 18
+        },
+        {
+          "from": 19,
+          "to": 20
+        },
+        {
+          "from": 20,
+          "to": 19
+        },
+        {
+          "from": 20,
+          "to": 21
+        },
+        {
+          "from": 21,
+          "to": 20
+        },
+        {
+          "from": 21,
+          "to": 22
+        },
+        {
+          "from": 22,
+          "to": 21
+        },
+        {
+          "from": 22,
+          "to": 23
+        },
+        {
+          "from": 23,
+          "to": 22
+        },
+        {
+          "from": 23,
+          "to": 24
+        },
+        {
+          "from": 24,
+          "to": 23
+        },
+        {
+          "from": 24,
+          "to": 25
+        },
+        {
+          "from": 25,
+          "to": 24
+        },
+        {
+          "from": 25,
+          "to": 26
+        },
+        {
+          "from": 26,
+          "to": 25
+        },
+        {
+          "from": 26,
+          "to": 27
+        },
+        {
+          "from": 27,
+          "to": 26
+        },
+        {
+          "from": 27,
+          "to": 28
+        },
+        {
+          "from": 28,
+          "to": 27
+        },
+        {
+          "from": 28,
+          "to": 29
+        },
+        {
+          "from": 29,
+          "to": 28
+        },
+        {
+          "from": 29,
+          "to": 30
+        },
+        {
+          "from": 30,
+          "to": 29
+        },
+        {
+          "from": 30,
+          "to": 31
+        },
+        {
+          "from": 31,
+          "to": 30
+        },
+        {
+          "from": 31,
+          "to": 32
+        },
+        {
+          "from": 32,
+          "to": 31
+        },
+        {
+          "from": 32,
+          "to": 33
+        },
+        {
+          "from": 33,
+          "to": 32
+        },
+        {
+          "from": 33,
+          "to": 34
+        },
+        {
+          "from": 34,
+          "to": 33
+        },
+        {
+          "from": 34,
+          "to": 35
+        },
+        {
+          "from": 35,
+          "to": 34
+        },
+        {
+          "from": 35,
+          "to": 36
+        },
+        {
+          "from": 36,
+          "to": 35
+        },
+        {
+          "from": 36,
+          "to": 37
+        },
+        {
+          "from": 37,
+          "to": 36
+        },
+        {
+          "from": 37,
+          "to": 38
+        },
+        {
+          "from": 38,
+          "to": 37
+        },
+        {
+          "from": 38,
+          "to": 39
+        },
+        {
+          "from": 39,
+          "to": 38
+        },
+        {
+          "from": 39,
+          "to": 40
+        },
+        {
+          "from": 40,
+          "to": 39
+        },
+        {
+          "from": 40,
+          "to": 41
+        },
+        {
+          "from": 41,
+          "to": 40
+        },
+        {
+          "from": 41,
+          "to": 42
+        },
+        {
+          "from": 42,
+          "to": 41
+        },
+        {
+          "from": 42,
+          "to": 43
+        },
+        {
+          "from": 43,
+          "to": 42
+        },
+        {
+          "from": 43,
+          "to": 44
+        },
+        {
+          "from": 44,
+          "to": 43
+        },
+        {
+          "from": 44,
+          "to": 45
+        },
+        {
+          "from": 45,
+          "to": 44
+        },
+        {
+          "from": 45,
+          "to": 46
+        },
+        {
+          "from": 46,
+          "to": 45
+        },
+        {
+          "from": 46,
+          "to": 47
+        },
+        {
+          "from": 47,
+          "to": 46
+        },
+        {
+          "from": 47,
+          "to": 48
+        },
+        {
+          "from": 48,
+          "to": 47
+        },
+        {
+          "from": 48,
+          "to": 49
+        },
+        {
+          "from": 49,
+          "to": 48
+        },
+        {
+          "from": 49,
+          "to": 50
+        },
+        {
+          "from": 50,
+          "to": 49
+        },
+        {
+          "from": 50,
+          "to": 51
+        },
+        {
+          "from": 51,
+          "to": 50
+        },
+        {
+          "from": 51,
+          "to": 52
+        },
+        {
+          "from": 52,
+          "to": 51
+        },
+        {
+          "from": 52,
+          "to": 53
+        },
+        {
+          "from": 53,
+          "to": 52
+        },
+        {
+          "from": 53,
+          "to": 54
+        },
+        {
+          "from": 54,
+          "to": 53
+        },
+        {
+          "from": 54,
+          "to": 55
+        },
+        {
+          "from": 55,
+          "to": 54
+        },
+        {
+          "from": 55,
+          "to": 56
+        },
+        {
+          "from": 56,
+          "to": 55
+        },
+        {
+          "from": 56,
+          "to": 57
+        },
+        {
+          "from": 57,
+          "to": 56
+        },
+        {
+          "from": 57,
+          "to": 58
+        },
+        {
+          "from": 58,
+          "to": 57
+        },
+        {
+          "from": 58,
+          "to": 59
+        },
+        {
+          "from": 59,
+          "to": 58
+        },
+        {
+          "from": 59,
+          "to": 60
+        },
+        {
+          "from": 60,
+          "to": 59
+        },
+        {
+          "from": 60,
+          "to": 61
+        },
+        {
+          "from": 61,
+          "to": 60
+        },
+        {
+          "from": 61,
+          "to": 62
+        },
+        {
+          "from": 62,
+          "to": 61
+        },
+        {
+          "from": 62,
+          "to": 63
+        },
+        {
+          "from": 63,
+          "to": 62
+        },
+        {
+          "from": 63,
+          "to": 64
+        },
+        {
+          "from": 64,
+          "to": 63
+        },
+        {
+          "from": 64,
+          "to": 65
+        },
+        {
+          "from": 65,
+          "to": 64
+        },
+        {
+          "from": 65,
+          "to": 66
+        },
+        {
+          "from": 66,
+          "to": 65
+        },
+        {
+          "from": 66,
+          "to": 67
+        },
+        {
+          "from": 67,
+          "to": 66
+        },
+        {
+          "from": 67,
+          "to": 68
+        },
+        {
+          "from": 68,
+          "to": 67
+        },
+        {
+          "from": 68,
+          "to": 69
+        },
+        {
+          "from": 69,
+          "to": 68
+        },
+        {
+          "from": 69,
+          "to": 70
+        },
+        {
+          "from": 70,
+          "to": 69
+        },
+        {
+          "from": 70,
+          "to": 71
+        },
+        {
+          "from": 71,
+          "to": 70
+        },
+        {
+          "from": 71,
+          "to": 72
+        },
+        {
+          "from": 72,
+          "to": 71
+        },
+        {
+          "from": 72,
+          "to": 73
+        },
+        {
+          "from": 73,
+          "to": 72
+        },
+        {
+          "from": 73,
+          "to": 74
+        },
+        {
+          "from": 74,
+          "to": 73
+        },
+        {
+          "from": 74,
+          "to": 75
+        },
+        {
+          "from": 75,
+          "to": 74
+        },
+        {
+          "from": 75,
+          "to": 76
+        },
+        {
+          "from": 76,
+          "to": 75
+        },
+        {
+          "from": 76,
+          "to": 77
+        },
+        {
+          "from": 77,
+          "to": 76
+        },
+        {
+          "from": 77,
+          "to": 78
+        },
+        {
+          "from": 78,
+          "to": 77
+        },
+        {
+          "from": 78,
+          "to": 79
+        },
+        {
+          "from": 79,
+          "to": 78
+        },
+        {
+          "from": 79,
+          "to": 80
+        },
+        {
+          "from": 80,
+          "to": 79
+        },
+        {
+          "from": 80,
+          "to": 81
+        },
+        {
+          "from": 81,
+          "to": 80
+        },
+        {
+          "from": 81,
+          "to": 82
+        },
+        {
+          "from": 82,
+          "to": 81
+        },
+        {
+          "from": 82,
+          "to": 83
+        },
+        {
+          "from": 83,
+          "to": 82
+        },
+        {
+          "from": 83,
+          "to": 84
+        },
+        {
+          "from": 84,
+          "to": 83
+        },
+        {
+          "from": 84,
+          "to": 85
+        },
+        {
+          "from": 85,
+          "to": 84
+        },
+        {
+          "from": 85,
+          "to": 86
+        },
+        {
+          "from": 86,
+          "to": 85
+        },
+        {
+          "from": 86,
+          "to": 87
+        },
+        {
+          "from": 87,
+          "to": 86
+        },
+        {
+          "from": 87,
+          "to": 88
+        },
+        {
+          "from": 88,
+          "to": 87
+        },
+        {
+          "from": 88,
+          "to": 89
+        },
+        {
+          "from": 89,
+          "to": 88
+        },
+        {
+          "from": 89,
+          "to": 90
+        },
+        {
+          "from": 90,
+          "to": 89
+        },
+        {
+          "from": 90,
+          "to": 91
+        },
+        {
+          "from": 91,
+          "to": 90
+        },
+        {
+          "from": 91,
+          "to": 92
+        },
+        {
+          "from": 92,
+          "to": 91
+        },
+        {
+          "from": 92,
+          "to": 93
+        },
+        {
+          "from": 93,
+          "to": 92
+        },
+        {
+          "from": 93,
+          "to": 94
+        },
+        {
+          "from": 94,
+          "to": 93
+        },
+        {
+          "from": 94,
+          "to": 95
+        },
+        {
+          "from": 95,
+          "to": 94
+        },
+        {
+          "from": 95,
+          "to": 96
+        },
+        {
+          "from": 96,
+          "to": 95
+        },
+        {
+          "from": 96,
+          "to": 97
+        },
+        {
+          "from": 97,
+          "to": 96
+        },
+        {
+          "from": 97,
+          "to": 98
+        },
+        {
+          "from": 98,
+          "to": 97
+        },
+        {
+          "from": 98,
+          "to": 99
+        },
+        {
+          "from": 99,
+          "to": 0
+        },
+        {
+          "from": 99,
+          "to": 98
+        }
+      ]
+    },
+    "objective": "Propose a small, source-grounded swarm AI safety experiment that a team can implement and evaluate in eight hours.",
+    "task": "hackathon",
+    "title": "Swarm AI safety · one-day research hackathon",
+    "condition": null,
+    "rounds": 3,
+    "citizenship": {
+      "team": "Research team",
+      "objective": "Propose a small, source-grounded swarm AI safety experiment that a team can implement and evaluate in eight hours.",
+      "scoring": "Deliver a cited research brief, experiment protocol, baseline, metrics, schedule, limitations and pitch. Findings remain hypotheses until tested."
+    },
+    "pricing": {
+      "source": "https://docs.adaptionlabs.ai/inference-stacks/models/",
+      "verifiedAt": "2026-11-08T02:47:37.156501+00:00",
+      "mode": "demo",
+      "perAgent": [
+        {
+          "index": 0,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 1,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 2,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 3,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 4,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 627600,
+          "outputTokens": 12400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.029543712000000003,
+          "expectedCharge": 0,
+          "calls": 8
+        },
+        {
+          "index": 5,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 6,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 7,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 8,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 9,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 10,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 11,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 12,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 13,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 14,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 15,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 16,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 17,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 18,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 19,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 20,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 21,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 22,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 23,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 24,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 25,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 26,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 27,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 28,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 29,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 30,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 31,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 32,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 33,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 34,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 35,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 36,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 37,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 38,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 39,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 40,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 41,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 42,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 43,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 44,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 45,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 46,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 47,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 48,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 49,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 50,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 51,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 52,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 53,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 54,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 55,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 56,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 57,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 58,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 59,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 60,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 61,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 62,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 63,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 64,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 65,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 66,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 67,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 68,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 69,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 70,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 71,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 72,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 73,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 74,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 75,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 76,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 77,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 78,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 79,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 80,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 81,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 82,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 83,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 84,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 85,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 86,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 87,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 88,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 89,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 90,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 91,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 92,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 93,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 94,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 95,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 96,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 97,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 98,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        },
+        {
+          "index": 99,
+          "model": "deepseek-v4-flash",
+          "inputTokens": 431200,
+          "outputTokens": 8400,
+          "inputRate": 0.04444,
+          "outputRate": 0.13332,
+          "credits": 0.020282415999999998,
+          "expectedCharge": 0,
+          "calls": 7
+        }
+      ],
+      "totalCredits": 2.037502895999997,
+      "expectedCharge": 0,
+      "calls": 701,
+      "range": {
+        "low": 1.0187514479999984,
+        "high": 4.075005791999994
+      },
+      "assumptions": "Planning allowance: four web-action turns per agent plus collaboration rounds and one final synthesis. Assumes 6,000 additional context tokens per round, conservative context growth, 1,200 output tokens per turn and a larger final brief. Search-provider fees are excluded. Retries and synthesis failover can add model turns beyond this quote. Network restrictions and fresh decision contexts can reduce input usage. Actual usage varies; this is not a cap. Demo performs no web or model calls."
+    },
+    "catalog": {
+      "source": "https://docs.adaptionlabs.ai/inference-stacks/models/",
+      "verifiedAt": "2026-11-08T02:47:37.156501+00:00",
+      "unit": "credits per million tokens",
+      "models": [
+        {
+          "id": "deepseek-v4-flash",
+          "input": 0.04444,
+          "cachedInput": 0.001414,
+          "output": 0.13332
+        },
+        {
+          "id": "gemma-4-26b-a4b-it",
+          "input": 0.0765,
+          "cachedInput": 0.0425,
+          "output": 0.255
+        },
+        {
+          "id": "gemma-4-31b-it",
+          "input": 0.09,
+          "cachedInput": 0.05,
+          "output": 0.34
+        },
+        {
+          "id": "glm-53-flash",
+          "input": 0.15,
+          "cachedInput": 0.03,
+          "output": 0.5
+        },
+        {
+          "id": "qwen3.8-27b",
+          "input": 0.039,
+          "cachedInput": 0.0039,
+          "output": 1.25
+        },
+        {
+          "id": "qwen3.5-397b",
+          "input": 0.55,
+          "cachedInput": 0.225,
+          "output": 3.5
+        },
+        {
+          "id": "glm-5.2",
+          "input": 1.4,
+          "cachedInput": 0.26,
+          "output": 4.4
+        }
+      ]
+    },
+    "rules": [
+      "Research → proposals → critique → final synthesis; agents receive contributions only from incoming neighbors on the graph.",
+      "Each agent can request up to four search/page-read actions per run. Search uses Crossref scholarly metadata by default, or Brave general web search when configured.",
+      "Retrieved sources follow the same incoming-neighbor routing as contributions. Edits take effect at the next decision; synthesis has no global bypass. Web failures are explicit; citations must refer to retrieved sources.",
+      "Agent turns have a 600-second deadline. Failed decisions are retried once with error feedback; persistent errors and timed-out turns are skipped. Agents return next round; synthesis falls back to another agent.",
+      "The final brief plans one eight-hour day. This task does not execute the proposed empirical experiment."
+    ],
+    "assignments": [
+      {
+        "name": "Agent A",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent B",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent C",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent D",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent E",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent F",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Replication analyst",
+        "label": "Replication analyst",
+        "instruction": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent G",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Red-team researcher",
+        "label": "Red-team researcher",
+        "instruction": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent H",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Methods reviewer",
+        "label": "Methods reviewer",
+        "instruction": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent I",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent J",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent K",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent L",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent M",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent N",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Replication analyst",
+        "label": "Replication analyst",
+        "instruction": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent O",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Red-team researcher",
+        "label": "Red-team researcher",
+        "instruction": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent P",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Methods reviewer",
+        "label": "Methods reviewer",
+        "instruction": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent Q",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent R",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent S",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent T",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent U",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent V",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Replication analyst",
+        "label": "Replication analyst",
+        "instruction": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent W",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Red-team researcher",
+        "label": "Red-team researcher",
+        "instruction": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent X",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Methods reviewer",
+        "label": "Methods reviewer",
+        "instruction": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent Y",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent Z",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AA",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AB",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AC",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AD",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Replication analyst",
+        "label": "Replication analyst",
+        "instruction": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AE",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Red-team researcher",
+        "label": "Red-team researcher",
+        "instruction": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AF",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Methods reviewer",
+        "label": "Methods reviewer",
+        "instruction": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AG",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AH",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AI",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AJ",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AK",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AL",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Replication analyst",
+        "label": "Replication analyst",
+        "instruction": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AM",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Red-team researcher",
+        "label": "Red-team researcher",
+        "instruction": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AN",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Methods reviewer",
+        "label": "Methods reviewer",
+        "instruction": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AO",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AP",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AQ",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AR",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AS",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AT",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Replication analyst",
+        "label": "Replication analyst",
+        "instruction": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AU",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Red-team researcher",
+        "label": "Red-team researcher",
+        "instruction": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AV",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Methods reviewer",
+        "label": "Methods reviewer",
+        "instruction": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AW",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AX",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AY",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent AZ",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BA",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BB",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Replication analyst",
+        "label": "Replication analyst",
+        "instruction": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BC",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Red-team researcher",
+        "label": "Red-team researcher",
+        "instruction": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BD",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Methods reviewer",
+        "label": "Methods reviewer",
+        "instruction": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BE",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BF",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BG",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BH",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BI",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BJ",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Replication analyst",
+        "label": "Replication analyst",
+        "instruction": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BK",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Red-team researcher",
+        "label": "Red-team researcher",
+        "instruction": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BL",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Methods reviewer",
+        "label": "Methods reviewer",
+        "instruction": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BM",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BN",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BO",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BP",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BQ",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BR",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Replication analyst",
+        "label": "Replication analyst",
+        "instruction": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BS",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Red-team researcher",
+        "label": "Red-team researcher",
+        "instruction": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BT",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Methods reviewer",
+        "label": "Methods reviewer",
+        "instruction": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BU",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BV",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BW",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BX",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BY",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent BZ",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Replication analyst",
+        "label": "Replication analyst",
+        "instruction": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CA",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Red-team researcher",
+        "label": "Red-team researcher",
+        "instruction": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CB",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Methods reviewer",
+        "label": "Methods reviewer",
+        "instruction": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CC",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CD",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CE",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CF",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CG",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CH",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Replication analyst",
+        "label": "Replication analyst",
+        "instruction": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CI",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Red-team researcher",
+        "label": "Red-team researcher",
+        "instruction": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CJ",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Methods reviewer",
+        "label": "Methods reviewer",
+        "instruction": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CK",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CL",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CM",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CN",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CO",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Synthesis lead",
+        "label": "Synthesis lead",
+        "instruction": "Act as synthesis lead; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CP",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Replication analyst",
+        "label": "Replication analyst",
+        "instruction": "Act as replication analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CQ",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Red-team researcher",
+        "label": "Red-team researcher",
+        "instruction": "Act as red-team researcher; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CR",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Methods reviewer",
+        "label": "Methods reviewer",
+        "instruction": "Act as methods reviewer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CS",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Literature scout",
+        "label": "Literature scout",
+        "instruction": "Act as literature scout; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CT",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Safety analyst",
+        "label": "Safety analyst",
+        "instruction": "Act as safety analyst; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CU",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Experiment designer",
+        "label": "Experiment designer",
+        "instruction": "Act as experiment designer; collaborate on one feasible, interesting safety experiment."
+      },
+      {
+        "name": "Agent CV",
+        "model": "deepseek-v4-flash",
+        "team": "Research team",
+        "role": "Skeptical reviewer",
+        "label": "Skeptical reviewer",
+        "instruction": "Act as skeptical reviewer; collaborate on one feasible, interesting safety experiment."
+      }
+    ]
+  }
+}
