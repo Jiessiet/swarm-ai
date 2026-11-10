@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
 import type { HackathonObservation } from './types.js';
-export const defaults = { count: 5, rounds: 3, tokens: 1, maxTake: 1 };
+export const defaults = { count: 5, rounds: 3 };
 export const roles = ['Literature scout', 'Safety analyst', 'Experiment designer', 'Skeptical reviewer', 'Synthesis lead'];
 export const roleFor = (index: number) => [...roles, 'Replication analyst', 'Red-team researcher', 'Methods reviewer'][index % 8];
-export const defaultObjective = 'Propose a small, source-grounded swarm AI safety experiment that a team can implement and evaluate in eight hours.';
+export const defaultObjective = 'Study how communication networks shape agent collaboration. Propose a practical experiment with clear controls and evaluation criteria.';
 export const maxWebActions = 4;
 export const instructions = readFileSync(new URL('./instructions.md', import.meta.url), 'utf8');
 const string = { type: 'string', minLength: 1, maxLength: 6000 };

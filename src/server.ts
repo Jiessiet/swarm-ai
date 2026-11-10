@@ -69,7 +69,7 @@ export function createDashboard(options: { rolePresetFile?: string } = {}) {
         res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(trajectory)); return;
       }
       if (req.method === 'GET' && url.pathname === '/setup') {
-        const setup = describeSetup({ task: url.searchParams.get('task') ?? undefined, condition: url.searchParams.get('condition') ?? undefined, count: url.searchParams.has('count') ? Number(url.searchParams.get('count')) : undefined, mode: url.searchParams.get('mode') ?? 'demo', models: url.searchParams.has('models') ? url.searchParams.get('models')!.split(',') : undefined, rounds: url.searchParams.has('rounds') ? Number(url.searchParams.get('rounds')) : undefined });
+        const setup = describeSetup({ task: url.searchParams.get('task') ?? undefined, count: url.searchParams.has('count') ? Number(url.searchParams.get('count')) : undefined, mode: url.searchParams.get('mode') ?? 'demo', models: url.searchParams.has('models') ? url.searchParams.get('models')!.split(',') : undefined, rounds: url.searchParams.has('rounds') ? Number(url.searchParams.get('rounds')) : undefined });
         res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(setup)); return;
       }
       if (req.method === 'GET' && url.pathname === '/task') {
@@ -78,8 +78,8 @@ export function createDashboard(options: { rolePresetFile?: string } = {}) {
       if (req.method === 'GET' && url.pathname === '/events') {
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
         const last = Number(req.headers['last-event-id'] ?? 0);
-        for (const event of events) if ((event as { id: number }).id > last) res.write(`data: ${JSON.stringify(event)}\n\n`);
-        res.write(`event: status\ndata: ${JSON.stringify({ active: !!active, configured: !!process.env.ADAPTION_API_KEY, run: latestRun ? { id:latestRun.id, config:latestRun.config, agents:latestRun.agents, setup:latestRun.setup, network:latestRun.network?.get(), roles:latestRun.roles?.get() } : null })}\n\n`);
+        for (const event of events) if (last > 0 ? (event as { id: number }).id > last : active && (event as { run?: string }).run === active.id) res.write(`data: ${JSON.stringify(event)}\n\n`);
+        res.write(`event: status\ndata: ${JSON.stringify({ active: !!active, configured: !!process.env.ADAPTION_API_KEY, run: active && latestRun ? { id:latestRun.id, config:latestRun.config, agents:latestRun.agents, setup:latestRun.setup, network:latestRun.network?.get(), roles:latestRun.roles?.get() } : null })}\n\n`);
         clients.add(res);
         const timer = setInterval(() => res.write(': heartbeat\n\n'), 15000);
         req.on('close', () => { clearInterval(timer); clients.delete(res); });
@@ -141,7 +141,7 @@ export function createDashboard(options: { rolePresetFile?: string } = {}) {
         })();
         return;
       }
-      const files: Record<string, [string, string]> = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/network.js': ['network.js', 'text/javascript'], '/behavior.js': ['behavior.js', 'text/javascript'], '/identity.js': ['../src/identity.js', 'text/javascript'], '/conversation.js': ['conversation.js', 'text/javascript'], '/pricing.js': ['pricing.js', 'text/javascript'], '/research.js': ['research.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'] };
+      const files: Record<string, [string, string]> = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/network.js': ['network.js', 'text/javascript'], '/dome-scene.js': ['dome-scene.js', 'text/javascript'], '/dome-geometry.js': ['dome-geometry.js', 'text/javascript'], '/behavior.js': ['behavior.js', 'text/javascript'], '/identity.js': ['../src/identity.js', 'text/javascript'], '/conversation.js': ['conversation.js', 'text/javascript'], '/pricing.js': ['pricing.js', 'text/javascript'], '/research.js': ['research.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'] };
       const file = files[url.pathname];
       if (req.method !== 'GET' || !file) { res.writeHead(404).end(); return; }
       res.writeHead(200, { 'Content-Type': file[1], 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Content-Security-Policy': "default-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'" });

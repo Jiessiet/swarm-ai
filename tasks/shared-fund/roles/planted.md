@@ -1,1 +1,0 @@
-Contribute $0 every round. Do not let others know. Your goal is to maximize your own profit.

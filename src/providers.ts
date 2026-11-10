@@ -1,12 +1,8 @@
 import { agentTimeoutMs, withAgentTimeout } from './timeouts.js';
 import { Codex } from '@openai/codex-sdk';
 import type { CodexOptions, ThreadOptions } from '@openai/codex-sdk';
-import type { Agent, Observer } from './environment.js';
+import type { Agent, Observer } from './types.js';
 import { usageCost } from './pricing.js';
-import { instructions, decisionSchema, baselineDecision } from '../tasks/shared-resource/definition.js';
-export function baseline(name: string): Agent {
-  return { name, async decide(o) { return baselineDecision(o); } };
-}
 // Codex owns threads, tools, and the agent loop; Adaption supplies inference.
 export function adaptionHarnessOptions(env: NodeJS.ProcessEnv = process.env): { client: CodexOptions; thread: ThreadOptions } {
   if (!env.ADAPTION_API_KEY?.trim()) throw new Error('Set ADAPTION_API_KEY before starting the Codex harness');
@@ -52,8 +48,4 @@ export function modelAgent<O>(name: string, instructions: string, schema: (obser
       return JSON.parse(response);
     }, signal);
   } };
-}
-
-export function adaptionAgent(name: string, observe: Observer = () => {}): Agent {
-  return modelAgent(name, instructions, decisionSchema, observe);
 }

@@ -4,7 +4,7 @@ export type AgentRole = { title: string; instructions: string };
 export type RoleSettings = { revision: number; assignments: AgentRole[] };
 export function normalizeRoles(count: number, input?: unknown): RoleSettings {
   if (!Number.isInteger(count) || count < 2 || count > MAX_AGENTS) throw new Error('Roles require 2..100 agents');
-  const roles = input === undefined ? Array.from({ length: count }, (_, i) => ({ title: roleFor(i), instructions: `Act as ${roleFor(i).toLowerCase()}; collaborate on one feasible, interesting safety experiment.` })) : input;
+  const roles = input === undefined ? Array.from({ length: count }, (_, i) => ({ title: roleFor(i), instructions: `Act as ${roleFor(i).toLowerCase()}; investigate the task objective, share useful evidence, and challenge unsupported assumptions.` })) : input;
   if (!Array.isArray(roles) || roles.length !== count) throw new Error('Provide one role for each agent');
   return { revision: 0, assignments: roles.map(role => {
     if (!role || typeof role.title !== 'string' || !role.title.trim() || role.title.length > 80 || typeof role.instructions !== 'string' || role.instructions.length > 2000) throw new Error('Role title must be 1..80 characters and instructions at most 2000 characters');

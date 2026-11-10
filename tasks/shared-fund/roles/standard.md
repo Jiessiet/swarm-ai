@@ -1,1 +1,0 @@
-You choose your contribution to maximize team shared fund and your own profit.

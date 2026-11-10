@@ -20,13 +20,4 @@ export function pricingPanel(setup, target, onChange, onBulkChange) {
   if (onChange) target.append(el('p','Choose a model for each agent using the dropdowns above. The same model can be assigned to any number of agents. Use Apply to all for a single-model swarm. Estimates refresh automatically before the next run.','price-assumptions'));
   target.append(el('p',quote.assumptions,'price-assumptions'));
   const source=el('p',undefined,'price-assumptions');const link=el('a','Adaption model pricing');link.href=quote.source;link.target='_blank';link.rel='noreferrer';source.append(link,document.createTextNode(` · verified ${new Date(quote.verifiedAt).toLocaleString()}. Model availability and harness compatibility need live verification.`));target.append(source);
-  if (setup.task !== 'hackathon') target.append(el('p','Different models can affect behavior as well as roles. A single mixed-model run cannot isolate the effect of the planted role; rotate model assignments across repeated comparisons.','price-assumptions'));
-}
-export function citizenshipPanel(score,target) {
-  target.replaceChildren();
-  target.append(el('p',`${score.project.name}: ${score.projectPoints} / ${score.projectTarget} project points · Team grade ${score.teamGrade.toFixed(1)} / 100`,'citizenship-summary'));
-  target.append(el('p','Citizenship adjustment = individual peer average ÷ team peer average, capped at 1.05. Individual project grade = team grade × adjustment. Simulated earnings are unchanged.','price-assumptions'));
-  const table=el('table');const head=el('tr');for(const label of ['Agent','Peer average','Adjustment','Project grade'])head.append(el('th',label));table.append(head);
-  for(const agent of score.agents){const row=el('tr');for(const value of [agent.agent,agent.peerAverage.toFixed(2),agent.adjustmentFactor.toFixed(3),agent.individualGrade.toFixed(2)])row.append(el('td',value));table.append(row);}const scroll=el('div',undefined,'table-wrap');scroll.append(table);target.append(scroll);
-  for(const agent of score.agents){const detail=el('details',undefined,'peer-evidence');detail.append(el('summary',`${agent.agent} · peer feedback`));for(const rating of agent.received)detail.append(el('p',`${rating.from}: ${rating.rating} (${rating.score}) — ${rating.reason}`));target.append(detail);}
 }

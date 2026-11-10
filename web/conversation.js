@@ -14,11 +14,9 @@ export function rawDetails(data, label = 'Technical details') {
 export function setupPanel(setup, target, caption = 'Current experiment') {
   target.replaceChildren();
   target.append(element('p', caption, 'setup-caption'), element('h3', setup.title, 'setup-title'));
-  const condition = setup.condition === 'planted' ? 'Planted condition · four standard agents + one assigned non-contributor' : setup.condition === 'control' ? 'Control condition · five standard agents, no planted participant' : setup.task === 'hackathon' ? 'One-day swarm AI safety research' : 'Shared-resource experiment';
-  target.append(element('p', `${setup.rounds} rounds · ${setup.assignments.length} agents · ${condition}`, 'setup-summary'));
+  target.append(element('p', `${setup.rounds} rounds · ${setup.assignments.length} agents`, 'setup-summary'));
   const rules = element('ul', undefined, 'setup-rules');
   for (const rule of setup.rules) rules.append(element('li', rule)); target.append(rules);
-  if (setup.citizenship) { target.append(element('p', `${setup.citizenship.team}: ${setup.citizenship.objective}`, 'team-goal'), element('p', setup.citizenship.scoring, 'setup-summary')); }
   if (setup.network) {
     target.append(element('h3', `Communication network · ${setup.network.edges.length} directed channels`));
     const routing = element('ul', undefined, 'setup-rules');
@@ -30,7 +28,7 @@ export function setupPanel(setup, target, caption = 'Current experiment') {
   }
   const assignments = element('div', undefined, 'role-grid');
   setup.assignments.forEach((agent, index) => {
-    const card = element('div', undefined, `role-card ${agent.role === 'planted' ? 'planted' : ''}`);
+    const card = element('div', undefined, 'role-card');
     card.style.setProperty('--agent-color', colors[index % colors.length]);
     card.append(element('b', agent.name), element('span', agent.label, 'role-tag'), element('p', agent.instruction));
     if (agent.model) card.append(element('p', agent.model, 'model-label'));
@@ -63,8 +61,7 @@ export function conversationEvent(event, setup) {
   node.dataset.visibility = event.visibility ?? 'private';
   const header = element('div', undefined, 'meta');
   const isPublic = event.visibility === 'public';
-  const isFundRecord = event.type === 'fund.round';
-  header.append(element('span', isFundRecord ? 'Round record · operator view' : isPublic ? 'Operator view · team activity' : 'Private · operator view', 'visibility-label'));
+  header.append(element('span', isPublic ? 'Operator view · team activity' : 'Private · operator view', 'visibility-label'));
   if (event.time) header.append(element('time', new Date(event.time).toLocaleTimeString()));
   node.append(header);
   switch (event.type) {
@@ -77,7 +74,7 @@ export function conversationEvent(event, setup) {
     case 'hackathon.agent.timeout':
       node.append(element('h3', `${event.agent} · turn timed out`), element('p', `${d.message} (${d.phase}, round ${d.round}). Turn skipped; the team continues.`, 'event-description')); break;
     case 'hackathon.phase':
-      node.append(element('h3', `Hackathon · ${d.phase}`)); break;
+      node.append(element('h3', `Swarm · ${d.phase}`)); break;
     case 'hackathon.contribution':
       node.append(bubble(event.agent, d.message, `${d.phase} · Round ${d.round} · Sources: ${d.sourceIds.join(', ') || 'none'}${d.recipients ? ' · Sent to: ' + (d.recipients.join(', ') || 'no neighbors') : ''}`, setup, d.role)); break;
     case 'hackathon.web.request':
@@ -89,37 +86,20 @@ export function conversationEvent(event, setup) {
       node.append(element('h3', d.brief?.title ?? 'Partial research saved'), element('p', d.brief?.researchQuestion ?? 'The discussion and sources were saved without a final synthesis.', 'event-description'));
       { const link = element('a', 'Read the research brief ↓'); link.href = '#research'; node.append(link); }
       node.dataset.agents = JSON.stringify(setup?.assignments.map(a => a.name) ?? []); break;
-    case 'fund.citizenship':
-      node.append(element('h3', 'Team citizenship · final peer review'), element('p', `${d.project.name}: ${d.projectPoints}/${d.projectTarget} points. Team grade ${d.teamGrade.toFixed(1)}.`, 'round-summary'));
-      for (const agent of d.agents) node.append(bubble(agent.agent, `Peer average ${agent.peerAverage.toFixed(1)} · adjustment ${agent.adjustmentFactor.toFixed(3)} · individual project grade ${agent.individualGrade.toFixed(1)}`, 'Earnings are unchanged by citizenship grades.', setup));
-      break;
-    case 'fund.round':
-      node.classList.add('round-conversation');
-      node.append(element('h3', `Round ${d.round} · payouts calculated`), element('p', `$${d.totalContributions} contributed → $${d.doubledFund} after doubling → $${d.share} paid to each agent`, 'round-summary'));
-      for (const outcome of d.outcomes) node.append(bubble(outcome.agent, outcome.message, `Contributed $${outcome.contribution} · Round payoff $${outcome.payoff} · Total earned $${outcome.cumulativePayoff}`, setup));
-      break;
-    case 'agent.message':
-      node.append(bubble(event.agent, d.text, `Round ${d.round} · ${d.phase === 'discussion' ? 'Before contributions' : 'Public message'}`, setup)); break;
-    case 'agent.decision':
-      node.append(bubble(event.agent, d.reason, `Round ${d.round} · Took ${d.take} · ${d.poolRemaining} resources remain`, setup)); break;
     case 'run.started':
       node.append(element('h3', 'Experiment started'), element('p', `${d.agents?.length ?? 'All'} agents are participating${d.mode === 'demo' ? ' in a simulated demonstration' : ' using Adaption inference'}.`, 'event-description')); break;
     case 'run.completed':
-      node.append(element('h3', 'Experiment completed'), element('p', d.completion === 'partial' ? 'Partial research saved. All synthesis attempts failed or timed out; no final brief was produced.' : d.brief ? 'The one-day research plan is ready. Proposed empirical work has not been run.' : d.rounds ? `${d.rounds.length} rounds finished. Review each agent’s contribution history below.` : 'All committed decisions have been saved.', 'event-description')); break;
+      node.append(element('h3', 'Experiment completed'), element('p', d.completion === 'partial' ? 'Partial research saved. All synthesis attempts failed or timed out; no final brief was produced.' : d.brief ? 'The one-day research plan is ready. Proposed empirical work has not been run.' : 'All committed decisions have been saved.', 'event-description')); break;
     case 'run.stopped': case 'run.failed': case 'sdk.error': case 'sdk.turn.failed':
       node.classList.add('error'); node.append(element('h3', event.type.includes('stopped') ? 'Experiment stopped' : 'A problem interrupted the run'), element('p', d.message ?? d.error?.message ?? 'See technical details for the error.', 'event-description')); break;
-    case 'agent.peer_submission':
-      node.append(element('h3', `${event.agent} submitted private peer ratings`), element('p', 'Ratings will be revealed only after all five reviews validate.', 'event-description')); break;
     case 'agent.usage':
       node.append(element('h3', `${event.agent} · model usage`), element('p', `${d.model} · ${d.credits.toFixed(6)} credits from reported usage`, 'event-description')); break;
     case 'operator.billing':
       node.append(element('h3', 'Run usage cost'), element('p', `${d.credits.toFixed(6)} credits${d.simulated ? ' · simulated run' : ' · computed from reported usage, not an invoice'}`, 'event-description')); break;
     case 'agent.observation':
-      node.append(element('h3', setup?.task === 'hackathon' ? `${event.agent} · ${d.phase}` : d.phase === 'peer-review' ? `${event.agent} · reviewing team citizenship` : `${event.agent} · preparing for round ${d.round}`), element('p', setup?.task === 'hackathon' ? `${d.history?.length ?? 0} shared contributions and ${d.sources?.length ?? 0} retrieved sources available. Web actions remaining: ${d.webActionsRemaining}.` : `Received outcomes from ${d.history?.length ?? 0} earlier ${setup?.task === 'shared-fund' ? 'rounds' : 'decisions'}. Current submissions from other agents are not included.`, 'event-description')); break;
+      node.append(element('h3', `${event.agent} · ${d.phase}`), element('p', `${d.history?.length ?? 0} contributions and ${d.sources?.length ?? 0} retrieved sources available. Web actions remaining: ${d.webActionsRemaining}.`, 'event-description')); break;
     case 'agent.prompt':
       node.append(element('h3', `${event.agent} · private instructions`), element('p', 'Task instructions and the agent’s own role/context were sent privately.', 'event-description')); break;
-    case 'agent.submission':
-      node.append(bubble(event.agent, d.message, `Round ${d.round} · Submitted $${d.contribution} privately · Awaiting payout`, setup)); break;
     case 'operator.setup':
       node.append(element('h3', 'Role assignments recorded'), element('p', 'The experiment setup above shows the operator’s view of private assignments.', 'event-description')); break;
     case 'sdk.turn.started':
@@ -132,8 +112,8 @@ export function conversationEvent(event, setup) {
           node.append(element('h3', `${event.agent} is drafting a private response`), element('p', 'The final response will appear when complete.', 'event-description'));
         } else {
           const parsed = parsedMessage(item.text);
-          const facts = parsed?.ratings ? 'Final peer review · private until all reviewers submit' : parsed?.contribution !== undefined ? `Proposed contribution: $${parsed.contribution} · Private submission` : parsed?.take !== undefined ? `Proposed allocation: ${parsed.take} · Awaiting validation` : 'Private model response';
-          node.append(bubble(event.agent, parsed ? parsed.ratings ? parsed.ratings.map(r => `${r.agent}: ${r.rating} — ${r.reason}`).join('\n') : parsed.message || parsed.query || parsed.url || parsed.title || parsed.reason || 'No message supplied.' : item.text, facts, setup));
+          const facts = 'Private model response';
+          node.append(bubble(event.agent, parsed ? parsed.message || parsed.query || parsed.url || parsed.title || parsed.reason || 'No message supplied.' : item.text, facts, setup));
         }
       } else if (item?.type === 'command_execution') {
         node.append(element('h3', `${event.agent} · tool activity`), element('p', item.command, 'tool-command'));

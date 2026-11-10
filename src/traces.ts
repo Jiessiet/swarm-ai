@@ -5,6 +5,7 @@ export type TraceEvent = Activity & { id: number; time: string; run: string; vis
 export const traceRoot = resolve(process.env.TRACE_DIR ?? 'traces');
 const validId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 function runPath(id: string) { if (!validId.test(id)) throw new Error('Invalid run ID'); return join(traceRoot, id); }
+// Retain historical event visibility for archived experiments, not active task modes.
 export function visibility(event: Activity): 'public' | 'private' {
   return ['run.started', 'run.completed', 'run.stopped', 'agent.decision', 'agent.message', 'fund.round', 'fund.citizenship', 'hackathon.phase', 'hackathon.contribution', 'hackathon.web.request', 'hackathon.web.result', 'hackathon.brief', 'hackathon.agent.timeout', 'hackathon.agent.error', 'hackathon.network', 'hackathon.roles'].includes(event.type) ? 'public' : 'private';
 }
