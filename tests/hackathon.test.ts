@@ -52,15 +52,20 @@ test('web failures reach the agent and exhausted action budgets terminate withou
   });
   await runHackathon(agents, 3, undefined, undefined, noWeb); assert.ok(feedbackSeen);
   let calls = 0;
-  await assert.rejects(runHackathon(team(async () => { calls++; return { ...share(), action: 'search', query: 'safety' }; }), 3, undefined, undefined, noWeb), /budget exhausted/);
-  assert.equal(calls, 5);
+  const exhausted = await runHackathon(team(async () => { calls++; return { ...share(), action: 'search', query: 'safety' }; }), 3, undefined, undefined, noWeb);
+  assert.equal(calls, 60); // 20 allowed web calls, 30 failed actions, 10 invalid synthesis attempts.
+  assert.equal(exhausted.errors.filter(e => e.message.includes('budget exhausted')).length, 30);
+  assert.equal(exhausted.completion, 'partial');
 });
 test('rejects fabricated citations, malformed briefs, overlong plans and invalid settings', async () => {
-  await assert.rejects(runHackathon(team(async () => share('Fabricated evidence', ['invented'])), 3), /unknown source/);
+  const rejected = await runHackathon(team(async o => o.phase === 'synthesis' ? brief() : share('Fabricated evidence', ['invented'])), 3);
+  assert.equal(rejected.contributions.length, 0);
+  assert.equal(rejected.errors.length, 30);
+  assert.ok(rejected.errors.every(e => /unknown source/.test(e.message)));
   const b = brief(); b.schedule[0].hours = 8; assert.throws(() => validateBrief(b, []), /eight-hour/);
   const fabricated = brief(); fabricated.relatedWork = [{ sourceId: 'S999', relevance: 'invented' }]; assert.throws(() => validateBrief(fabricated, []), /unknown source/);
   const missing: any = brief(); delete missing.experiment.baseline; assert.throws(() => validateBrief(missing, []), /baseline/);
-  assert.throws(() => createExperiment({ task: 'hackathon', count: 4 }, () => {}), /five agents/);
+  assert.throws(() => createExperiment({ task: 'hackathon', count: 1 }, () => {}), /Invalid run settings/);
   assert.throws(() => createExperiment({ task: 'hackathon', rounds: 1 }, () => {}), /3..6 rounds/);
 });
 test('cancellation propagates through an in-progress web action and publishes no brief', async () => {
@@ -73,7 +78,7 @@ test('cancellation propagates through an in-progress web action and publishes no
 test('demo has no internet calls, task-specific setup, zero billing and an eight-hour plan', async () => {
   const setup = describeSetup({}); assert.equal(setup.task, 'hackathon'); assert.equal(setup.assignments.length, 5);
   const result = await runHackathon(team(async o => demoDecision(o)), 3, undefined, undefined, noWeb, true);
-  assert.equal(result.simulated, true); assert.equal(result.sources.length, 0); assert.equal(result.brief.schedule.reduce((sum, s) => sum + s.hours, 0), 8);
+  assert.ok(result.brief); assert.equal(result.simulated, true); assert.equal(result.sources.length, 0); assert.equal(result.brief.schedule.reduce((sum, s) => sum + s.hours, 0), 8);
   assert.match(briefMarkdown(result), /SIMULATED DEMO/);
   assert.equal(estimatePricing('hackathon', 3, assignModels(5), 'demo').expectedCharge, 0);
   assert.equal(estimatePricing('hackathon', 3, assignModels(5)).calls, 36);
@@ -83,4 +88,145 @@ test('page access rejects local and private targets and strips executable page c
   assert.equal(publicAddress('8.8.8.8'), true);
   for (const url of ['http://example.com', 'https://localhost', 'https://127.0.0.1', 'https://user:password@example.com', 'https://example.com:8080']) await assert.rejects(validatePublicUrl(url));
   assert.equal(plainText('<script>attack()</script><h1>Paper &amp; evidence</h1>'), 'Paper & evidence');
+});
+
+test('skips a timed-out discussion turn, informs peers, and lets that agent return next round', async () => {
+  const { AgentTimeoutError } = await import('../src/timeouts.js');
+  let sawTimeout = false, returned = false;
+  const events: any[] = [];
+  const result = await runHackathon(team(async (o, i) => {
+    if (i === 0 && o.phase === 'research') throw new AgentTimeoutError('Agent 0', 600_000);
+    if (i === 1 && o.phase === 'research') { assert.equal(o.timeouts[0].agent, 'Agent 0'); sawTimeout = true; }
+    if (i === 0 && o.phase === 'proposal') returned = true;
+    return o.phase === 'synthesis' ? brief() : share();
+  }), 3, e => events.push(e), undefined, noWeb);
+  assert.ok(sawTimeout && returned); assert.ok(result.brief);
+  assert.equal(result.timeouts.length, 1); assert.equal(result.contributions.length, 14);
+  assert.equal(result.completion, 'complete');
+  assert.match(briefMarkdown(result), /Agent 0 timed out after 600 seconds/);
+  assert.equal(visibility(events.find(e => e.type === 'hackathon.agent.timeout')), 'public');
+});
+test('preserves web evidence retrieved before a timeout', async () => {
+  const { AgentTimeoutError } = await import('../src/timeouts.js');
+  const result = await runHackathon(team(async (o, i) => {
+    if (i === 0 && o.phase === 'research') {
+      if (!o.toolFeedback) return { ...share(), action: 'search', query: 'safety' };
+      throw new AgentTimeoutError('Agent 0', 600_000);
+    }
+    if (i === 1 && o.phase === 'research') assert.equal(o.sources[0].id, 'S1');
+    return o.phase === 'synthesis' ? brief() : share();
+  }), 3, undefined, undefined, {
+    async search() { return [{ title: 'Evidence', url: 'https://example.com', text: 'Metadata', kind: 'search-result', retrievedAt: '2026-11-07' }]; }, read: noWeb.read,
+  });
+  assert.equal(result.sources.length, 1); assert.equal(result.timeouts.length, 1);
+});
+test('falls back to another synthesis agent and saves partial research if all synthesizers time out', async () => {
+  const { AgentTimeoutError } = await import('../src/timeouts.js');
+  const result = await runHackathon(team(async (o, i) => {
+    if (o.phase === 'synthesis') {
+      if (i === 4) throw new AgentTimeoutError('Agent 4', 600_000);
+      assert.equal(o.timeouts[0].phase, 'synthesis'); assert.match(o.role, /acting synthesis lead/);
+      return brief();
+    }
+    return share();
+  }), 3, undefined, undefined, noWeb);
+  assert.equal(result.synthesisAgent, 'Agent 0'); assert.ok(result.brief);
+  const partial = await runHackathon(team(async (o, i) => {
+    if (o.phase === 'synthesis') throw new AgentTimeoutError(`Agent ${i}`, 600_000);
+    return share();
+  }), 3, undefined, undefined, noWeb);
+  assert.equal(partial.completion, 'partial'); assert.equal(partial.brief, null);
+  assert.equal(partial.timeouts.length, 5); assert.equal(partial.contributions.length, 15);
+  assert.match(briefMarkdown(partial), /Partial hackathon record/);
+  assert.match(briefMarkdown(partial), /Shared evidence/);
+});
+test('does not swallow operator stops or mislabel provider errors as timeouts', async () => {
+  const { AgentTimeoutError } = await import('../src/timeouts.js');
+  const controller = new AbortController(); const events: any[] = [];
+  await assert.rejects(runHackathon(team(async () => { controller.abort(); throw new AgentTimeoutError('Agent 0', 600_000); }), 3, e => events.push(e), controller.signal), /abort/i);
+  assert.ok(!events.some(e => e.type === 'hackathon.agent.timeout'));
+  const failed = await runHackathon(team(async () => { throw new Error('Unauthorized provider'); }), 3);
+  assert.equal(failed.timeouts.length, 0);
+  assert.equal(failed.errors.length, 40);
+  assert.equal(failed.completion, 'partial');
+  assert.match(briefMarkdown(failed), /Unauthorized provider/);
+  assert.match(briefMarkdown(failed), /failed or timed out/);
+});
+
+
+test('retries provider and validation errors with feedback, then resumes later rounds', async () => {
+  const events: any[] = [];
+  let attempts = 0, sawFailure = false, returned = false;
+  const result = await runHackathon(team(async (o, i) => {
+    if (i === 0 && o.phase === 'research') {
+      attempts++;
+      if (attempts === 1) throw new Error('Temporary provider failure');
+      assert.match(JSON.stringify(o.toolFeedback), /Temporary provider failure/);
+      assert.equal(o.errors.length, 1);
+      return share('Invalid citation', ['fake']);
+    }
+    if (i === 1 && o.phase === 'research') {
+      sawFailure = o.errors.length === 2;
+      o.errors[0].message = 'mutation';
+    }
+    if (i === 0 && o.phase === 'proposal') returned = true;
+    return o.phase === 'synthesis' ? brief() : share();
+  }), 3, e => events.push(e), undefined, noWeb);
+  assert.ok(sawFailure && returned);
+  assert.equal(attempts, 2);
+  assert.equal(result.contributions.length, 14);
+  assert.deepEqual(result.errors.map(e => e.retrying), [true, false]);
+  assert.equal(result.errors[0].message, 'Temporary provider failure');
+  assert.ok(result.brief);
+  assert.equal(visibility(events.find(e => e.type === 'hackathon.agent.error')), 'public');
+});
+
+test('corrects an exhausted web action using retry feedback without exceeding the budget', async () => {
+  let searches = 0, corrected = false;
+  const result = await runHackathon(team(async (o, i) => {
+    if (o.phase === 'synthesis') return brief();
+    if (i === 0 && o.phase === 'research') {
+      if (JSON.stringify(o.toolFeedback)?.includes('budget exhausted')) {
+        corrected = true;
+        assert.equal(o.webActionsRemaining, 0);
+        return share('Evidence gap disclosed after exhausting research budget.');
+      }
+      return { ...share(), action: 'search', query: 'safety' };
+    }
+    return share();
+  }), 3, undefined, undefined, { async search() { searches++; return []; }, read: noWeb.read });
+  assert.ok(corrected);
+  assert.equal(searches, 4);
+  assert.equal(result.errors.length, 1);
+  assert.equal(result.contributions.length, 15);
+});
+
+test('retries malformed synthesis and falls back after repeated invalid briefs', async () => {
+  let leadCalls = 0;
+  const result = await runHackathon(team(async (o, i) => {
+    if (o.phase !== 'synthesis') return share();
+    if (i === 4) {
+      leadCalls++;
+      const invalid = brief(); invalid.schedule[0].hours = 8;
+      if (leadCalls === 2) assert.match(JSON.stringify(o.toolFeedback), /eight-hour/);
+      return invalid;
+    }
+    assert.equal(o.errors.length, 2);
+    return brief();
+  }), 3, undefined, undefined, noWeb);
+  assert.equal(leadCalls, 2);
+  assert.equal(result.synthesisAgent, 'Agent 0');
+  assert.ok(result.brief);
+});
+
+test('cancellation during an error retry stops immediately without publishing a brief', async () => {
+  const controller = new AbortController(), events: any[] = [];
+  let calls = 0;
+  await assert.rejects(runHackathon(team(async () => {
+    if (++calls === 2) controller.abort(new Error('Operator stopped'));
+    throw new Error('Provider failure');
+  }), 3, e => events.push(e), controller.signal, noWeb), /Operator stopped/);
+  assert.equal(calls, 2);
+  assert.equal(events.filter(e => e.type === 'hackathon.agent.error').length, 1);
+  assert.ok(!events.some(e => e.type === 'hackathon.brief'));
 });

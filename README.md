@@ -1,152 +1,154 @@
-# swarm-ai
+# Swarm Chamber
 
-A collaborative **one-day swarm AI safety research hackathon**. Five agents search
-online sources, discuss research ideas, challenge each other's assumptions, and
-converge on a small empirical project a team can implement and evaluate in eight
-hours. The output is a cited research brief with a hypothesis, baseline,
-intervention, metrics, analysis plan, schedule, limitations, fallback and pitch.
+A local workbench for configuring AI agent networks and following their work.
+Start with five agents, set a research objective, assign roles and models, and
+edit the communication graph. Live role and connection changes apply to the next
+decision. The trajectory connects recorded contributions to their actual nodes,
+recipients, contexts and final synthesis.
 
-The hackathon is now the default CLI and dashboard task. The original
-shared-resource and shared-fund experiments remain selectable alternatives.
+## Start
 
-## Run the hackathon
-
-Requires Node.js 20.18.1+ and npm:
+Requires Node.js 20.18.1 or later.
 
 ```bash
 npm ci
-npm run demo        # deterministic demo; no credentials or internet calls
-npm run dashboard   # http://127.0.0.1:3333
+npm run dashboard  # http://127.0.0.1:3333
+npm run demo       # scripted CLI run, no model or web calls
 ```
 
-In the dashboard choose **Swarm AI safety · hackathon**, inspect the five research
-roles and model assignments, then start **Demo** or **Live · Adaption inference**.
-Live mode requires `ADAPTION_API_KEY` in the server environment. Credentials are
-never entered in the browser. For the CLI:
+The dashboard opens in **Demo** with five agents, three rounds and a mesh. The
+**Swarm** graph is visible immediately. **Spiral** adds an interactive 3D
+half-dome view; **Network** provides a simple
+view of the same editable graph. Detailed models, role presets and agent
+settings are expandable. Starting a fresh page opens a new setup; an active run
+reconnects, and completed runs remain available in the archive.
+
+Choose **Live · Adaption** to use model inference. Set `ADAPTION_API_KEY` in the
+server shell before launching. Credentials are not entered in the browser.
+The CLI uses live inference with `npm start`. For example:
 
 ```bash
-# Configure ADAPTION_API_KEY in your shell/secret manager first.
-npm start
-# Optional additional critique rounds (3–6 collaboration rounds in total):
-TASK=hackathon ROUNDS=4 npm start
+AGENT_COUNT=5 ROUNDS=4 OBJECTIVE='Investigate a coordination hypothesis and propose a controlled study.' npm start
 ```
 
-`.env.example` documents settings; it is not loaded automatically. Configure
-variables in your shell or use your runtime's environment-file support.
+`.env.example` documents settings; it is not loaded automatically. Model pricing
+in `config/models.json` is in Adaption credits. Estimates are planning figures,
+not spending caps or invoices. The recorded SDK usage is priced separately.
+Repeated model IDs are supported; **Apply to all** assigns one model to the team.
 
-## How the team works
+## Configure a network
 
-The agents have five complementary roles: literature scout, safety analyst,
-experiment designer, skeptical reviewer and synthesis lead. Each has a persistent
-Codex SDK thread and its own selected Adaption model. Defaults use five different
-low-cost catalog models; dashboard dropdowns swap assignments when needed.
-`AGENT_MODELS` accepts five distinct catalog model IDs.
+- Team size is **2–100**, chosen before running. Larger teams default to a sparse
+  bidirectional ring above ten agents. Names remain unique through Agent CV.
+- **Mesh, Hub, Ring, Pipeline and Clusters** supply starting topologies. A full
+  100-agent mesh has 9,900 directed channels. Above twenty agents, all nodes stay
+  selectable while only the selected node's channels are displayed.
+- Select a node or use **Inspect agent**. Expand **Edit role** to change its title
+  and instructions. Expand **Connections** to edit incoming channels.
+- **Connect nodes** toggles a channel by selecting its source and destination.
+  **Two-way** toggles both directions. A selected edge can also be removed.
+- Drag nodes to arrange the graph, or focus a node and use arrow keys. Layout is
+  cosmetic; edges govern communication. **Spiral** adds a perspective 3D half
+  dome: drag empty space to rotate and tilt, drag an agent to reposition its
+  action spiral, Alt + drag to raise it, or use the camera buttons to zoom and reset.
+  Hub networks place the hub above its peers. Shift + arrow
+  keys move a focused agent, and Alt + Up/Down changes its elevation; arrow keys rotate the view. Camera and position
+  changes preserve the communication edges; **Connect nodes** edits them.
+- **Saved role teams** stores applied titles and instructions across browser
+  refreshes and server restarts. Loading preserves models and the objective.
+  A matching-size preset can be applied live; resizing waits until the run ends.
 
-1. **Research:** discover and inspect relevant work on swarm / multi-agent AI safety.
-2. **Propose:** formulate narrow questions with a falsifiable hypothesis and controls.
-3. **Critique:** challenge novelty, confounds, cost, feasibility and evaluation design.
-4. **Synthesize:** the lead receives the entire shared discussion and produces one
-   research brief, including rejected alternatives and a schedule capped at eight hours.
+Roles and edges are revisioned. An in-flight response retains its original
+snapshot; subsequent decisions and retries use the updated configuration. Team
+size and models remain fixed during a run. Fresh SDK threads at each research
+decision prevent inaccessible peer history from surviving graph changes.
 
-Extra rounds repeat critique. Speakers rotate, and every validated contribution
-is shared before the next agent responds. Research roles have a common goal;
-there are no simulated fund contributions, allocations, earnings or peer grades
-in this task. Expected findings are hypotheses, **not measured results**. This
-runner plans the research project; it does not automatically execute the proposed
-empirical experiment or train models.
+**Swarm** and **Network** retain the 2D editor without a particle backdrop.
+**Spiral** is also available in the linked trajectory panel alongside Orbit
+and Straight. Agent action markers come from recorded events; selecting one
+updates the timeline and record detail. Published and context routes rise as
+3D arcs, and replay uses the network snapshot at the selected event. Empty
+spiral guides indicate where a future run will record actions. Network presets
+change both the real communication graph and its initial spatial arrangement.
+For large teams, markers are sampled and selected events are always retained;
+all events remain available through the timeline and record list. Playback
+honors reduced motion, and camera movement is controlled by the user.
 
-## Internet research
+## Research workflow
 
-Agents explicitly request `search` and `read` actions in their structured replies.
-The environment performs the request and returns evidence or an explicit error
-on their next turn. Each agent has up to **four web actions per run** (20 for the
-team), separate from its discussion turns. Sources receive IDs, titles, URLs,
-retrieval times and a `search-result` or `page` label. All teammates receive the
-source registry. Contributions and the final brief may cite only registered IDs.
-This verifies citation IDs, not the truth or relevance of every model claim.
+The single built-in workflow is **research → proposal → critique → synthesis**.
+Additional rounds repeat critique. The objective and roles are configurable;
+the output remains a structured research plan with evidence, a hypothesis,
+controls, evaluation criteria and an eight-hour schedule. Proposed experiments
+are not executed automatically. Different tools or output formats require a
+compatible task module. The scripted demo illustrates the workflow with example
+research; it does not reason about the edited objective or browse the web.
 
-- **Without another key:** search queries go to Crossref's public scholarly API.
-  Results may be metadata/abstracts only and are labeled as discovery results.
-- **General web search:** configure `BRAVE_SEARCH_API_KEY` on the server to use
-  Brave Search instead. Search API fees are not included in model-cost estimates.
-- **Read:** agents can request public HTTPS HTML/text pages, including abstract
-  pages. Reads follow at most four redirects, limit downloads to 1 MB, and return
-  at most 12,000 readable characters. PDFs are unsupported; use their abstract
-  page. Paywalls, bot checks and truncated pages remain evidence gaps.
+Each live agent can request up to four mediated search/page-read actions per
+run. Search uses Crossref scholarly metadata by default, or Brave when
+`BRAVE_SEARCH_API_KEY` is set. Public HTTPS HTML/text pages can be read with
+bounded redirects, download size and returned text. PDFs, inaccessible pages and
+search metadata remain evidence limitations. Source IDs are validated, but that
+is not independent verification of each cited claim.
 
-Research requests honor standard HTTP(S) proxy variables. Destination checks
-reject private/local addresses and check redirects. When local DNS cannot resolve
-an external host, a fixed Google DNS-over-HTTPS lookup validates its public IPv4
-addresses. Network policy must allow the chosen search service, `dns.google` when
-needed, and the pages being read. These checks are not adversarial OS isolation.
+Incoming directed edges determine visible peer contributions and sources.
+Validated citations can relay source records through a visible contribution.
+Synthesis follows the same routing rules; it has no global context bypass.
+Disconnected groups may therefore have different information available.
 
-Webpage text is untrusted evidence, never agent instructions. Tool results, errors
-and contributions appear in the public trace. Browsing is mediated by the task,
-so it does not depend on Adaption implementing a native web-search tool. Existing
-Codex command sandboxing and native web-search settings remain unchanged.
+Model turns default to a 600-second deadline, configurable from 1 to 3600 with
+`AGENT_TIMEOUT_SECONDS`. Provider and validation errors retry once, then skip the
+turn so other agents can continue. Timed-out agents may return in later rounds.
+Synthesis can fall back to another agent; if no valid brief can be produced,
+partial research is retained. Stop cancels the run and in-progress retrieval.
+`DEMO_STREAM_DELAY_MS` controls scripted pacing only, not inference latency.
 
-## Results and dashboard
+## Inspect and save
 
-The dashboard shows research roles, model assignments, estimated costs, live
-conversation, searches, sources, phase progress and the final readable brief.
-**Download research brief (.md)** exports the report. Completed CLI/dashboard
-runs also write JSON and Markdown to ignored `results/`.
+**What the agents actually did** combines a selected record, historical swarm
+view, timeline and playback controls. Select a node, filter contributions, and
+inspect which later contexts included them. The report links role/network edits,
+source use and synthesis to original events. It is computed from the trace and
+makes no extra model calls. Context exposure does not establish agreement,
+understanding, private intent or causal influence.
 
-Every run persists `traces/<run-id>/run.json`, public `events.jsonl`, per-agent
-private SDK/prompt logs, and an operator log. Saved trajectories survive server
-restarts. The trusted local operator can inspect private traces; agents receive
-shared validated contributions and retrieved sources through task observations.
-This separation is at application level, not an OS security boundary. Codex
-processes running as the same user may still read workspace files.
+Runs write JSON and Markdown to `results/` and traces under `traces/<run-id>/`.
+The local operator can inspect public records and per-agent private SDK events;
+agents only receive filtered task observations. The local role library defaults
+to `data/role-presets.json`, with `ROLE_PRESET_FILE` available as an override.
+These data folders are not changed by the removal of the retired experiment
+runners. Older records remain available through the archive.
 
-The server binds to loopback (`127.0.0.1`, default port 3333). One run can be active
-at a time. Stop cancels agent turns and in-progress web requests. The live event
-buffer holds 2,000 events and the browser holds 400 feed entries; complete saved
-traces remain on disk. Trace storage is unbounded and can contain model-visible
-source/tool output. The viewer shows SDK-visible events, not hidden chain-of-thought.
+The server binds to `127.0.0.1` (port 3333 by default), validates Host/Origin,
+and allows one active run. This is application-level mediation, not a proven OS
+isolation boundary. Logs can contain sensitive prompts and tool output; review
+before sharing. Traces are not automatically pruned.
 
-## Architecture and validation
-
-```text
-CLI / local dashboard → tasks/hackathon/environment.ts
-                       ↔ shared discussion + source registry
-                       ↔ Codex SDK threads → Adaption Responses API
-                       ↔ Crossref / Brave search + public-page reader
-                       → JSON traces + Markdown research brief
-```
-
-Task instructions, schemas, deterministic demo and rules live in `tasks/hackathon/`.
-`src/experiments.ts` selects tasks; `src/providers.ts` configures Codex/Adaption;
-`src/server.ts` serves the local observatory; `web/` renders conversations and briefs.
+## Development
 
 ```bash
 npm run check
 npm test
 ```
 
-Tests cover collaboration/context isolation, research-action budgets, web errors,
-cancellation, registered citations, the eight-hour schedule limit, demo behavior,
-public traces, existing games and dashboard endpoints.
+- `src/experiments.ts` configures the single research workflow.
+- `src/providers.ts` connects the Codex harness to Adaption.
+- `tasks/hackathon/` contains research instructions, schemas, demo and retrieval.
+- `src/server.ts`, `src/traces.ts` and `src/analysis.ts` handle APIs and records.
+- `web/network.js` handles graph editing; `web/dome-scene.js` renders the shared
+  interactive 3D view using the projection in `web/dome-geometry.js`.
+- `web/behavior.js` links the historical trajectory to recorded agent activity.
 
-**Live Adaption/Codex compatibility remains unverified without credentials.**
-Codex sends structured outputs, tool definitions, conversation history and streaming
-requests. A shared Responses endpoint format does not prove full compatibility.
-`ADAPTION_BASE_URL` must be an HTTPS API base including `/api/v1`, without
-`/responses`. No OpenAI API key or ChatGPT login is used by this runner.
+The internal `hackathon` task ID and event prefix are retained for saved-record
+compatibility. They are not a task selector. The retired shared-fund/resource
+runners and standalone Python experiment have been removed; their task IDs are
+rejected rather than silently launching a different experiment.
 
-Model pricing in `config/models.json` is in Adaption credits per million tokens.
-Hackathon estimates allow for research-action turns and synthesis but are planning
-figures, not spending caps or provider invoices. Live reported SDK usage is
-converted to credits separately; demos cost zero and their conversations are scripted.
+Local APIs include `/setup`, `/run`, `/stop`, `/network`, `/roles`, `/role-presets`,
+`/runs/:id`, `/runs/:id/analysis` and Markdown exports. Graph and role edits require
+the active run ID and expected revision. Stale changes and team-size mismatches
+are rejected. Public and private trace scopes remain separate.
 
-## Original tasks
-
-```bash
-TASK=shared-resource npm run demo
-TASK=shared-fund CONDITION=both ROUNDS=3 npm run demo
-```
-
-The original Python `experiment.py` is a separate standalone experiment requiring
-its pinned Python dependencies and `ADAPTION_API_KEY`. See
-[tasks/README.md](tasks/README.md) and
-[tasks/shared-fund/README.md](tasks/shared-fund/README.md) for the retained games.
+The visual design is inspired by [AI Safety HOT](https://aisafetyhot.com/en) and
+[SwarmHarm](https://swarmharm.com/?case=r136&phase=1). The 3D implementation uses local SVG projection code and adds no external
+graphics dependency.

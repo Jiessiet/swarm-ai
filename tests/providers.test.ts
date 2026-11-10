@@ -17,3 +17,23 @@ test('fails before spawning Codex when credentials or endpoint are invalid', () 
   for (const url of ['http://example.com', 'https://example.com/responses', 'https://example.com?key=secret'])
     assert.throws(() => adaptionHarnessOptions({ ADAPTION_API_KEY: 'test', ADAPTION_BASE_URL: url }));
 });
+
+test('fresh research contexts start a new SDK thread for every decision', async t => {
+  const { Codex } = await import('@openai/codex-sdk');
+  const { modelAgent } = await import('../src/providers.js');
+  const priorKey=process.env.ADAPTION_API_KEY;
+  process.env.ADAPTION_API_KEY='offline-test';
+  let threads=0;
+  const prompts:string[]=[];
+  t.mock.method(Codex.prototype,'startThread',()=>{
+    threads++;
+    return {async runStreamed(prompt:string){prompts.push(prompt);return {events:(async function*(){yield {type:'item.completed',item:{type:'agent_message',text:'{"ok":true}'}};})()};}};
+  });
+  try {
+    const researcher=modelAgent('Researcher','Research safely',()=>({}),()=>{},'deepseek-v4-flash',true);
+    await researcher.decide({history:['Peer A evidence']});
+    await researcher.decide({history:[]});
+    assert.equal(threads,2);
+    assert.match(prompts[0],/Peer A evidence/);assert.ok(!prompts[1].includes('Peer A evidence'));
+  } finally {if(priorKey===undefined)delete process.env.ADAPTION_API_KEY;else process.env.ADAPTION_API_KEY=priorKey;}
+});

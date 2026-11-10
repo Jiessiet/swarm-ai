@@ -5,8 +5,9 @@ export type TraceEvent = Activity & { id: number; time: string; run: string; vis
 export const traceRoot = resolve(process.env.TRACE_DIR ?? 'traces');
 const validId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 function runPath(id: string) { if (!validId.test(id)) throw new Error('Invalid run ID'); return join(traceRoot, id); }
+// Retain historical event visibility for archived experiments, not active task modes.
 export function visibility(event: Activity): 'public' | 'private' {
-  return ['run.started', 'run.completed', 'run.stopped', 'agent.decision', 'agent.message', 'fund.round', 'fund.citizenship', 'hackathon.phase', 'hackathon.contribution', 'hackathon.web.request', 'hackathon.web.result', 'hackathon.brief'].includes(event.type) ? 'public' : 'private';
+  return ['run.started', 'run.completed', 'run.stopped', 'agent.decision', 'agent.message', 'fund.round', 'fund.citizenship', 'hackathon.phase', 'hackathon.contribution', 'hackathon.web.request', 'hackathon.web.result', 'hackathon.brief', 'hackathon.agent.timeout', 'hackathon.agent.error', 'hackathon.network', 'hackathon.roles'].includes(event.type) ? 'public' : 'private';
 }
 export function createTrace(id: string, config: Record<string, unknown>, agents: string[], setup?: unknown) {
   const directory = runPath(id);
@@ -22,7 +23,7 @@ export function createTrace(id: string, config: Record<string, unknown>, agents:
       const member = members.find(a => a.name === event.agent);
       const target = record.visibility === 'public' ? join(directory, 'public', 'events.jsonl') : member ? join(directory, 'agents', member.id, 'private.jsonl') : join(directory, 'operator.jsonl');
       appendFileSync(target, JSON.stringify(record) + '\n', { mode: 0o600 });
-      if (['run.completed', 'run.stopped', 'run.failed'].includes(event.type)) { manifest.status = event.type.slice(4); save(); }
+      if (['run.completed', 'run.stopped', 'run.failed'].includes(event.type)) { manifest.status = event.type === 'run.completed' && (event.data as { completion?: string })?.completion === 'partial' ? 'partial' : event.type.slice(4); save(); }
       return record;
     },
   };
@@ -47,4 +48,18 @@ export function readTrajectory(id: string, agent?: string): { manifest: any; eve
     events.push(...read(join(directory, 'agents', member.id, 'private.jsonl')));
   }
   return { manifest, events: events.sort((a, b) => a.id - b.id) };
+}
+
+// Full operator view for computed behavior reports. Callers must sanitize this
+// stream; unlike readTrajectory, it includes every agent and operator failures.
+export function readAnalysisTrajectory(id: string) {
+  const trajectory = readTrajectory(id);
+  const directory = runPath(id);
+  const paths = [join(directory, 'operator.jsonl'), ...trajectory.manifest.agents.map((a: {id:string}) => join(directory, 'agents', a.id, 'private.jsonl'))];
+  for (const path of paths) {
+    try { trajectory.events.push(...readFileSync(path, 'utf8').split('\n').filter(Boolean).map(line => JSON.parse(line))); }
+    catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
+  }
+  trajectory.events.sort((a,b)=>a.id-b.id);
+  return trajectory;
 }

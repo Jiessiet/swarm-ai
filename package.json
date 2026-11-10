@@ -1,8 +1,7 @@
 {
   "name": "swarm-ai",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Swarm Chamber: configurable agent networks, live roles, and trace-linked observation",
   "scripts": {
     "demo": "AGENT_BACKEND=baseline tsx src/cli.ts",
     "start": "tsx src/cli.ts",
@@ -23,7 +22,6 @@
   },
   "homepage": "https://github.com/Jiessiet/swarm-ai#readme",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.32.2",
     "@openai/codex-sdk": "^0.167.0",
     "undici": "^7.30.2"
   },
