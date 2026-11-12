@@ -6,6 +6,12 @@ edit the communication graph. Live role and connection changes apply to the next
 decision. The trajectory connects recorded contributions to their actual nodes,
 recipients, contexts and final synthesis.
 
+## Features
+- **Configurable team size**: 2–100 agents, each with a role, model and instructions.
+- **Editable communication graph**: Mesh, Hub, Ring, Pipeline and Cluster topologies.
+- **Live inference**: Agents can use Adaption or Brave search to retrieve information.
+- **Structured research workflow**: Research → Proposal → Critique → Synthesis.
+
 ## Start
 
 Requires Node.js 20.18.1 or later.
